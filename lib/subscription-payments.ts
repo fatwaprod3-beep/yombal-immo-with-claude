@@ -62,10 +62,10 @@ export async function createSasPayCheckout(user:Customer,planId:PlanId,origin:st
   const sessionId=providerId(session.id);
   if(!sessionId||!trustedCheckoutUrl(session.checkout_url)||xofAmount(session.amount)!==plan.price||session.currency!=='XOF')throw Error('Session de paiement incohérente.');
   await db.transaction(async tx=>{
-   await tx.update(billingCheckouts).set({providerSessionId:sessionId,checkoutUrl:session.checkout_url,status:'pending',updatedAt:stamp}).where(eq(billingCheckouts.id,id));
+   await tx.update(billingCheckouts).set({providerSessionId:sessionId,checkoutUrl:String(session.checkout_url),status:'pending',updatedAt:stamp}).where(eq(billingCheckouts.id,id));
    await tx.insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:plan.price,status:'pending',createdAt:stamp});
   });
-  return {...inserted[0],checkoutUrl:session.checkout_url};
+  return {...inserted[0],checkoutUrl:String(session.checkout_url)};
  }catch{
   await db.update(billingCheckouts).set({status:'failed',activeSlot:null,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,id));
   throw Error('Le paiement SasPay n’a pas pu être préparé. Réessayez ; aucun accès n’a été modifié.');
