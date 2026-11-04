@@ -1,47 +1,12 @@
 {
   "version": "7",
-  "dialect": "sqlite",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "6",
-      "when": 1792249552764,
-      "tag": "0000_curvy_nighthawk",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1792270039405,
-      "tag": "0001_panoramic_randall_flagg",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1792533906593,
-      "tag": "0002_fresh_epoch",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1793408562654,
-      "tag": "0003_clumsy_otto_octavius",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1793798427706,
-      "tag": "0004_mysterious_steel_serpent",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1793900000000,
-      "tag": "0005_yombal_users",
+      "version": "7",
+      "when": 1793840000000,
+      "tag": "0000_yombal_supabase",
       "breakpoints": true
     }
   ]

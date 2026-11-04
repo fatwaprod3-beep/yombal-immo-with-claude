@@ -14,7 +14,7 @@
   },
   "runtime": {
     "hosting": "Vercel (Next.js)",
-    "database": "Turso (libSQL, compatible SQLite)",
+    "database": "Supabase (PostgreSQL)",
     "files": "Vercel Blob",
     "auth": "Comptes Yombal e-mail + mot de passe"
   },

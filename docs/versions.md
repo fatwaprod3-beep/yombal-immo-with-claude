@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.20.0 — 4 novembre 2026
+
+- Base de données : passage de Turso à Supabase (PostgreSQL), projet dédié. Schéma identique, migration unique `0000_yombal_supabase`, RLS activée sur toutes les tables.
+- Paiements : les écritures atomiques passent par des transactions PostgreSQL avec verrou par compte ; même règle de prolongation (mois calendaires, cumul des renouvellements, aucune double activation).
+- Mode test sans connexion (`YOMBAL_TEST_MODE=1`) : données gardées dans le navigateur, fonctions Pro débloquées pour les essais.
+
 ## 0.19.0 — 4 novembre 2026
 
 Indépendance vis-à-vis de ChatGPT : l’application devient un projet Next.js standard, déployable sur Vercel depuis GitHub.

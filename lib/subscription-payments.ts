@@ -18,24 +18,26 @@ export function addCalendarMonths(iso:string,months:number){
  const last=new Date(Date.UTC(date.getUTCFullYear(),date.getUTCMonth()+1,0)).getUTCDate();date.setUTCDate(Math.min(day,last));return date.toISOString();
 }
 
-// The upsert computes the next expiry inside the same D1 transaction as the
+// The next expiry is computed inside the same transaction as the
 // unique payment ledger. Concurrent renewals never overwrite one another.
 async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now()){
  const plan=planFor(row.planId);if(row.mode!=='live'||row.currency!=='XOF'||row.amount!==plan.price)throw Error('Règlement incohérent.');
  const db=getDb(),now=new Date(at).toISOString();
  const guard=and(eq(billingPayments.providerPaymentId,paymentId),eq(billingPayments.checkoutId,row.id),eq(billingPayments.userId,row.userId),eq(billingPayments.applied,0))!;
- const ready=sql`exists (select 1 from ${billingPayments} where ${guard})`;
- const base=sql`case when ${subscriptions.status} = 'active' and julianday(${subscriptions.expiresAt}) > julianday(${now}) then ${subscriptions.expiresAt} else ${now} end`;
- const start=sql`date(${base}, 'start of month', ${'+'+plan.months+' months'})`;
- const lastDay=sql`cast(strftime('%d', date(${base}, 'start of month', ${'+'+(plan.months+1)+' months'}, '-1 day')) as integer)`;
- const nextExpiry=sql`date(${start}, '+' || (min(cast(strftime('%d', ${base}) as integer), ${lastDay}) - 1) || ' days') || strftime('T%H:%M:%fZ', ${base})`;
- await db.batch([
-  db.insert(billingPayments).values({providerPaymentId:paymentId,checkoutId:row.id,userId:row.userId,planId:plan.id,amount:plan.price,currency:'XOF',createdAt:now,applied:0}).onConflictDoNothing(),
-  db.insert(subscriptions).select(sql`select ${row.userId}, ${plan.id}, 'active', ${addCalendarMonths(now,plan.months)}, ${now} from ${billingPayments} where ${guard}`).onConflictDoUpdate({target:subscriptions.userId,set:{planId:plan.id,status:'active',expiresAt:nextExpiry,updatedAt:now}}),
-  db.update(billingCheckouts).set({status:'paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:now}).where(and(eq(billingCheckouts.id,row.id),ready)),
-  db.update(subscriptionRequests).set({status:'paid'}).where(and(eq(subscriptionRequests.id,row.id),ready)),
-  db.update(billingPayments).set({applied:1}).where(guard),
- ]);
+ // Transaction PostgreSQL : verrou par compte pour que deux renouvellements simultanés se cumulent.
+ await db.transaction(async tx=>{
+  await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${'yombal-billing:'+row.userId}))`);
+  await tx.insert(billingPayments).values({providerPaymentId:paymentId,checkoutId:row.id,userId:row.userId,planId:plan.id,amount:plan.price,currency:'XOF',createdAt:now,applied:0}).onConflictDoNothing();
+  const pending=(await tx.select().from(billingPayments).where(guard).for('update').limit(1))[0];
+  if(!pending)return;
+  const current=(await tx.select().from(subscriptions).where(eq(subscriptions.userId,row.userId)).limit(1))[0];
+  const base=current&&current.status==='active'&&current.expiresAt&&Date.parse(current.expiresAt)>Date.parse(now)?current.expiresAt:now;
+  const expiresAt=addCalendarMonths(base,plan.months);
+  await tx.insert(subscriptions).values({userId:row.userId,planId:plan.id,status:'active',expiresAt,updatedAt:now}).onConflictDoUpdate({target:subscriptions.userId,set:{planId:plan.id,status:'active',expiresAt,updatedAt:now}});
+  await tx.update(billingCheckouts).set({status:'paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:now}).where(eq(billingCheckouts.id,row.id));
+  await tx.update(subscriptionRequests).set({status:'paid'}).where(eq(subscriptionRequests.id,row.id));
+  await tx.update(billingPayments).set({applied:1}).where(guard);
+ });
  const ledger=(await db.select().from(billingPayments).where(eq(billingPayments.providerPaymentId,paymentId)).limit(1))[0];
  if(!ledger||ledger.checkoutId!==row.id||ledger.userId!==row.userId||ledger.applied!==1)throw Error('Règlement déjà associé ou incomplet.');
 }
@@ -59,10 +61,10 @@ export async function createSasPayCheckout(user:Customer,planId:PlanId,origin:st
   }));
   const sessionId=providerId(session.id);
   if(!sessionId||!trustedCheckoutUrl(session.checkout_url)||xofAmount(session.amount)!==plan.price||session.currency!=='XOF')throw Error('Session de paiement incohérente.');
-  await db.batch([
-   db.update(billingCheckouts).set({providerSessionId:sessionId,checkoutUrl:session.checkout_url,status:'pending',updatedAt:stamp}).where(eq(billingCheckouts.id,id)),
-   db.insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:plan.price,status:'pending',createdAt:stamp}),
-  ]);
+  await db.transaction(async tx=>{
+   await tx.update(billingCheckouts).set({providerSessionId:sessionId,checkoutUrl:session.checkout_url,status:'pending',updatedAt:stamp}).where(eq(billingCheckouts.id,id));
+   await tx.insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:plan.price,status:'pending',createdAt:stamp});
+  });
   return {...inserted[0],checkoutUrl:session.checkout_url};
  }catch{
   await db.update(billingCheckouts).set({status:'failed',activeSlot:null,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,id));
@@ -89,10 +91,10 @@ export async function verifyCheckout(row:Checkout,credentials:Credentials):Promi
  const payment=unwrap(paymentRaw);
  if(payment.id!==paymentId||payment.merchant!==merchant||payment.status!=='SUCCESS'||payment.transaction_type!=='PAIEMENT'||payment.flow_direction!=='INBOUND'||xofAmount(payment.requested_amount)!==plan.price||payment.currency!=='XOF')throw Error('Règlement non confirmé.');
  if(row.mode!=='live'){
-  await getDb().batch([
-   getDb().update(billingCheckouts).set({status:'test_paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,row.id)),
-   getDb().update(subscriptionRequests).set({status:'test_paid'}).where(eq(subscriptionRequests.id,row.id)),
-  ]);return 'test_paid';
+  await getDb().transaction(async tx=>{
+   await tx.update(billingCheckouts).set({status:'test_paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,row.id));
+   await tx.update(subscriptionRequests).set({status:'test_paid'}).where(eq(subscriptionRequests.id,row.id));
+  });return 'test_paid';
  }
  await applyVerifiedPayment(row,paymentId);return 'active';
 }

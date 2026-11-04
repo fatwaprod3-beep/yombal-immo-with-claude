@@ -7,7 +7,7 @@
 1. Ouvrir /administration, connecté avec le compte Yombal dont l’e-mail est YOMBAL_ADMIN_EMAIL, puis saisir le mot de passe administrateur.
 2. Dans Connecter SasPay, coller la clé API complète reçue dans le tableau de bord SasPay. La portée Encaissement suffit ; aucun retrait n’est effectué par cette intégration.
 3. Vérifier et connecter effectue uniquement une lecture authentifiée de la liste des sessions. Une clé refusée ne remplace pas l’ancienne configuration.
-4. La clé est chiffrée par AES-GCM, avec une clé dérivée par HKDF du secret serveur existant et une séparation de domaine. Elle reste en base (Turso), hors Git, et n’est jamais renvoyée au navigateur. Ne pas la transmettre dans le chat. Une rotation du secret maître d’administration exige de reconfigurer ces identifiants.
+4. La clé est chiffrée par AES-GCM, avec une clé dérivée par HKDF du secret serveur existant et une séparation de domaine. Elle reste en base (Supabase), hors Git, et n’est jamais renvoyée au navigateur. Ne pas la transmettre dans le chat. Une rotation du secret maître d’administration exige de reconfigurer ces identifiants.
 5. Une clé sk_test_ est identifiée comme test. Ses transactions peuvent être confirmées, mais ne donnent jamais un abonnement réel. Utiliser une clé sk_live_ pour les encaissements réels.
 
 ## Offres et sessions liées au compte

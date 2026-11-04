@@ -10,7 +10,7 @@ Version : voir [VERSION](VERSION) et [le journal des versions](docs/versions.md)
 | --- | --- |
 | Application | Next.js (App Router), React, Tailwind |
 | Hébergement | Vercel |
-| Base de données | Turso (libSQL, compatible SQLite) via Drizzle ORM |
+| Base de données | Supabase (PostgreSQL) via Drizzle ORM |
 | Fichiers privés | Vercel Blob |
 | Connexion | Comptes Yombal (e-mail + mot de passe) |
 | Paiements | SasPay (clé saisie dans `/administration`, chiffrée en base) |
@@ -19,15 +19,15 @@ Aucune dépendance à ChatGPT, Sites ou Cloudflare.
 
 ## Mise en ligne sur Vercel (une seule fois)
 
-1. **Base de données Turso**
-   - Créez un compte sur https://turso.tech puis une base `yombal` (région la plus proche, par ex. Europe).
-   - Notez son **URL** (`libsql://…`) et créez un **jeton** (Database → Create token).
+1. **Base de données Supabase**
+   - Sur https://supabase.com, créez un projet dédié **yombal-immo** (région Europe).
+   - *Project Settings → Database → Connection string* : copiez l’URL **Transaction pooler** (port 6543) et l’URL **Session/Direct** (port 5432), avec le mot de passe de la base.
 2. **Projet Vercel**
    - Sur https://vercel.com : *Add New → Project*, importez le dépôt GitHub de Yombal (ou ouvrez le projet `yombal-immo` existant et reliez-le au dépôt dans *Settings → Git*).
    - Framework : **Next.js** (détecté automatiquement). Ne changez pas les commandes.
 3. **Stockage des fichiers** : dans le projet Vercel, onglet *Storage → Create → Blob*, puis reliez-le au projet. La variable `BLOB_READ_WRITE_TOKEN` est ajoutée automatiquement.
 4. **Variables d’environnement** (*Settings → Environment Variables*), voir [.env.example](.env.example) :
-   - `TURSO_DATABASE_URL` et `TURSO_AUTH_TOKEN` (étape 1)
+   - `DATABASE_URL` (pooler, port 6543) et `DATABASE_URL_DIRECT` (port 5432) — étape 1
    - `AUTH_SECRET` : une longue valeur aléatoire (64 caractères), par ex. générée sur https://generate-secret.vercel.app/64
    - `YOMBAL_ADMIN_EMAIL` : l’e-mail de **votre** compte Yombal (propriétaire)
    - `YOMBAL_ADMIN_PASSWORD_HASH`, `YOMBAL_ADMIN_PASSWORD_SALT`, `YOMBAL_ADMIN_SESSION_SECRET` : générés par `npm run admin:password -- "votre-mot-de-passe-admin"`
@@ -49,7 +49,7 @@ Détails : [docs/saspay-integration.md](docs/saspay-integration.md).
 
 ```bash
 npm install
-cp .env.example .env.local   # sans Turso, une base locale local.db est utilisée
+cp .env.example .env.local   # renseignez DATABASE_URL (Supabase)
 npm run db:migrate
 npm run dev
 ```

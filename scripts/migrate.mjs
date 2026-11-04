@@ -1,15 +1,15 @@
-// Applique les migrations Drizzle (dossier drizzle/) à la base Turso.
-// Lancé automatiquement avant chaque build Vercel.
-import { createClient } from '@libsql/client';
-import { drizzle } from 'drizzle-orm/libsql';
-import { migrate } from 'drizzle-orm/libsql/migrator';
+// Applique les migrations (dossier drizzle/) à la base Supabase avant chaque build.
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
-const url = process.env.TURSO_DATABASE_URL || (process.env.VERCEL ? '' : 'file:local.db');
+// Les migrations passent de préférence par la connexion directe (sans pooler).
+const url = process.env.DATABASE_URL_DIRECT || process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
 if (!url) {
-  console.warn('⚠ TURSO_DATABASE_URL manquant : migrations ignorées. Ajoutez la base Turso dans Vercel puis redéployez.');
+  console.warn('⚠ DATABASE_URL manquant : migrations ignorées. Ajoutez la base Supabase puis redéployez.');
   process.exit(0);
 }
-const client = createClient({ url, authToken: process.env.TURSO_AUTH_TOKEN });
+const client = postgres(url, { prepare: false, max: 1 });
 await migrate(drizzle(client), { migrationsFolder: 'drizzle' });
-client.close();
+await client.end();
 console.log('Base de données à jour.');

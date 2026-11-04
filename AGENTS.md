@@ -2,7 +2,7 @@
 
 - Projet Next.js standard, hébergé sur Vercel, sans dépendance à ChatGPT, Sites ou Cloudflare.
 - Dépôt GitHub : compte `fatwaprod3-beep`. Chaque livraison est poussée sur GitHub ; Vercel déploie automatiquement la branche `main`.
-- Données : Turso (libSQL). Fichiers : Vercel Blob. Connexion : comptes Yombal (e-mail + mot de passe).
+- Données : Supabase (PostgreSQL). Fichiers : Vercel Blob. Connexion : comptes Yombal (e-mail + mot de passe).
 - Ne jamais mettre de secret, de clé SasPay, de jeton ou de donnée utilisateur dans le dépôt. Les secrets vont dans les variables d’environnement Vercel (voir `.env.example`).
 
 ## Ordre de livraison

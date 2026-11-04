@@ -4,7 +4,7 @@
 | --- | --- |
 | Code source | GitHub, compte `fatwaprod3-beep` |
 | Hébergement | Vercel, projet `yombal-immo` (équipe `tes-9ce1`) |
-| Base de données | Turso (libSQL), variables `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` |
+| Base de données | Supabase (PostgreSQL), projet dédié `yombal-immo`, variables `DATABASE_URL` / `DATABASE_URL_DIRECT` |
 | Fichiers privés | Vercel Blob, variable `BLOB_READ_WRITE_TOKEN` |
 | Connexion | Comptes Yombal, variable `AUTH_SECRET` |
 
@@ -16,9 +16,10 @@ Modification ciblée → vérifications → numéro de version et journal → pu
 
 ## Base de données
 
-- `npm run db:generate` crée une migration après modification de `db/schema.ts`. La migration `0005_yombal_users` a été écrite à la main : avant la prochaine génération, lancez `npx drizzle-kit generate` une fois et vérifiez qu’aucune table `yombal_users` en double n’est proposée.
+- Après modification de `db/schema.ts`, `npm run db:generate` crée une migration dans `drizzle/`.
 - Les migrations s’appliquent automatiquement au build (`scripts/migrate.mjs`).
-- Sauvegardes : Turso conserve un historique ; un export peut être fait avec `turso db shell yombal .dump`.
+- La sécurité au niveau des lignes (RLS) est activée sur toutes les tables : seules les routes serveur de Yombal y accèdent.
+- Sauvegardes : tableau de bord Supabase → *Database → Backups*.
 
 ## Retours arrière
 
