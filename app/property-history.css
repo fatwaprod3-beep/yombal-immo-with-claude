@@ -1,0 +1,28 @@
+.property-history-dialog[open]{display:flex;flex-direction:column;width:min(1080px,calc(100vw - 40px));max-width:1080px;max-height:88dvh;overflow:hidden}
+.property-history-dialog>.dialog-header,.property-history-dialog>.dialog-footer{flex-shrink:0;position:static}
+.property-history-tabs{display:flex;flex-wrap:wrap;gap:5px;padding:12px 20px;background:#f1eaf7;border-bottom:1px solid #e7dcef;flex-shrink:0}
+.property-history-tabs>button{flex:1;min-height:38px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:550;color:#8b6a9c;white-space:nowrap}
+.property-history-tabs>button.active{background:#fff;color:#513360;box-shadow:0 2px 5px #321a4210}
+.property-history-body{padding:23px;min-height:0;overflow:auto;overscroll-behavior:contain}
+.property-history-body>h3,.property-history-block>h3{font-size:15px;color:#50335f;margin:0 0 15px}
+.property-history-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.property-history-stats>div{padding:15px;background:#faf7fc;border:1px solid #e9dff0;border-radius:11px;min-width:0}
+.property-history-stats small{display:block;font-size:11px;color:#8b729b;line-height:1.5}.property-history-stats strong{display:block;font-size:22px;color:#50375d;margin-top:10px;overflow-wrap:anywhere;letter-spacing:-.4px}
+.property-history-stats>.has-arrears{background:#fff3f1;border-color:#f1d4d0}.property-history-stats>.has-arrears strong{color:#b35447}
+.property-history-note{font-size:11px;color:#9b85a6;line-height:1.7;margin:13px 0 21px}
+.property-history-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0;padding:18px 0;border-top:1px solid #eee5f4;border-bottom:1px solid #eee5f4}
+.property-history-facts dt{font-size:11px;color:#9d88a8;margin-bottom:7px}.property-history-facts dd{margin:0;font-size:13px;color:#644973;line-height:1.5;overflow-wrap:anywhere}.property-history-facts dd small{display:block;font-size:11px;color:#9d88a8;margin-top:4px}
+.property-history-block{margin-top:24px}.property-history-block>p{font-size:12px;color:#8b7398;line-height:1.8;white-space:pre-line}
+.property-history-list>div,.property-current-units>div{display:flex;align-items:center;gap:16px;padding:15px 0;border-bottom:1px solid #eee6f4;min-width:0}
+.property-history-list>div:last-child,.property-current-units>div:last-child{border-bottom:0}
+.property-history-list>div>div{flex:1;min-width:0}.property-history-list strong,.property-current-units strong{display:block;font-size:13px;color:#61416f;line-height:1.5;overflow-wrap:anywhere}.property-history-list small{display:block;font-size:11px;color:#9c86a7;line-height:1.6;margin-top:5px;overflow-wrap:anywhere}.property-history-list b{font-size:14px;font-weight:600;overflow-wrap:anywhere;max-width:30%;text-align:right}
+.property-history-list .button{font-size:11px;min-height:34px}.property-history-list .text-button{font-size:11px}.property-current-units>div>strong{flex:1}.property-current-units>div>span:not(.badge){font-size:12px;color:#977da4;flex:1;overflow-wrap:anywhere}
+.property-occupant-history{display:grid;gap:13px}.property-occupant-history>article{padding:16px;border:1px solid #e9dff0;border-radius:11px;background:#fcfafe}
+.property-occupant-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}.property-occupant-heading>button{text-align:left;min-width:0}.property-occupant-heading strong{display:block;font-size:14px;color:#5c3d6e;overflow-wrap:anywhere}.property-occupant-heading small{display:block;font-size:11px;color:#9c83a8;margin-top:5px}
+.property-lease-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0;font-size:12px;color:#9c87a7}.property-lease-facts b{font-weight:550;color:#735784}.property-occupant-history .text-button{font-size:11px}
+.property-history-empty{padding:15px 0;font-size:12px;color:#9a83a7;line-height:1.7}
+@media(max-width:850px){
+ .property-history-dialog .dialog-header h2{font-size:17px}.property-history-tabs{padding:9px 12px;gap:5px}.property-history-tabs>button{flex:1 1 40%;font-size:12px;min-height:38px}
+ .property-history-body{padding:16px}.property-history-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.property-history-stats strong{font-size:20px}.property-history-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+ .property-history-list>div{flex-wrap:wrap;gap:10px}.property-history-list>div>div{flex-basis:60%}.property-history-list .button{margin-left:auto}.property-current-units>div{flex-wrap:wrap;gap:9px}.property-current-units>div>strong{flex-basis:100%}.property-lease-facts{grid-template-columns:minmax(0,1fr)}
+}

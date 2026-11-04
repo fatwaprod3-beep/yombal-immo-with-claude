@@ -1,0 +1,39 @@
+/* A compact calendar and fewer settings sections on computers. */
+@media(min-width:851px){
+ .desktop-settings-form .settings-profile-columns{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:start}
+ .settings-profile-identity{min-width:0}.settings-profile-identity .image-field-top{gap:14px;align-items:flex-start}.settings-profile-identity .image-field-preview{width:80px;min-width:80px}
+ .settings-profile-identity .image-field-description>strong{font-size:13px}.settings-profile-identity .image-field-description>small{font-size:10px;line-height:1.6}.settings-profile-identity .image-field-description .button{font-size:11px;padding:8px 10px;min-height:34px}
+ .settings-profile-role{border-top:1px solid #eee7f3;padding-top:20px;margin-top:22px}.settings-profile-role .panel-heading{padding:0;margin:0 0 12px}.settings-profile-role h3{font-size:13px}.settings-profile-role .panel-heading p{font-size:11px;line-height:1.6;color:#957fa0;margin-top:6px}
+ .settings-profile-role .profile-choices{grid-template-columns:minmax(0,1fr);gap:9px;margin:0}.settings-profile-role .profile-choices button{padding:13px;gap:7px}.settings-profile-role .profile-choices button>svg:first-child{width:20px;height:20px}.settings-profile-role .profile-choices strong{font-size:12px}.settings-profile-role .profile-choices span{font-size:11px}
+ .settings-preferences-data{border-top:1px solid #eee6f3;margin-top:22px;padding-top:22px}
+ .settings-change-status{flex:1;font-size:12px;color:#95829f;min-width:160px}.desktop-settings-form .button:disabled{opacity:.45;cursor:default;box-shadow:none}
+ .calendar-page .agenda-layout{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:22px;align-items:start}
+ .calendar-page .agenda-layout>.panel{min-width:0;height:auto;align-self:start;margin:0}
+ .calendar-page .calendar-heading{display:grid;grid-template-columns:34px minmax(0,210px) 34px;gap:9px;align-items:center;justify-content:center;padding:18px 15px 12px}
+ .calendar-page .calendar-heading>.date-control{width:100%;max-width:210px}.calendar-page .calendar-heading .date-control input{font-size:14px}.calendar-page .calendar-heading>.icon-button{width:34px;height:36px}
+ .calendar-page .calendar-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:0 16px;font-size:12px;color:#8b7698;text-align:center}
+ .calendar-page .calendar-dates.agenda-dates{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:10px 16px}
+ .calendar-page .calendar-dates.agenda-dates>button{aspect-ratio:auto;min-height:38px;height:38px;border-radius:9px;font-size:13px;display:flex;align-items:center;justify-content:center;position:relative;padding:4px}
+ .calendar-page .agenda-dates>button:hover{background:#f3eaf9}.calendar-page .agenda-dates>button.selected{background:#efe3f6;border-color:#b69bc9;color:#5d3a75}.calendar-page .agenda-dates>button.today{font-weight:700}
+ .calendar-page .calendar-event-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px}
+ .calendar-page .calendar-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:2px 17px 8px}.calendar-page .calendar-footer .text-button{font-size:12px;min-height:34px}
+ .calendar-page .calendar-key{display:flex;flex-direction:column;gap:7px;padding:0 18px 18px;font-size:11px;color:#9783a2}.calendar-page .calendar-key small{font-size:11px}
+ .calendar-page .agenda-layout>.panel>.panel-heading{padding:18px 20px 13px;margin:0}.calendar-page .agenda-layout .panel-heading h3{font-size:16px}.calendar-page .agenda-layout .panel-heading p{font-size:12px;color:#8b7698}
+ .agenda-list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px 12px}.agenda-list-toolbar .filter-tabs button{font-size:12px;min-height:34px;padding:8px 12px}.agenda-list-toolbar>small{font-size:11px;color:#8e779b;white-space:nowrap}
+ .calendar-page .agenda-items{padding:0 18px 12px;max-height:none;overflow:visible}
+ .calendar-page .agenda-item.agenda-event{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:13px;padding:12px 0;min-height:80px;margin:0}
+ .calendar-page .agenda-item>.agenda-date{margin:0;width:40px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:9px}
+ .calendar-page .agenda-date>strong{font-size:15px}.calendar-page .agenda-date>small{font-size:10px;margin-top:3px}
+ .calendar-page .agenda-event-info{min-width:0}.calendar-page .agenda-event-info>strong{font-size:13px;line-height:1.5}.calendar-page .agenda-event-info>small{font-size:11px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.calendar-page .agenda-event-info .badge{font-size:10px;min-height:24px;padding:4px 7px;margin-top:7px}
+ .calendar-page .agenda-event-actions{display:flex;align-items:center;gap:8px}.calendar-page .agenda-event-actions .icon-button{width:30px;height:32px}.calendar-page .agenda-event>.button{font-size:11px;min-height:32px;padding:8px 11px}
+ .agenda-pagination{border-top:1px solid #eee7f3;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 18px 15px}.agenda-pagination>small{font-size:11px;color:#8d779b}.agenda-pagination .button{font-size:11px;min-height:33px}
+ .desktop-property-actions .record-menu>div{min-width:190px}
+ .property-quick-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:17px 0}
+ .property-quick-facts dt{font-size:11px;color:#8b7497;margin-bottom:6px}.property-quick-facts dd{font-size:12px;line-height:1.5;color:#5b406a;font-weight:550;margin:0;overflow-wrap:anywhere}
+ .property-quick-facts .danger-text{color:#b6444f}.property-quick-description{font-size:12px;color:#8d7999;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:14px}
+}
+@media(min-width:851px) and (max-width:1150px){
+ .calendar-page .agenda-layout{grid-template-columns:minmax(0,1fr)}.calendar-page .agenda-layout>.panel:first-child{width:100%;max-width:380px;justify-self:center}
+ .desktop-settings-form .settings-profile-columns{grid-template-columns:210px minmax(0,1fr);gap:20px}.settings-profile-identity .image-field-top{flex-direction:column}.settings-profile-identity .image-field-description>small{margin-bottom:8px}
+ .property-quick-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

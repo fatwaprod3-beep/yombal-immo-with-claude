@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {runtime,resetDb,request} from './helpers/server-runtime.mjs';
+const {POST,DELETE}=await import('../app/api/admin/session/route.ts');
+const {passwordDigest,verifyAdminToken}=await import('../lib/admin-crypto.ts');
+const password='test-password-never-configured';
+async function setup(){resetDb();runtime.config={email:'owner@example.test',salt:'unit-test-salt',hash:await passwordDigest(password,'unit-test-salt'),secret:'unit-test-secret'};}
+const send=(body={email:'owner@example.test',password})=>POST(request('/api/admin/session',body));
+test('only the authenticated owner can use the private login and same origin is required',async()=>{await setup();runtime.isOwner=false;assert.equal((await send()).status,403);runtime.isOwner=true;runtime.user=null;assert.equal((await send()).status,403);runtime.user={userId:'test-user',email:'owner@example.test'};assert.equal((await POST(request('/api/admin/session',{email:'owner@example.test',password},'https://attacker.example'))).status,403);});
+test('correct credentials issue a secure owner-bound expiring cookie and wrong credentials do not',async()=>{await setup();assert.equal((await send({email:'owner@example.test',password:'wrong'})).status,401);const r=await send();assert.equal(r.status,200);const cookie=r.headers.get('Set-Cookie');for(const value of ['HttpOnly','Secure','SameSite=Strict','Max-Age=14400','Path=/'])assert(cookie.includes(value));const token=cookie.match(/^[^=]+=([^;]+)/)[1];assert(await verifyAdminToken(token,'test-user',runtime.config.secret));assert(!await verifyAdminToken(token,'another-user',runtime.config.secret));});
+test('five attempts are persisted and excess requests are throttled before password verification',async()=>{await setup();for(let i=0;i<5;i++)assert.equal((await send({email:'owner@example.test',password:'wrong'})).status,401);const locked=await send();assert.equal(locked.status,429);assert.equal(locked.headers.get('Retry-After'),'900');runtime.sqlite.prepare('UPDATE yombal_admin_attempts SET window_at=?').run(Date.now()-16*60*1000);assert.equal((await send()).status,200);});
+test('missing server secrets fail closed and logout clears the cookie',async()=>{await setup();runtime.config.secret='';assert.equal((await send()).status,503);const r=await DELETE(new Request('https://yombal.example/api/admin/session',{method:'DELETE',headers:{Origin:'https://yombal.example'}}));assert.equal(r.status,200);assert(r.headers.get('Set-Cookie').includes('Max-Age=0'));});

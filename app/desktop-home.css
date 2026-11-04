@@ -1,0 +1,21 @@
+/* Desktop dashboard alignment. Mobile keeps its existing layout. */
+@media(min-width:851px){
+ .overview-page>.overview-late{display:flex;width:100%;min-width:0;min-height:60px;margin:0 0 20px;padding:14px 18px}
+ .overview-page>.overview-late>span{min-width:0;flex:1}
+ .overview-page>.overview-late>svg{flex-shrink:0}
+ .overview-desktop-details{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;min-width:0}
+ .overview-desktop-details>.overview-owners{width:100%;min-height:64px;margin:0;padding:13px 18px}
+ .overview-desktop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:stretch;min-width:0}
+ .overview-desktop-grid>.panel{min-width:0;height:100%;margin:0}
+ .overview-desktop-grid>.panel>.panel-heading{min-height:78px;display:flex;align-items:center;margin:0}
+ .overview-desktop-grid>.overview-reminders{display:flex;flex-direction:column}
+ .overview-desktop-grid>.overview-reminders>.reminder-list,.overview-desktop-grid>.overview-reminders>.calm-state{flex:1}
+ .overview-desktop-grid .reminder-add{margin-top:12px}
+ .overview-desktop-grid .mini-property>span:nth-child(2),.overview-desktop-grid .activity>div{min-width:0;flex:1}
+ .overview-desktop-grid .mini-property strong,.overview-desktop-grid .activity strong{overflow-wrap:anywhere}
+ .overview-desktop-grid .mini-status,.overview-desktop-grid .activity>b{flex-shrink:0}
+}
+@media(min-width:851px) and (max-width:1279px){
+ .overview-desktop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .overview-desktop-grid>.panel:last-child{grid-column:1/-1}
+}

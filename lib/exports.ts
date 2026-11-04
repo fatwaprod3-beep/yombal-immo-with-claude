@@ -1,0 +1,36 @@
+import {openDocument as openPreparedDocument} from './client-document';
+import {ownerStatementHtml} from './owner-account';
+import { invoiceHtml,invoiceSnapshot } from './invoices';
+import { type State, type Payment, type Property, type Lease, money, dateLabel, monthLabel, paidFor, balanceFor, totals,paymentAllocations } from './model';
+const escape = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+export function download(name: string, data: string, type = 'text/plain;charset=utf-8') { const url = URL.createObjectURL(new Blob([data], { type })); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+export function csv(name: string, rows: unknown[][]) { const cell = (v: unknown) => { let text = String(v ?? ''); if (/^[=+\-@\t\r]/.test(text)) text = "'" + text; return '"' + text.replace(/"/g, '""') + '"'; }; download(name, '\ufeff' + rows.map(row => row.map(cell).join(';')).join('\r\n'), 'text/csv;charset=utf-8'); }
+export function parseCsv(source: string): string[][] {
+  const text = source.replace(/^\ufeff/, ''); const delimiter = (text.split('\n')[0].match(/;/g) || []).length >= (text.split('\n')[0].match(/,/g) || []).length ? ';' : ',';
+  const rows: string[][] = []; let row: string[] = [], field = '', quoted = false;
+  for (let i = 0; i < text.length; i++) { const c = text[i]; if (c === '"') { if (quoted && text[i + 1] === '"') { field += '"'; i++; } else quoted = !quoted; } else if (c === delimiter && !quoted) { row.push(field); field = ''; } else if ((c === '\n' || c === '\r') && !quoted) { if (c === '\r' && text[i + 1] === '\n') i++; row.push(field); if (row.some(v => v.trim())) rows.push(row); row = []; field = ''; } else field += c; }
+  if (quoted) throw new Error('Une cellule entre guillemets n’est pas fermée.'); row.push(field); if (row.some(v => v.trim())) rows.push(row); return rows;
+}
+function openDocument(title: string, body: string, issuer: string) {
+  const win = window.open('', '_blank'); if (!win) throw new Error('Autorisez l’ouverture de la fenêtre pour imprimer le document.'); win.opener = null;
+  win.document.write('<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>' + escape(title) + '</title><style>body{font:15px/1.6 system-ui;color:#261d30;margin:0;background:#f5f2ee}.sheet{max-width:820px;margin:30px auto;background:white;padding:48px}header{display:flex;justify-content:space-between;gap:24px;border-bottom:3px solid #ee8c77;padding-bottom:24px}.brand{font-weight:750;font-size:25px}small{color:#706777}h1{font-size:27px;margin:32px 0 8px}table{width:100%;border-collapse:collapse;margin:24px 0}td,th{text-align:left;padding:13px 8px;border-bottom:1px solid #e7e1e9}th{font-size:12px;color:#706777}td:last-child,th:last-child{text-align:right}.total{font-size:22px;background:#f7eee9}.buttons{display:flex;gap:12px;margin-bottom:20px}button{padding:12px 20px;border:0;border-radius:8px;background:#291a35;color:white;font:inherit;cursor:pointer}@media print{body{background:white}.sheet{margin:0;padding:20px}.buttons{display:none}tr{break-inside:avoid}}</style></head><body><main class="sheet"><div class="buttons"><button onclick="window.print()">Imprimer / enregistrer en PDF</button></div><header><div><div class="brand">yombal.immo</div><small>La gestion immobilière, simplifiée.</small></div><div>' + escape(issuer) + '</div></header><h1>' + escape(title) + '</h1>' + body + '<p><small>Document établi à partir des paiements et dépenses enregistrés dans votre espace.</small></p></main></body></html>'); win.document.close();
+}
+export function printReceipt(state: State, payment: Payment) { const data=invoiceSnapshot(state,payment.leaseId,payment.period,payment.id,payment.createdAt+'T12:00:00Z');openPreparedDocument(invoiceHtml(data)); }
+export function printReport(state: State, period: string, ownerId = 'all') {
+  if(ownerId!=='all'&&ownerId){const html=ownerStatementHtml(state,ownerId,period),win=window.open('','_blank');if(!win)throw new Error('Autorisez les fenêtres pour ouvrir le relevé.');win.opener=null;win.document.write(html);win.document.close();return;}
+  const properties = state.properties.filter(p => ownerId === 'all' || p.ownerId === ownerId);
+  const leases = state.leases.filter(l => properties.some(p => p.id === l.propertyId));
+  const payments = state.payments.filter(p => p.period === period && leases.some(l => l.id === p.leaseId));
+  const expenses = state.expenses.filter(e => e.date.startsWith(period) && properties.some(p => p.id === e.propertyId) && e.ownerCharge);
+  const received = payments.reduce((sum, p) => sum + p.amount, 0); const fees = paymentAllocations(state).filter(a=>a.payment.period===period&&leases.some(l=>l.id===a.payment.leaseId)).reduce((sum,a)=>sum+a.fee,0); const spent = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const owner = state.owners.find(o => o.id === ownerId);
+  const rows = properties.map(p => { const ls = leases.filter(l => l.propertyId === p.id); const amount = payments.filter(pay => ls.some(l => l.id === pay.leaseId)).reduce((sum, pay) => sum + pay.amount, 0); return '<tr><td>' + escape(p.name) + '</td><td>' + escape(p.city) + '</td><td>' + escape(money(amount)) + '</td></tr>'; }).join('');
+  openDocument('Compte rendu de gestion · ' + monthLabel(period), '<p>' + escape(owner?.name || 'Ensemble du patrimoine') + '</p><table><thead><tr><th>Bien</th><th>Ville</th><th>Loyers enregistrés</th></tr></thead><tbody>' + rows + '</tbody></table><table><tr><td>Loyers encaissés affectés au mois</td><td>' + escape(money(received)) + '</td></tr><tr><td>Commissions sur la part loyer encaissée</td><td>' + escape(money(fees)) + '</td></tr><tr><td>Dépenses à la charge du propriétaire</td><td>' + escape(money(spent)) + '</td></tr><tr class="total"><td>Net de gestion avant reversements</td><td>' + escape(money(received - fees - spent)) + '</td></tr></table><p><small>Charges récupérées incluses dans ce total de gestion ; cautions et locations courtes séparées. Consultez les comptes propriétaires pour les soldes à reverser hors charges et les versements déjà effectués.</small></p>', state.profile.company || state.profile.name || 'Propriétaire');
+}
+export function calendarFile(state: State) {
+  const clean = (v: string) => v.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
+  const events = state.tasks.filter(t => !t.done).map(t => ({ id: t.id, date: t.date, title: t.title }));
+  state.leases.filter(l => l.status === 'active' && l.endDate).forEach(l => events.push({ id: 'lease-' + l.id, date: l.endDate, title: 'Fin du bail · ' + (state.properties.find(p => p.id === l.propertyId)?.name || 'Logement') }));
+  const text = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Yombal.immo//Agenda//FR', ...events.flatMap(e => ['BEGIN:VEVENT', 'UID:' + e.id + '@yombal.immo', 'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''), 'DTSTART;VALUE=DATE:' + e.date.replaceAll('-', ''), 'SUMMARY:' + clean(e.title), 'END:VEVENT']), 'END:VCALENDAR'].join('\r\n');
+  download('yombal-agenda.ics', text, 'text/calendar;charset=utf-8');
+}

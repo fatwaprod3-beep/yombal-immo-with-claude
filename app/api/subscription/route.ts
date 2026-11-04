@@ -1,0 +1,28 @@
+import {getCurrentUser} from '../../auth';
+import {plans} from '../../../lib/billing';
+import {subscriptionFor} from '../../../lib/subscription-server';
+import {paymentCredentials} from '../../../lib/payment-config';
+import {createSasPayCheckout,reconcilePayments} from '../../../lib/subscription-payments';
+
+const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
+export async function GET(request?:Request){
+ const user=await getCurrentUser();if(!user)return json({error:'Connexion nécessaire.'},401);
+ try{
+  const checkoutId=request?new URL(request.url).searchParams.get('commande')||undefined:undefined;
+  const payment=await reconcilePayments(user.userId,checkoutId);
+  return json({subscription:await subscriptionFor(user.userId),payment});
+ }catch{return json({error:'La vérification du paiement n’a pas abouti. Réessayez dans un instant.'},503);}
+}
+export async function POST(request:Request){
+ const user=await getCurrentUser();if(!user)return json({error:'Connectez-vous pour choisir votre abonnement.'},401);
+ if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return json({error:'Origine non autorisée.'},403);
+ try{
+  const raw=await request.text();if(raw.length>1024)return json({error:'Demande trop longue.'},413);
+  const body=JSON.parse(raw) as {planId?:string;action?:string};if(body.action)return json({error:'Cette action est indisponible.'},403);
+  const plan=plans.find(p=>p.id===body.planId);if(!plan)return json({error:'Choisissez une durée valide.'},400);
+  const credentials=await paymentCredentials();
+  if(!credentials)return json({error:'Le paiement automatique n’est pas encore configuré. L’équipe Yombal doit terminer la connexion SasPay.'},503);
+  const checkout=await createSasPayCheckout(user,plan.id,new URL(request.url).origin,credentials);
+  return json({subscription:await subscriptionFor(user.userId),reference:checkout.id,checkoutUrl:checkout.checkoutUrl,amount:plan.price,currency:plan.currency,mode:credentials.mode,message:'Votre accès sera activé après confirmation du paiement par SasPay.'});
+ }catch{return json({error:'Le paiement n’a pas pu être préparé. Réessayez dans un instant.'},503);}
+}

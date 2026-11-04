@@ -1,0 +1,22 @@
+{
+  "project": "yombal-immo",
+  "displayName": "Yombal.immo",
+  "codeVersion": "0.19.0",
+  "github": {
+    "owner": "fatwaprod3-beep",
+    "repository": "le-pact",
+    "state": "awaiting_first_push"
+  },
+  "vercel": {
+    "teamSlug": "tes-9ce1",
+    "projectName": "yombal-immo",
+    "state": "import_github_repository_then_add_environment_variables"
+  },
+  "runtime": {
+    "hosting": "Vercel (Next.js)",
+    "database": "Turso (libSQL, compatible SQLite)",
+    "files": "Vercel Blob",
+    "auth": "Comptes Yombal e-mail + mot de passe"
+  },
+  "secrets": "Aucun secret ne doit figurer dans ce fichier ni dans le dépôt."
+}
