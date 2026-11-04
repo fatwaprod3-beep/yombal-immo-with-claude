@@ -1,6 +1,6 @@
 # Administration privée — Yombal.immo
 
-La page `/administration` est réservée au compte Yombal dont l’e-mail correspond à `YOMBAL_ADMIN_EMAIL`. Après la connexion normale, un second mot de passe administrateur est demandé.
+La page `/administration` est réservée au compte Yombal dont l’e-mail correspond à `YOMBAL_ADMIN_EMAIL`. Après la connexion normale, le mot de passe du compte Yombal propriétaire est redemandé (ou un mot de passe administrateur dédié si `YOMBAL_ADMIN_PASSWORD_HASH` et `YOMBAL_ADMIN_PASSWORD_SALT` sont définis).
 
 Variables Vercel (toutes secrètes), générées avec `npm run admin:password -- "mot-de-passe"` :
 
