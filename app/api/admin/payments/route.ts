@@ -5,12 +5,13 @@ import {getDb} from '../../../../db';
 import {paymentConfig} from '../../../../db/schema';
 import {decryptPaymentSecret,encryptPaymentSecret,newWebhookSecret,readPaymentConfig} from '../../../../lib/payment-config';
 import {checkSasPayKey,SasPayError} from '../../../../lib/saspay';
+import {activateLinkRequest,dismissLinkRequest,pendingLinkRequests} from '../../../../lib/manual-activation';
 
 const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','Pragma':'no-cache'}});
 async function authorized(){const user=await getCurrentUser();return !!user&&await isDevelopmentAdmin(user.userId)&&await hasAdminAccess(user.userId);}
 export async function GET(){
  if(!await authorized())return json({error:'Accès administrateur nécessaire.'},403);
- try{const row=await readPaymentConfig();return json({configured:!!row,mode:row?.mode||null,verifiedAt:row?.verifiedAt||null,lastWebhookAt:row?.lastWebhookAt||null});}
+ try{const row=await readPaymentConfig();return json({configured:!!row,mode:row?.mode||null,verifiedAt:row?.verifiedAt||null,lastWebhookAt:row?.lastWebhookAt||null,requests:await pendingLinkRequests()});}
  catch{return json({error:'La configuration ne peut pas être lue.'},503);}
 }
 export async function POST(request:Request){
@@ -19,7 +20,12 @@ export async function POST(request:Request){
  let stage:'verification'|'configuration'='verification';
  try{
   const raw=await request.text();if(raw.length>4096)return json({error:'Demande trop longue.'},413);
-  const body=JSON.parse(raw) as {action?:string;apiKey?:unknown};
+  const body=JSON.parse(raw) as {action?:string;apiKey?:unknown;id?:unknown};
+  if(body.action==='activate_request'||body.action==='dismiss_request'){
+   const id=typeof body.id==='string'?body.id:'';if(!/^[a-f0-9-]{36}$/.test(id))return json({error:'Demande invalide.'},400);
+   try{if(body.action==='activate_request'){const r=await activateLinkRequest(id);return json({ok:true,expiresAt:r.expiresAt,requests:await pendingLinkRequests()});}await dismissLinkRequest(id);return json({ok:true,requests:await pendingLinkRequests()});}
+   catch(e){return json({error:e instanceof Error?e.message:'Action impossible.'},409);}
+  }
   if(body.action==='webhook_secret'){
    const row=await readPaymentConfig();if(!row)return json({error:'Connectez d’abord votre clé SasPay.'},400);
    return json({webhookSecret:await decryptPaymentSecret(row.webhookSecret,'webhook')});

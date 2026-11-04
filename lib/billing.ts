@@ -4,6 +4,11 @@ export const plans=[
  {id:'annual',name:'Pro annuel',price:25000,currency:'XOF',checkoutUrl:'https://link.saspay.me/jeultha48me',months:12,period:'12 mois',detail:'33 800 F économisés sur un an.'},
 ] as const;
 export type PlanId=typeof plans[number]['id'];
+// Liens de paiement SasPay créés par le propriétaire (utilisés tant que la clé API n’est pas connectée).
+export function isSasPayPaymentLink(value:unknown):value is string {
+ if(typeof value!=='string'||value.length>300)return false;
+ try{const url=new URL(value);return url.protocol==='https:'&&url.hostname==='link.saspay.me'&&!url.port&&!url.username&&!url.password&&/^\/[A-Za-z0-9]+\/?$/.test(url.pathname)&&!url.search&&!url.hash;}catch{return false;}
+}
 export function isSasPayCheckoutUrl(value:unknown):value is string {
  if(typeof value!=='string'||value.length>1000)return false;
  try{const url=new URL(value);return url.protocol==='https:'&&url.hostname==='pay.saspay.me'&&!url.port&&!url.username&&!url.password&&/^\/checkout\/[^/]+\/?$/.test(url.pathname)&&!url.search&&!url.hash;}catch{return false;}

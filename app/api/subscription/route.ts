@@ -1,5 +1,7 @@
 import {getCurrentUser} from '../../auth';
 import {plans} from '../../../lib/billing';
+import {getDb} from '../../../db';
+import {subscriptionRequests} from '../../../db/schema';
 import {subscriptionFor} from '../../../lib/subscription-server';
 import {paymentCredentials} from '../../../lib/payment-config';
 import {createSasPayCheckout,reconcilePayments} from '../../../lib/subscription-payments';
@@ -21,7 +23,13 @@ export async function POST(request:Request){
   const body=JSON.parse(raw) as {planId?:string;action?:string};if(body.action)return json({error:'Cette action est indisponible.'},403);
   const plan=plans.find(p=>p.id===body.planId);if(!plan)return json({error:'Choisissez une durée valide.'},400);
   const credentials=await paymentCredentials();
-  if(!credentials)return json({error:'Le paiement automatique n’est pas encore configuré. L’équipe Yombal doit terminer la connexion SasPay.'},503);
+  if(!credentials){
+   // Clé API pas encore connectée : on enregistre la demande et on envoie vers le lien SasPay de l’offre.
+   // L’accès Pro est alors activé par le propriétaire après vérification du paiement.
+   const id=crypto.randomUUID();
+   await getDb().insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:plan.price,status:'link_pending',createdAt:new Date().toISOString()});
+   return json({subscription:await subscriptionFor(user.userId),reference:id,checkoutUrl:plan.checkoutUrl,amount:plan.price,currency:plan.currency,mode:'link',message:'Après le paiement, votre accès Pro sera activé par l’équipe Yombal.'});
+  }
   const checkout=await createSasPayCheckout(user,plan.id,new URL(request.url).origin,credentials);
   return json({subscription:await subscriptionFor(user.userId),reference:checkout.id,checkoutUrl:checkout.checkoutUrl,amount:plan.price,currency:plan.currency,mode:credentials.mode,message:'Votre accès sera activé après confirmation du paiement par SasPay.'});
  }catch{return json({error:'Le paiement n’a pas pu être préparé. Réessayez dans un instant.'},503);}

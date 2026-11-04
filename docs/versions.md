@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.21.0 — 4 novembre 2026
+
+- Abonnements : tant que la clé API SasPay n’est pas connectée, « Continuer au paiement » enregistre la demande et redirige vers le lien SasPay de l’offre (mensuel, trimestriel, annuel).
+- Administration : liste des demandes faites via ces liens, avec activation de l’accès Pro après vérification du paiement dans SasPay (cumul des durées, une seule activation par demande).
+- Connexion à l’administration avec le mot de passe du compte propriétaire.
+
 ## 0.20.0 — 4 novembre 2026
 
 - Base de données : passage de Turso à Supabase (PostgreSQL), projet dédié. Schéma identique, migration unique `0000_yombal_supabase`, RLS activée sur toutes les tables.
