@@ -6,8 +6,8 @@ import { migrate } from 'drizzle-orm/libsql/migrator';
 
 const url = process.env.TURSO_DATABASE_URL || (process.env.VERCEL ? '' : 'file:local.db');
 if (!url) {
-  console.error('TURSO_DATABASE_URL manquant : ajoutez-le dans Vercel → Settings → Environment Variables.');
-  process.exit(1);
+  console.warn('⚠ TURSO_DATABASE_URL manquant : migrations ignorées. Ajoutez la base Turso dans Vercel puis redéployez.');
+  process.exit(0);
 }
 const client = createClient({ url, authToken: process.env.TURSO_AUTH_TOKEN });
 await migrate(drizzle(client), { migrationsFolder: 'drizzle' });
