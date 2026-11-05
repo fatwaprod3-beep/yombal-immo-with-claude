@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.31.1 — 5 novembre 2026
+
+- Accueil : pendant le chargement de l’espace (quelques secondes après la connexion), les chiffres affichent un squelette animé au lieu de « 0 F », pour ne plus donner l’impression que les données ont disparu.
+
 ## 0.31.0 — 5 novembre 2026
 
 - Factures : trois nouveaux modèles Pro — « Sahel » (sable et terre cuite, titres à empattement), « Atlantique » (bleu marine et turquoise, cartes arrondies), « Ardoise » (anthracite et jaune, typographie affirmée). Neuf modèles au total.

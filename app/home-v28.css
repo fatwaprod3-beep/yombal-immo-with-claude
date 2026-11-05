@@ -91,3 +91,10 @@
 .nav-collapsed .admin-view-tabs{grid-template-columns:1fr}
 .nav-collapsed .admin-view-tabs span,.nav-collapsed .admin-view-link span,.nav-collapsed .admin-view-link svg:last-child{display:none}
 .nav-collapsed .admin-view-link{justify-content:center}
+
+/* Chargement de l'espace : squelettes animés au lieu de chiffres à zéro */
+.space-loading .stat strong,.space-loading .stat small,.space-loading .home-bulletin strong,.space-loading .home-bulletin small{color:transparent!important;border-radius:8px;background:linear-gradient(90deg,#efe9f3 25%,#f8f4fa 50%,#efe9f3 75%);background-size:200% 100%;animation:space-shimmer 1.2s linear infinite}
+.space-loading .stat-progress i{width:0!important}
+.space-loading .overview-analytics,.space-loading .overview-desktop-details{opacity:.45;filter:grayscale(.3);transition:opacity .3s}
+@keyframes space-shimmer{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.space-loading .stat strong{animation:none}}
