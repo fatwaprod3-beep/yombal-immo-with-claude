@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.25.2 — 5 novembre 2026
+
+- Abonnement : un abonnement payé est prioritaire sur l’aperçu administrateur. Le propriétaire abonné voit désormais son espace Pro, sa date de fin, le message de bienvenue et non plus les tarifs.
+
 ## 0.25.1 — 5 novembre 2026
 
 - Correction de typage dans le retour de paiement (compilation de la 0.25.0).
