@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.25.1 — 5 novembre 2026
+
+- Correction de typage dans le retour de paiement (compilation de la 0.25.0).
+
 ## 0.25.0 — 5 novembre 2026
 
 - Abonnés Pro : « Mon abonnement » affiche les avantages Pro, l’offre et la date de fin au lieu des tarifs, avec un bouton « Prolonger mon abonnement ».
