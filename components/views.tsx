@@ -20,15 +20,16 @@ import { Badge, Empty, SectionTitle, Panel, RecordMenu, PropertyArt } from './ui
 export type Actions = {canPro?:boolean;pro?:(feature:import('../lib/billing').ProFeature)=>void;contract:(leaseId?:string)=>void; selectMonth:(month:string)=>void; tenant:(id:string)=>void; add: (entity: Entity, defaults?: Record<string, unknown>) => void; edit: (entity: Entity, item: unknown) => void; remove: (entity: Entity, id: string) => void; go: (page: string) => void; pay: (leaseId: string, period: string) => void; inspect: (property: Property) => void; mutate: (mutation: Mutation) => Promise<boolean>; notice: (message: string) => void; remind: (leaseId: string, period: string) => void; importProperties: () => void };
 type Props = { state: State; period: string; actions: Actions; search?: string };
 export function SmallChart({state,period,actions,simple=false}:{state:State;period:string;actions?:Actions;simple?:boolean}) {return <AnalyticsChart state={state} period={period} actions={actions} simple={simple}/>;}
+// Une fois par ouverture de Yombal (connexion, rechargement), pas à chaque retour sur l’accueil.
+let helloShown=false;
 export function Overview({ state, period, actions }: Props) {
   const [mobileLayout,setMobileLayout]=useState(false);
   // Salutation animée à chaque nouvelle connexion : entrée, 10 secondes, puis sortie ; la page reprend la place.
-  const [hello,setHello]=useState<'in'|'out'|'gone'>('in');
+  const [hello,setHello]=useState<'in'|'out'|'gone'>(()=>helloShown?'gone':'in');
   useEffect(()=>{
     const mobile=window.matchMedia('(max-width:850px)');const update=()=>setMobileLayout(mobile.matches);update();mobile.addEventListener('change',update);
-    let seen=false;try{seen=sessionStorage.getItem('yombal-hello')==='1';}catch{}
-    if(seen){setHello('gone');return()=>mobile.removeEventListener('change',update);}
-    const out=setTimeout(()=>setHello('out'),10000),gone=setTimeout(()=>{setHello('gone');try{sessionStorage.setItem('yombal-hello','1');}catch{}},10700);
+    if(helloShown){setHello('gone');return()=>mobile.removeEventListener('change',update);}
+    const out=setTimeout(()=>setHello('out'),10000),gone=setTimeout(()=>{setHello('gone');},10700);helloShown=true;
     return()=>{clearTimeout(out);clearTimeout(gone);mobile.removeEventListener('change',update);};
   },[]);
   const hour=Number(new Intl.DateTimeFormat('fr-FR',{hour:'numeric',hourCycle:'h23',timeZone:'Africa/Dakar'}).format(new Date()));

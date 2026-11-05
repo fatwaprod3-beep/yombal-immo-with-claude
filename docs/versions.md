@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.29.0 — 5 novembre 2026
+
+- Administration : la vue d’ensemble se charge à nouveau (requête des revenus corrigée : alias SQL réservé « month »). Utilisateurs, sécurité, assistant et contrôles d’urgence sont de nouveau alimentés.
+- Accueil : la salutation animée « Bonjour / Bon après-midi / Bonsoir + prénom » s’affiche à chaque ouverture de Yombal (connexion ou rechargement), puis s’efface après 10 secondes. Elle ne se rejoue pas en revenant sur l’accueil depuis un autre menu.
+- Nouvelle page de présentation publique pour les visiteurs non connectés : présentation, fonctionnalités, étapes, tarifs (prix lus sur SasPay), appel à l’inscription. La démo reste accessible via « Voir la démo ».
+
 ## 0.28.1 — 5 novembre 2026
 
 - Correction de typage de l’action « Offrir Pro » (compilation de la 0.28.0).
