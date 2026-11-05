@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.21.1 — 5 novembre 2026
+
+- Documentation : recherche sur l’automatisation SasPay (`docs/saspay-automatisation.md`) — durées gérées par Yombal, webhooks, deux modes de paiement.
+- Règle de numérotation : chaque commit commence par son numéro de version.
+
 ## 0.21.0 — 4 novembre 2026
 
 - Abonnements : tant que la clé API SasPay n’est pas connectée, « Continuer au paiement » enregistre la demande et redirige vers le lien SasPay de l’offre (mensuel, trimestriel, annuel).

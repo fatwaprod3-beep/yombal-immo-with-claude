@@ -13,6 +13,12 @@
 4. Toute modification du schéma passe par une nouvelle migration dans `drizzle/` ; ne jamais réinitialiser la base.
 5. Pousser sur GitHub, attendre un déploiement Vercel réussi, puis donner le numéro de version et le lien.
 
+## Numérotation des versions
+
+- Chaque enregistrement (commit) commence par son numéro : `v0.21.1 — description`.
+- Le fichier `VERSION`, `package.json` et `docs/versions.md` portent le même numéro.
+- Correction : 0.21.0 → 0.21.1. Nouvelle fonction : 0.21.x → 0.22.0.
+
 ## À préserver
 
 - Le design validé est le premier design simple, prune et corail.
