@@ -1,6 +1,7 @@
 import {getCurrentUser} from '../../../auth';
 import {hasAdminAccess} from '../../../../lib/admin-access';
 import {isDevelopmentAdmin} from '../../../../lib/development-admin';
+import {eq} from 'drizzle-orm';
 import {getDb} from '../../../../db';
 import {paymentConfig} from '../../../../db/schema';
 import {decryptPaymentSecret,encryptPaymentSecret,newWebhookSecret,readPaymentConfig} from '../../../../lib/payment-config';
@@ -29,6 +30,14 @@ export async function POST(request:Request){
   if(body.action==='webhook_secret'){
    const row=await readPaymentConfig();if(!row)return json({error:'Connectez d’abord votre clé SasPay.'},400);
    return json({webhookSecret:await decryptPaymentSecret(row.webhookSecret,'webhook')});
+  }
+  if(body.action==='set_webhook_secret'){
+   // Secret de signature généré par SasPay : on le remplace pour qu’il corresponde exactement.
+   const secret=typeof body.apiKey==='string'?body.apiKey.trim():'';
+   if(secret.length<16||secret.length>300||/\s/.test(secret))return json({error:'Collez le secret de signature complet affiché par SasPay.'},400);
+   const row=await readPaymentConfig();if(!row)return json({error:'Connectez d’abord votre clé SasPay.'},400);
+   await getDb().update(paymentConfig).set({webhookSecret:await encryptPaymentSecret(secret,'webhook'),updatedAt:new Date().toISOString()}).where(eq(paymentConfig.provider,'saspay'));
+   return json({ok:true,message:'Secret SasPay enregistré. Envoyez un événement de test depuis SasPay.'});
   }
   if(body.action!=='save')return json({error:'Action inconnue.'},400);
   const apiKey=typeof body.apiKey==='string'?body.apiKey.trim():'';

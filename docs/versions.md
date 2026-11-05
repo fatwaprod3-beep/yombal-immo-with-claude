@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.22.0 — 5 novembre 2026
+
+- Administration : champ pour coller le secret de signature fourni par SasPay à la création du webhook, et affichage de la date du dernier webhook reçu.
+- Clé API SasPay connectée en mode réel par le propriétaire.
+
 ## 0.21.1 — 5 novembre 2026
 
 - Documentation : recherche sur l’automatisation SasPay (`docs/saspay-automatisation.md`) — durées gérées par Yombal, webhooks, deux modes de paiement.
