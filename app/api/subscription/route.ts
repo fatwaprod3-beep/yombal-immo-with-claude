@@ -34,6 +34,6 @@ export async function POST(request:Request){
    return json({subscription:await subscriptionFor(user.userId),reference:id,checkoutUrl:plan.checkoutUrl,amount:plan.price,currency:plan.currency,mode:'link',message:'Après le paiement, votre accès Pro sera activé par l’équipe Yombal.'});
   }
   const checkout=await createSasPayCheckout(user,plan.id,new URL(request.url).origin,credentials);
-  return json({subscription:await subscriptionFor(user.userId),reference:checkout.id,checkoutUrl:checkout.checkoutUrl,amount:plan.price,currency:plan.currency,mode:credentials.mode,message:'Votre accès sera activé après confirmation du paiement par SasPay.'});
+  return json({subscription:await subscriptionFor(user.userId),reference:checkout.id,checkoutUrl:checkout.checkoutUrl,amount:checkout.amount,currency:plan.currency,mode:credentials.mode,message:'Votre accès sera activé après confirmation du paiement par SasPay.'});
  }catch{return json({error:'Le paiement n’a pas pu être préparé. Réessayez dans un instant.'},503);}
 }

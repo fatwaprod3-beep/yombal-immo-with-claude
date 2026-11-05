@@ -27,12 +27,13 @@ export function unwrap(value:unknown):SasPayObject {
  if(outer.success===false)throw new SasPayError();
  return outer.success===true&&outer.data!==undefined?object(outer.data):outer;
 }
-export async function sasPayRequest(apiKey:string,path:string,body?:SasPayObject):Promise<unknown> {
+export async function sasPayRequest(apiKey:string,path:string,body?:SasPayObject,query?:Record<string,string>):Promise<unknown> {
  if(!path.startsWith('/')||path.includes('..')||path.includes('?')||path.includes('#'))throw new SasPayError();
+ const search=query?'?'+new URLSearchParams(query).toString():'';
  try{
   // Workers rejects redirect:"error" before making any request. Manual mode
   // plus the non-2xx check also prevents sending the key to a redirect target.
-  const response=await fetch(apiOrigin+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+apiKey,Accept:'application/json',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),cache:'no-store',redirect:'manual',signal:AbortSignal.timeout(8000)});
+  const response=await fetch(apiOrigin+path+search,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+apiKey,Accept:'application/json',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),cache:'no-store',redirect:'manual',signal:AbortSignal.timeout(8000)});
   if(!response.ok){
    const failure=httpFailure(response.status);
    // Diagnostic interne : code d’erreur et noms des champs refusés uniquement (aucun secret).

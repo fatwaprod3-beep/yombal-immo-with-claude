@@ -2,6 +2,7 @@ import {and,desc,eq,lt,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {billingCheckouts,billingPayments,subscriptionRequests,subscriptions} from '../db/schema';
 import {findPlan} from './billing';
+import {priceFor} from './saspay-prices';
 import {paymentCredentials} from './payment-config';
 import {object,providerId,sasPayRequest,trustedCheckoutUrl,unwrap,xofAmount} from './saspay';
 
@@ -21,13 +22,13 @@ export function addCalendarMonths(iso:string,months:number){
 // The next expiry is computed inside the same transaction as the
 // unique payment ledger. Concurrent renewals never overwrite one another.
 async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now()){
- const plan=planFor(row.planId);if(row.mode!=='live'||row.currency!=='XOF'||row.amount!==plan.price)throw Error('Règlement incohérent.');
+ const plan=planFor(row.planId);if(row.mode!=='live'||row.currency!=='XOF'||!Number.isSafeInteger(row.amount)||row.amount<100)throw Error('Règlement incohérent.');
  const db=getDb(),now=new Date(at).toISOString();
  const guard=and(eq(billingPayments.providerPaymentId,paymentId),eq(billingPayments.checkoutId,row.id),eq(billingPayments.userId,row.userId),eq(billingPayments.applied,0))!;
  // Transaction PostgreSQL : verrou par compte pour que deux renouvellements simultanés se cumulent.
  await db.transaction(async tx=>{
   await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${'yombal-billing:'+row.userId}))`);
-  await tx.insert(billingPayments).values({providerPaymentId:paymentId,checkoutId:row.id,userId:row.userId,planId:plan.id,amount:plan.price,currency:'XOF',createdAt:now,applied:0}).onConflictDoNothing();
+  await tx.insert(billingPayments).values({providerPaymentId:paymentId,checkoutId:row.id,userId:row.userId,planId:plan.id,amount:row.amount,currency:'XOF',createdAt:now,applied:0}).onConflictDoNothing();
   const pending=(await tx.select().from(billingPayments).where(guard).for('update').limit(1))[0];
   if(!pending)return;
   const current=(await tx.select().from(subscriptions).where(eq(subscriptions.userId,row.userId)).limit(1))[0];
@@ -43,33 +44,33 @@ async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now())
 }
 
 export async function createSasPayCheckout(user:Customer,planId:string,origin:string,credentials:Credentials){
- const db=getDb(),plan=planFor(planId),now=Date.now(),stamp=new Date(now).toISOString(),slot=user.userId+':'+plan.id;
+ const db=getDb(),plan=planFor(planId),price=await priceFor(planId,credentials.apiKey),now=Date.now(),stamp=new Date(now).toISOString(),slot=user.userId+':'+plan.id;
  const previous=(await db.select().from(billingCheckouts).where(eq(billingCheckouts.activeSlot,slot)).limit(1))[0];
  if(previous){
-  if(previous.mode===credentials.mode&&previous.status==='pending'&&Date.parse(previous.expiresAt)>now&&trustedCheckoutUrl(previous.checkoutUrl))return previous;
+  if(previous.mode===credentials.mode&&previous.amount===price&&previous.status==='pending'&&Date.parse(previous.expiresAt)>now&&trustedCheckoutUrl(previous.checkoutUrl))return previous;
   if(previous.status==='creating'&&now-Date.parse(previous.createdAt)<120_000)throw Error('Votre paiement est en cours de préparation. Réessayez dans un instant.');
   await db.update(billingCheckouts).set({activeSlot:null,updatedAt:stamp}).where(and(eq(billingCheckouts.id,previous.id),eq(billingCheckouts.activeSlot,slot)));
  }
  const id=crypto.randomUUID(),expiresAt=new Date(now+24*60*60*1000).toISOString();
- const inserted=await db.insert(billingCheckouts).values({id,userId:user.userId,planId:plan.id,amount:plan.price,currency:'XOF',mode:credentials.mode,status:'creating',activeSlot:slot,createdAt:stamp,updatedAt:stamp,expiresAt}).onConflictDoNothing().returning({id:billingCheckouts.id});
+ const inserted=await db.insert(billingCheckouts).values({id,userId:user.userId,planId:plan.id,amount:price,currency:'XOF',mode:credentials.mode,status:'creating',activeSlot:slot,createdAt:stamp,updatedAt:stamp,expiresAt}).onConflictDoNothing().returning({id:billingCheckouts.id});
  if(!inserted.length)throw Error('Un paiement est déjà en cours de préparation. Réessayez dans un instant.');
  try{
   const session=unwrap(await sasPayRequest(credentials.apiKey,'/checkout-sessions/',{
-   amount:plan.price+'.00',currency:'XOF',customer_email:user.email,customer_name:user.fullName||user.email.split('@')[0],
+   amount:price+'.00',currency:'XOF',customer_email:user.email,customer_name:user.fullName||user.email.split('@')[0],
    description:checkoutDescription(id,plan.id),return_url:origin+'/?paiement=retour&commande='+id,
    metadata:{yombal_checkout_id:id,yombal_plan:plan.id},expires_at:expiresAt,
   }));
   const sessionId=providerId(session.id);
-  if(!sessionId||!trustedCheckoutUrl(session.checkout_url)||xofAmount(session.amount)!==plan.price||session.currency!=='XOF'){
+  if(!sessionId||!trustedCheckoutUrl(session.checkout_url)||xofAmount(session.amount)!==price||session.currency!=='XOF'){
    let checkoutHost='',checkoutPath='';try{const u=new URL(String(session.checkout_url));checkoutHost=u.hostname;checkoutPath=u.pathname.replace(/[A-Za-z0-9_-]{8,}/g,'<id>');}catch{}
    console.warn(JSON.stringify({event:'saspay_checkout_mismatch',idOk:!!sessionId,idType:typeof session.id,idSample:String(session.id??'').replace(/[A-Za-z0-9]/g,'x').slice(0,40),checkoutHost,checkoutPath,amount:String(session.amount??''),currency:String(session.currency??''),keys:Object.keys(session).slice(0,30)}));
    throw Error('Session de paiement incohérente.');
   }
   await db.transaction(async tx=>{
    await tx.update(billingCheckouts).set({providerSessionId:sessionId,checkoutUrl:String(session.checkout_url),status:'pending',updatedAt:stamp}).where(eq(billingCheckouts.id,id));
-   await tx.insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:plan.price,status:'pending',createdAt:stamp});
+   await tx.insert(subscriptionRequests).values({id,userId:user.userId,planId:plan.id,amount:price,status:'pending',createdAt:stamp});
   });
-  return {...inserted[0],checkoutUrl:String(session.checkout_url)};
+  return {...inserted[0],amount:price,checkoutUrl:String(session.checkout_url)};
  }catch(error){
   console.warn(JSON.stringify({event:'saspay_checkout_failed',plan:plan.id,error:error instanceof Error?error.message.slice(0,160):'unknown',code:(error as {code?:string})?.code||null,httpStatus:(error as {httpStatus?:number})?.httpStatus||null,detail:(error as {detail?:string})?.detail||null}));
   await db.update(billingCheckouts).set({status:'failed',activeSlot:null,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,id));
@@ -92,9 +93,9 @@ export async function verifyCheckout(row:Checkout,credentials:Credentials):Promi
  ]);
  const detail=unwrap(detailRaw);
  const metadata=object(detail.metadata),detailTransaction=providerId(detail.transaction)||providerId(object(detail.transaction).id),merchant=providerId(detail.merchant);
- if(detail.id!==sessionId||detail.status!=='PAID'||detailTransaction!==paymentId||!merchant||xofAmount(detail.amount)!==row.amount||detail.currency!==row.currency||metadata.yombal_checkout_id!==row.id||metadata.yombal_plan!==row.planId||row.amount!==plan.price||row.currency!=='XOF')throw Error('Le règlement ne correspond pas à cette offre.');
+ if(detail.id!==sessionId||detail.status!=='PAID'||detailTransaction!==paymentId||!merchant||xofAmount(detail.amount)!==row.amount||detail.currency!==row.currency||metadata.yombal_checkout_id!==row.id||metadata.yombal_plan!==row.planId||row.currency!=='XOF')throw Error('Le règlement ne correspond pas à cette offre.');
  const payment=unwrap(paymentRaw);
- if(payment.id!==paymentId||payment.merchant!==merchant||payment.status!=='SUCCESS'||payment.transaction_type!=='PAIEMENT'||payment.flow_direction!=='INBOUND'||xofAmount(payment.requested_amount)!==plan.price||payment.currency!=='XOF')throw Error('Règlement non confirmé.');
+ if(payment.id!==paymentId||payment.merchant!==merchant||payment.status!=='SUCCESS'||payment.transaction_type!=='PAIEMENT'||payment.flow_direction!=='INBOUND'||xofAmount(payment.requested_amount)!==row.amount||payment.currency!=='XOF')throw Error('Règlement non confirmé.');
  if(row.mode!=='live'){
   await getDb().transaction(async tx=>{
    await tx.update(billingCheckouts).set({status:'test_paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:new Date().toISOString()}).where(eq(billingCheckouts.id,row.id));

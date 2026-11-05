@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.24.0 — 5 novembre 2026
+
+- Prix : les montants des offres sont lus sur les liens de paiement SasPay du propriétaire (slugs rq9ukd8p6j4, b5mk93gecf0, jeultha48me) via `GET /payment-links/`, avec 1 minute de cache. Le prix affiché dans Yombal, la session créée et la vérification du paiement utilisent ce montant. Les prix du code ne servent que de secours.
+- Vérification : le montant payé est comparé au montant enregistré lors de la création de la session.
+- Nouvelle route publique `/api/prices`.
+
 ## 0.23.2 — 5 novembre 2026
 
 - Paiement : accepte le format actuel des liens SasPay (`https://checkout.saspay.me/<slug>`). Les sessions étaient bien créées mais leur lien était refusé par la vérification de sécurité.
