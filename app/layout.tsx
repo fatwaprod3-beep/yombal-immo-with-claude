@@ -13,6 +13,9 @@ import "./desktop-management.css";
 import "./desktop-simplicity.css";
 import "./property-history.css";
 import "./navigation-polish.css";
+import "./admin.css";
+import "./assistant.css";
+import "./home-v28.css";
 export const viewport: Viewport = {
   width: 'device-width', initialScale: 1, viewportFit: 'cover',
   interactiveWidget: 'resizes-content', colorScheme: 'light',

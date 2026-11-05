@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { getDb } from "../db";
 import { users } from "../db/schema";
 import { passwordDigest, sameValue } from "../lib/admin-crypto";
+import { getSetting } from "../lib/app-settings";
 
 // Connexion propre à Yombal : e-mail + mot de passe, session signée en cookie.
 export type AppUser = {
@@ -42,7 +43,7 @@ async function verifySessionToken(token: string, at = Date.now()) {
   const expires = Number(match[2]);
   if (expires <= at) return null;
   const expected = await sign(match[1] + "." + match[2]);
-  return sameValue(expected, match[3]) ? match[1] : null;
+  return sameValue(expected, match[3]) ? { userId: match[1], issuedAt: expires - sessionSeconds * 1000 } : null;
 }
 
 export function sessionCookieHeader(token: string) {
@@ -64,10 +65,17 @@ export async function getCurrentUser(): Promise<AppUser | null> {
   try {
     const token = (await cookies()).get(sessionCookie)?.value;
     if (!token) return null;
-    const userId = await verifySessionToken(token);
-    if (!userId) return null;
-    const row = (await getDb().select().from(users).where(eq(users.id, userId)).limit(1))[0];
-    if (!row) return null;
+    const session = await verifySessionToken(token);
+    if (!session) return null;
+    const row = (await getDb().select().from(users).where(eq(users.id, session.userId)).limit(1))[0];
+    if (!row || row.status !== "active") return null;
+    // Sessions révoquées par l'administration (compte précis ou tous les comptes).
+    const globalAfter = Number((await getSetting("sessions_after")) || 0);
+    if (session.issuedAt < Math.max(Number(row.sessionsAfter || 0), globalAfter)) return null;
+    const now = Date.now();
+    if (!row.lastSeenAt || now - Date.parse(row.lastSeenAt) > 10 * 60 * 1000) {
+      await getDb().update(users).set({ lastSeenAt: new Date(now).toISOString() }).where(eq(users.id, row.id)).catch(() => {});
+    }
     return { userId: row.id, email: row.email, fullName: row.name || null, displayName: row.name || row.email };
   } catch {
     return null;

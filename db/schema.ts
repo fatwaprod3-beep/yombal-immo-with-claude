@@ -33,4 +33,13 @@ export const billingPayments=pgTable('yombal_billing_payments',{
 export const users=pgTable('yombal_users',{
  id:text('id').primaryKey(),email:text('email').notNull().unique(),name:text('name').notNull(),
  passwordHash:text('password_hash').notNull(),passwordSalt:text('password_salt').notNull(),createdAt:text('created_at').notNull(),
+ status:text('status').notNull().default('active'),lastSeenAt:text('last_seen_at'),lastLoginAt:text('last_login_at'),sessionsAfter:bigint('sessions_after',{mode:'number'}).notNull().default(0),
 });
+
+// Journal de sécurité : connexions échouées, blocages, actions administrateur, messages signalés.
+export const securityEvents=pgTable('yombal_security_events',{id:text('id').primaryKey(),kind:text('kind').notNull(),email:text('email'),userId:text('user_id'),ip:text('ip'),userAgent:text('user_agent'),detail:text('detail'),createdAt:text('created_at').notNull()},table=>[index('yombal_security_created').on(table.createdAt)]);
+// Réglages globaux pilotés depuis l'administration (inscriptions, maintenance, assistant…).
+export const appSettings=pgTable('yombal_app_settings',{key:text('key').primaryKey(),value:text('value').notNull(),updatedAt:text('updated_at').notNull()});
+// Assistant IA : conversations et messages conservés pour la modération.
+export const aiConversations=pgTable('yombal_ai_conversations',{id:text('id').primaryKey(),userId:text('user_id').notNull(),title:text('title').notNull(),flagged:integer('flagged').notNull().default(0),flagReason:text('flag_reason'),messageCount:integer('message_count').notNull().default(0),createdAt:text('created_at').notNull(),updatedAt:text('updated_at').notNull()},table=>[index('yombal_ai_conv_user').on(table.userId,table.updatedAt)]);
+export const aiMessages=pgTable('yombal_ai_messages',{id:text('id').primaryKey(),conversationId:text('conversation_id').notNull(),userId:text('user_id').notNull(),role:text('role').notNull(),content:text('content').notNull(),flagged:integer('flagged').notNull().default(0),createdAt:text('created_at').notNull()},table=>[index('yombal_ai_msg_conv').on(table.conversationId,table.createdAt),index('yombal_ai_msg_user').on(table.userId,table.createdAt)]);

@@ -1,5 +1,15 @@
 # Versions de Yombal.immo
 
+## 0.28.0 — 5 novembre 2026
+
+- Accueil : cartes du haut avec liseré de couleur Yombal (vert, corail, prune, sable) et barre d’encaissement verte sous « Loyers encaissés » ; colonne de droite alignée sur la hauteur du graphique (plus d’espace vide) ; espaces du haut resserrés.
+- Salutation animée à chaque nouvelle connexion (Bonjour / Bon après-midi / Bonsoir + prénom) : elle s’efface après 10 secondes et la page reprend la place.
+- Menu : sous-titres « MES LOGEMENTS » / « MA GESTION » supprimés, éléments plus compacts, bouton pour réduire le menu en barre d’icônes ou l’afficher (choix mémorisé).
+- Administration entièrement refaite : vue d’ensemble (inscrits, Pro / gratuits, actifs / inactifs, en ligne, revenus, inscriptions sur 30 jours), utilisateurs (recherche, filtres, fiche détaillée, offrir ou retirer Pro, déconnecter, suspendre / réactiver), sécurité (journal des connexions, échecs, blocages, adresses IP suspectes), contrôles d’urgence (fermer les inscriptions, mode maintenance, couper l’assistant, déconnecter tous les comptes), paiements.
+- Assistant IA pour les clients (bulle « Assistant ») : répond sur Yombal et la gestion locative, connaît les offres et les prix SasPay. Fournisseur au choix (Groq ou Google Gemini gratuits, xAI Grok, OpenAI), clé chiffrée saisie dans l’administration. Historique complet visible par l’administrateur, messages à risque signalés automatiquement, limite de 30 messages par heure.
+- Sécurité : journal des événements, comptes suspendus refusés à la connexion, sessions révocables par compte ou pour tous.
+- Base : migration `0001_admin_assistant` (colonnes de suivi des comptes, tables sécurité, réglages, conversations IA).
+
 ## 0.27.0 — 5 novembre 2026
 
 - Accueil : bulletin simplifié, même forme que l’ancien bandeau, couleurs Yombal douces (rouge clair pour les retards, corail pour les alertes, vert pour les bonnes nouvelles, prune pour les conseils).

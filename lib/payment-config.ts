@@ -11,12 +11,12 @@ async function encryptionKey(){
 }
 const encode=(bytes:Uint8Array)=>btoa(String.fromCharCode(...bytes));
 const decode=(value:string)=>Uint8Array.from(atob(value),c=>c.charCodeAt(0));
-export async function encryptPaymentSecret(value:string,purpose:'api-key'|'webhook'){
+export async function encryptPaymentSecret(value:string,purpose:'api-key'|'webhook'|'ai-key'){
  const iv=crypto.getRandomValues(new Uint8Array(12));
  const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:encoder.encode(purpose)},await encryptionKey(),encoder.encode(value));
  return 'v1.'+encode(iv)+'.'+encode(new Uint8Array(cipher));
 }
-export async function decryptPaymentSecret(value:string,purpose:'api-key'|'webhook'){
+export async function decryptPaymentSecret(value:string,purpose:'api-key'|'webhook'|'ai-key'){
  const [version,iv,cipher,...extra]=value.split('.');if(version!=='v1'||!iv||!cipher||extra.length)throw Error('Configuration chiffrée invalide.');
  const raw=await crypto.subtle.decrypt({name:'AES-GCM',iv:decode(iv),additionalData:encoder.encode(purpose)},await encryptionKey(),decode(cipher));
  return new TextDecoder().decode(raw);

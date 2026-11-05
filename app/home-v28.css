@@ -1,0 +1,67 @@
+/* v0.28 — accueil plus compact, cartes à liseré coloré, menu réductible */
+
+/* Cartes du haut : liseré de couleur + barre d'encaissement */
+.stat{position:relative;overflow:hidden}
+.stat[class*="stat-tone-"]::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--stat-tone,#9a7bb2)}
+.stat-tone-green{--stat-tone:#3d8a62}.stat-tone-coral{--stat-tone:#c86f55}.stat-tone-purple{--stat-tone:#674580}.stat-tone-sand{--stat-tone:#bf9a68}
+.stat-progress{display:block;height:6px;border-radius:99px;background:#eef4f0;overflow:hidden;margin-top:10px}
+.stat-progress i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#3d8a62,#6cbf94);transition:width .6s ease}
+
+/* Salutation : entrée animée, puis sortie après 10 s ; la page reprend la place */
+.hello-v28{overflow:hidden;max-height:120px;animation:hello-v28-in .7s cubic-bezier(.2,.8,.2,1) both}
+.hello-v28 h1{animation:hello-v28-rise .8s .1s cubic-bezier(.2,.8,.2,1) both}
+.hello-v28 .welcome-description{animation:hello-v28-rise .8s .3s cubic-bezier(.2,.8,.2,1) both}
+.hello-v28 .hello-dot{display:inline-block;animation:hello-v28-dot 1.6s .9s ease-in-out 2}
+.hello-v28.out{animation:hello-v28-out .7s ease forwards}
+@keyframes hello-v28-in{from{opacity:0;transform:translateY(-8px)}}
+@keyframes hello-v28-rise{from{opacity:0;transform:translateY(12px)}}
+@keyframes hello-v28-dot{50%{transform:scale(1.6)}}
+@keyframes hello-v28-out{to{opacity:0;max-height:0;transform:translateY(-10px);margin:0}}
+.overview-heading.hello-gone{margin-bottom:16px}
+.overview-heading.hello-gone .overview-tools{margin-left:auto}
+.overview-heading.hello-gone~.stats-grid{animation:hello-v28-settle .5s ease both}
+@keyframes hello-v28-settle{from{transform:translateY(8px);opacity:.6}}
+@media(prefers-reduced-motion:reduce){.hello-v28,.hello-v28 h1,.hello-v28 .welcome-description,.hello-v28 .hello-dot,.overview-heading.hello-gone~.stats-grid{animation:none}.hello-v28.out{display:none}}
+
+@media(min-width:851px){
+ /* Espaces plus serrés en haut et dans le menu */
+ .topbar{height:62px}
+ .main-content{padding-top:12px}
+ .workspace-status{margin-bottom:8px}
+ .overview-heading{margin-bottom:16px}
+ .overview-intro h1{font-size:27px;line-height:1.2}
+ .overview-intro .welcome-description{margin-top:4px}
+ .stats-grid{margin-bottom:16px}
+ .sidebar{padding-top:20px}
+ .sidebar-brand{padding-bottom:14px}
+ .workspace-switch{margin-bottom:12px;padding:9px 10px}
+ .nav-item{min-height:36px;padding-top:8px;padding-bottom:8px;margin:1px 0}
+ .nav-divider{display:block;height:1px;background:#ffffff12;margin:10px 8px}
+ .sidebar-bottom{padding-top:10px}
+ .profile-button{padding-top:10px;padding-bottom:10px}
+
+ /* Accueil : la colonne de droite s'aligne sur la hauteur du graphique */
+ .is-home .overview-analytics{align-items:stretch}
+ .is-home .overview-analytics>.portfolio-statistics{display:flex;flex-direction:column;gap:16px}
+ .is-home .overview-analytics>.portfolio-statistics>.panel{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+ .is-home .overview-analytics>.portfolio-statistics>.panel>.donut-layout{margin-top:auto;margin-bottom:auto}
+
+ /* Menu réductible : rail d'icônes */
+ .sidebar-toggle{position:fixed;top:30px;left:235px;z-index:45;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#674580;border:1px solid #e3d8ea;box-shadow:0 4px 14px #21152e26;cursor:pointer;transition:left .22s ease,transform .15s}
+ .sidebar-toggle:hover{transform:scale(1.08)}
+ .sidebar,.main-shell{transition:width .22s ease,margin-left .22s ease,padding .22s ease}
+ .nav-collapsed .sidebar{width:74px;padding-left:12px;padding-right:12px;overflow-x:hidden}
+ .nav-collapsed .main-shell{margin-left:74px}
+ .nav-collapsed .sidebar-toggle{left:61px}
+ .nav-collapsed .brand>span:not(.brand-symbol),.nav-collapsed .nav-item>span,.nav-collapsed .nav-item>small,.nav-collapsed .workspace-switch>span:not(.workspace-icon),.nav-collapsed .workspace-switch>svg,
+ .nav-collapsed .pro-sidebar>span,.nav-collapsed .pro-sidebar>svg:last-child,.nav-collapsed .profile-button>span,.nav-collapsed .profile-button>svg{display:none}
+ .nav-collapsed .sidebar-brand{justify-content:center;padding-left:0;padding-right:0}
+ .nav-collapsed .workspace-switch{justify-content:center;padding:9px 0}
+ .nav-collapsed .nav-item{justify-content:center;padding-left:0;padding-right:0}
+ .nav-collapsed .pro-sidebar{justify-content:center;padding-left:0;padding-right:0}
+ .nav-collapsed .sidebar-tools{grid-template-columns:1fr}
+ .nav-collapsed .sidebar-tools button{font-size:0;justify-content:center;gap:0}
+ .nav-collapsed .profile-button{justify-content:center;padding-left:0;padding-right:0}
+}
+@media(min-width:851px) and (max-width:1250px){.sidebar-toggle{left:212px}}
+@media(max-width:850px){.sidebar-toggle,.nav-divider{display:none}}

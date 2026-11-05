@@ -1,0 +1,26 @@
+/* Assistant Yombal (bulle flottante) */
+.ya-fab{position:fixed;right:22px;bottom:22px;z-index:55;display:flex;align-items:center;gap:8px;padding:12px 16px 12px 14px;border:0;border-radius:99px;background:linear-gradient(135deg,#674580,#8d5f9f 60%,#c86f55);color:#fff;font:inherit;font-size:14px;font-weight:700;box-shadow:0 12px 30px #4a2d5e55;cursor:pointer;transition:transform .15s}
+.ya-fab:hover{transform:translateY(-2px)}
+.ya-panel{position:fixed;right:22px;bottom:22px;z-index:70;width:min(390px,calc(100vw - 24px));height:min(600px,calc(100dvh - 44px));display:flex;flex-direction:column;background:#fff;border:1px solid #e9e0ef;border-radius:22px;box-shadow:0 24px 70px #21152e40;overflow:hidden;animation:ya-in .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes ya-in{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.ya-panel header{display:flex;align-items:center;gap:11px;padding:14px 14px 14px 16px;background:linear-gradient(120deg,#2c1d38,#674580);color:#fff}
+.ya-panel header>div{flex:1}.ya-panel header strong{display:block;font-size:15px}.ya-panel header small{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#e4d6ee}
+.ya-panel header small i{width:7px;height:7px;border-radius:50%;background:#6cdf9c}
+.ya-panel header button{width:32px;height:32px;border:0;border-radius:10px;background:#ffffff1c;color:#fff;display:grid;place-items:center;cursor:pointer}
+.ya-avatar{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#9a6fb3,#e08a6a)}
+.ya-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#faf8fb}
+.ya-msg{max-width:86%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.55}.ya-msg p{margin:0;white-space:pre-wrap}
+.ya-msg.bot{align-self:flex-start;background:#fff;border:1px solid #eee6f3;border-bottom-left-radius:5px;color:#2f2039}
+.ya-msg.me{align-self:flex-end;background:#674580;color:#fff;border-bottom-right-radius:5px}
+.ya-msg.typing{display:flex;gap:4px;padding:13px 15px}.ya-msg.typing span{width:7px;height:7px;border-radius:50%;background:#b9a4c9;animation:ya-dot 1s infinite}
+.ya-msg.typing span:nth-child(2){animation-delay:.15s}.ya-msg.typing span:nth-child(3){animation-delay:.3s}
+@keyframes ya-dot{50%{transform:translateY(-4px);opacity:.5}}
+.ya-suggest{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.ya-suggest button{align-self:flex-start;text-align:left;border:1px solid #e3d6ec;background:#fff;color:#5b3d70;border-radius:12px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer}.ya-suggest button:hover{background:#f6f0fa}
+.ya-empty{margin:auto;text-align:center;color:#8a7795;display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px}.ya-empty strong{color:#2f2039}.ya-empty p{margin:0;font-size:13px;line-height:1.6}
+.ya-error{margin:0;padding:9px 12px;border-radius:11px;background:#fff3f1;color:#a64a3e;font-size:13px}
+.ya-input{display:flex;align-items:flex-end;gap:8px;padding:10px 12px;border-top:1px solid #f0e9f4;background:#fff}
+.ya-input textarea{flex:1;resize:none;border:1px solid #e3d8ea;border-radius:14px;padding:10px 12px;font:inherit;font-size:14px;max-height:110px;outline:0}.ya-input textarea:focus{border-color:#9a6fb3}
+.ya-input button{width:40px;height:40px;border:0;border-radius:12px;background:#674580;color:#fff;display:grid;place-items:center;cursor:pointer}.ya-input button:disabled{opacity:.45;cursor:default}
+.ya-foot{display:block;padding:0 14px 10px;background:#fff;font-size:10.5px;color:#a392ad;text-align:center}
+@media(max-width:850px){.ya-fab{right:14px;bottom:calc(84px + env(safe-area-inset-bottom));padding:12px}.ya-fab span{display:none}.ya-panel{right:0;bottom:0;width:100vw;height:100dvh;border-radius:0}}
