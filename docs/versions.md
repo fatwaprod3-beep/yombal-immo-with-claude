@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.24.1 — 5 novembre 2026
+
+- Paiement réel validé de bout en bout (200 F, Pro mensuel) : session SasPay, webhook `transaction.success` signé reçu, paiement enregistré une seule fois, abonnement prolongé d’un mois calendaire à la suite de l’accès existant.
+- Mode test sans connexion désactivé (`YOMBAL_TEST_MODE=0`) : les fonctions Pro demandent un compte et un abonnement.
+
 ## 0.24.0 — 5 novembre 2026
 
 - Prix : les montants des offres sont lus sur les liens de paiement SasPay du propriétaire (slugs rq9ukd8p6j4, b5mk93gecf0, jeultha48me) via `GET /payment-links/`, avec 1 minute de cache. Le prix affiché dans Yombal, la session créée et la vérification du paiement utilisent ce montant. Les prix du code ne servent que de secours.
