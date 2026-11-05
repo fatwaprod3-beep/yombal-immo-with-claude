@@ -64,12 +64,27 @@ DOCUMENTATION OFFICIELLE
 ${knowledge()}`;
 }
 
-export async function askModel(config:{provider:AiProvider;model:string;apiKey:string},messages:{role:'system'|'user'|'assistant';content:string}[]){
+// Modèles de secours si celui choisi n’est pas accessible avec la clé (droits du projet, modèle retiré…).
+const fallbackModels:Record<AiProvider,string[]>={groq:['llama-3.3-70b-versatile','openai/gpt-oss-120b','openai/gpt-oss-20b','llama-3.1-8b-instant'],gemini:['gemini-2.0-flash','gemini-2.5-flash','gemini-1.5-flash'],xai:['grok-3-mini','grok-3'],openai:['gpt-4o-mini','gpt-4.1-mini']};
+const workingModel=new Map<string,string>();
+async function callModel(config:{provider:AiProvider;apiKey:string},model:string,messages:{role:'system'|'user'|'assistant';content:string}[]){
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),25000);
  try{
-  const r=await fetch(aiProviders[config.provider].base+'/chat/completions',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+config.apiKey},body:JSON.stringify({model:config.model,messages,temperature:0.4,max_tokens:700})});
+  const r=await fetch(aiProviders[config.provider].base+'/chat/completions',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json',Authorization:'Bearer '+config.apiKey},body:JSON.stringify({model,messages,temperature:0.4,max_tokens:900})});
   const data=await r.json().catch(()=>({})) as {choices?:{message?:{content?:string}}[];error?:{message?:string}};
-  if(!r.ok){console.error('assistant_provider_error',r.status,(data.error?.message||'').slice(0,200));throw Error(r.status===401?'Clé de l’assistant invalide.':r.status===429?'L’assistant est très sollicité. Réessayez dans une minute.':'L’assistant ne répond pas pour le moment.');}
-  const text=data.choices?.[0]?.message?.content?.trim();if(!text)throw Error('Réponse vide de l’assistant.');return text.slice(0,4000);
+  return {status:r.status,ok:r.ok,text:data.choices?.[0]?.message?.content?.trim()||'',error:(data.error?.message||'').slice(0,200)};
  }finally{clearTimeout(timer);}
+}
+export async function askModel(config:{provider:AiProvider;model:string;apiKey:string},messages:{role:'system'|'user'|'assistant';content:string}[]){
+ const cacheKey=config.provider+':'+config.apiKey.slice(-6);
+ const order=[workingModel.get(cacheKey),config.model,...fallbackModels[config.provider]].filter((m,i,a):m is string=>!!m&&a.indexOf(m)===i);
+ let last={status:0,error:''};
+ for(const model of order){
+  const r=await callModel(config,model,messages);
+  if(r.ok&&r.text){workingModel.set(cacheKey,model);return r.text.slice(0,4000);}
+  last=r;console.error('assistant_provider_error',r.status,model,r.error);
+  if(r.status===401||r.status===429)break;
+  if(r.ok||(r.status!==404&&r.status!==400&&r.status!==403))break;
+ }
+ throw Error(last.status===401?'Clé de l’assistant invalide.':last.status===429?'L’assistant est très sollicité. Réessayez dans une minute.':'L’assistant ne répond pas pour le moment.');
 }

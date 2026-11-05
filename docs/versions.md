@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.30.1 — 5 novembre 2026
+
+- Assistant IA : si le modèle choisi n’est pas accessible avec la clé (droits du projet Groq, modèle retiré), l’assistant essaie automatiquement d’autres modèles gratuits (gpt-oss-120b, gpt-oss-20b, llama-3.1-8b) et retient celui qui fonctionne.
+
 ## 0.30.0 — 5 novembre 2026
 
 - Accueil : « Votre espace est synchronisé » retiré (les alertes de connexion restent affichées si besoin). Salutation « Bonjour / Bon après-midi / Bonsoir + prénom » permanente, animée à l’arrivée, alignée sur la même ligne que le mois et « Ajouter un bien ».
