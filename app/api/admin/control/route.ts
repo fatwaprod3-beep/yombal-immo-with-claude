@@ -46,6 +46,7 @@ export async function POST(request:Request){
   if(a.action==='activate'){await db.update(users).set({status:'active'}).where(eq(users.id,target.id));await audit(`Compte réactivé : ${target.email}`);return adminJson({ok:true,message:'Compte réactivé.'});}
   if(a.action==='logout_user'){await db.update(users).set({sessionsAfter:Date.now()}).where(eq(users.id,target.id));await audit(`Sessions fermées : ${target.email}`);return adminJson({ok:true,message:'Toutes les sessions de ce compte sont fermées.'});}
   if(a.action==='revoke_pro'){await db.update(subscriptions).set({status:'expired',expiresAt:now.toISOString(),updatedAt:now.toISOString()}).where(eq(subscriptions.userId,target.id));await audit(`Pro retiré : ${target.email}`);return adminJson({ok:true,message:'Accès Pro retiré.'});}
+  if(a.action!=='grant_pro')return adminJson({error:'Action invalide.'},400);
   // grant_pro : s'ajoute à la date de fin actuelle si l'abonnement est encore actif.
   const sub=(await db.select().from(subscriptions).where(eq(subscriptions.userId,target.id)).limit(1))[0];
   const base=sub&&sub.status==='active'&&sub.expiresAt&&new Date(sub.expiresAt)>now?new Date(sub.expiresAt):now;

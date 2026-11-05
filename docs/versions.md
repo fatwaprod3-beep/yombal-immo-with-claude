@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.28.1 — 5 novembre 2026
+
+- Correction de typage de l’action « Offrir Pro » (compilation de la 0.28.0).
+
 ## 0.28.0 — 5 novembre 2026
 
 - Accueil : cartes du haut avec liseré de couleur Yombal (vert, corail, prune, sable) et barre d’encaissement verte sous « Loyers encaissés » ; colonne de droite alignée sur la hauteur du graphique (plus d’espace vide) ; espaces du haut resserrés.
