@@ -4,6 +4,10 @@ export const plans=[
  {id:'annual',name:'Pro annuel',price:25000,currency:'XOF',checkoutUrl:'https://link.saspay.me/jeultha48me',months:12,period:'12 mois',detail:'33 800 F économisés sur un an.'},
 ] as const;
 export type PlanId=typeof plans[number]['id'];
+// Offre réservée au compte propriétaire pour tester un vrai paiement SasPay à petit prix.
+export const testPlan={id:'test',name:'Test propriétaire',price:200,currency:'XOF',checkoutUrl:'',months:1,period:'1 mois',detail:'Paiement de contrôle.'} as const;
+export type AnyPlan=typeof plans[number]|typeof testPlan;
+export const findPlan=(id:unknown):AnyPlan|undefined=>id==='test'?testPlan:plans.find(p=>p.id===id);
 // Liens de paiement SasPay créés par le propriétaire (utilisés tant que la clé API n’est pas connectée).
 export function isSasPayPaymentLink(value:unknown):value is string {
  if(typeof value!=='string'||value.length>300)return false;

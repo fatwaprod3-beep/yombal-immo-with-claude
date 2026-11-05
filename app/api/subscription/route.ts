@@ -1,5 +1,6 @@
 import {getCurrentUser} from '../../auth';
-import {plans} from '../../../lib/billing';
+import {findPlan} from '../../../lib/billing';
+import {isDevelopmentAdmin} from '../../../lib/development-admin';
 import {getDb} from '../../../db';
 import {subscriptionRequests} from '../../../db/schema';
 import {subscriptionFor} from '../../../lib/subscription-server';
@@ -21,8 +22,10 @@ export async function POST(request:Request){
  try{
   const raw=await request.text();if(raw.length>1024)return json({error:'Demande trop longue.'},413);
   const body=JSON.parse(raw) as {planId?:string;action?:string};if(body.action)return json({error:'Cette action est indisponible.'},403);
-  const plan=plans.find(p=>p.id===body.planId);if(!plan)return json({error:'Choisissez une durée valide.'},400);
+  const plan=findPlan(body.planId);if(!plan)return json({error:'Choisissez une durée valide.'},400);
+  if(plan.id==='test'&&!await isDevelopmentAdmin(user.userId))return json({error:'Offre réservée au propriétaire.'},403);
   const credentials=await paymentCredentials();
+  if(plan.id==='test'&&!credentials)return json({error:'Connectez d’abord la clé SasPay pour tester un paiement.'},400);
   if(!credentials){
    // Clé API pas encore connectée : on enregistre la demande et on envoie vers le lien SasPay de l’offre.
    // L’accès Pro est alors activé par le propriétaire après vérification du paiement.

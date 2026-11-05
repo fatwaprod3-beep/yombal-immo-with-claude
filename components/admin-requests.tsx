@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 import {Check,LoaderCircle,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
-import {plans} from '../lib/billing';
+import {findPlan} from '../lib/billing';
 import {money} from '../lib/model';
 
 type Request={id:string;planId:string;amount:number;status:string;createdAt:string;email:string;name:string};
@@ -23,10 +23,10 @@ export default function AdminRequests(){
   {requests===null&&!error&&<p><LoaderCircle className="spin" size={16}/> Chargement…</p>}
   {requests&&!pending.length&&<p>Aucune demande en attente.</p>}
   {pending.map(r=><div key={r.id} style={{display:'flex',flexWrap:'wrap',gap:12,alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderTop:'1px solid #eee'}}>
-   <div><strong>{r.name||r.email}</strong><br/><small>{r.email} · {plans.find(p=>p.id===r.planId)?.name||r.planId} · {money(r.amount)} · {new Date(r.createdAt).toLocaleString('fr-FR')}</small></div>
+   <div><strong>{r.name||r.email}</strong><br/><small>{r.email} · {findPlan(r.planId)?.name||r.planId} · {money(r.amount)} · {new Date(r.createdAt).toLocaleString('fr-FR')}</small></div>
    <div style={{display:'flex',gap:8}}><button type="button" className="button primary" disabled={!!busy} onClick={()=>void act(r.id,'activate_request')}>{busy===r.id?<LoaderCircle className="spin" size={16}/>:<Check size={16}/>}Activer Pro</button><button type="button" className="button secondary" disabled={!!busy} onClick={()=>void act(r.id,'dismiss_request')} aria-label="Retirer la demande"><X size={16}/></button></div>
   </div>)}
-  {done.length>0&&<details style={{marginTop:12}}><summary>Derniers accès activés</summary>{done.map(r=><p key={r.id}><small>{r.email} · {plans.find(p=>p.id===r.planId)?.name} · {new Date(r.createdAt).toLocaleDateString('fr-FR')}</small></p>)}</details>}
+  {done.length>0&&<details style={{marginTop:12}}><summary>Derniers accès activés</summary>{done.map(r=><p key={r.id}><small>{r.email} · {findPlan(r.planId)?.name} · {new Date(r.createdAt).toLocaleDateString('fr-FR')}</small></p>)}</details>}
   {message&&<p className="form-success" role="status">{message}</p>}{error&&<p className="form-error" role="alert">{error}</p>}
  </section>;
 }

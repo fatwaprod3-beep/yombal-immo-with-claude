@@ -1,7 +1,7 @@
 import {and,desc,eq,lt,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {billingCheckouts,billingPayments,subscriptionRequests,subscriptions} from '../db/schema';
-import {plans,type PlanId} from './billing';
+import {findPlan} from './billing';
 import {paymentCredentials} from './payment-config';
 import {object,providerId,sasPayRequest,trustedCheckoutUrl,unwrap,xofAmount} from './saspay';
 
@@ -9,8 +9,8 @@ type Checkout=typeof billingCheckouts.$inferSelect;
 type Credentials=NonNullable<Awaited<ReturnType<typeof paymentCredentials>>>;
 type Customer={userId:string;email:string;fullName:string|null};
 export type PaymentCheck={state:'idle'|'pending'|'active'|'test_paid';checked:number};
-const planFor=(id:string)=>{const plan=plans.find(p=>p.id===id);if(!plan)throw Error('Offre inconnue.');return plan;};
-export const checkoutDescription=(id:string,planId:PlanId)=>'Yombal '+planFor(planId).name+' [YOMBAL:'+id+']';
+const planFor=(id:string)=>{const plan=findPlan(id);if(!plan)throw Error('Offre inconnue.');return plan;};
+export const checkoutDescription=(id:string,planId:string)=>'Yombal '+planFor(planId).name+' [YOMBAL:'+id+']';
 
 export function addCalendarMonths(iso:string,months:number){
  const date=new Date(iso);if(!Number.isFinite(date.valueOf())||!Number.isInteger(months)||months<1)throw Error('Durée invalide.');
@@ -42,7 +42,7 @@ async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now())
  if(!ledger||ledger.checkoutId!==row.id||ledger.userId!==row.userId||ledger.applied!==1)throw Error('Règlement déjà associé ou incomplet.');
 }
 
-export async function createSasPayCheckout(user:Customer,planId:PlanId,origin:string,credentials:Credentials){
+export async function createSasPayCheckout(user:Customer,planId:string,origin:string,credentials:Credentials){
  const db=getDb(),plan=planFor(planId),now=Date.now(),stamp=new Date(now).toISOString(),slot=user.userId+':'+plan.id;
  const previous=(await db.select().from(billingCheckouts).where(eq(billingCheckouts.activeSlot,slot)).limit(1))[0];
  if(previous){

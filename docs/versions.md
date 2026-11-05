@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.23.0 — 5 novembre 2026
+
+- Paiement : la page SasPay s’ouvre dans un nouvel onglet ; Yombal reste ouvert avec le bouton « Actualiser mon accès ».
+- Administration : bouton « Payer 200 F pour tester », réservé au compte propriétaire, pour vérifier toute la chaîne (SasPay, webhook, activation Pro 1 mois).
+
 ## 0.22.1 — 5 novembre 2026
 
 - Webhook SasPay : journal de diagnostic (reçu, signature refusée, rapproché, erreur), sans secret ni données de paiement.

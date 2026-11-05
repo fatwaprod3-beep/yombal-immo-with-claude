@@ -1,7 +1,7 @@
 import {and,desc,eq,inArray,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {subscriptionRequests,subscriptions,users} from '../db/schema';
-import {plans} from './billing';
+import {findPlan} from './billing';
 import {addCalendarMonths} from './subscription-payments';
 
 // Demandes faites via les liens SasPay partagés : le propriétaire vérifie le paiement
@@ -19,7 +19,7 @@ export async function activateLinkRequest(id:string){
  return db.transaction(async tx=>{
   const request=(await tx.select().from(subscriptionRequests).where(and(eq(subscriptionRequests.id,id),eq(subscriptionRequests.status,'link_pending'))).for('update').limit(1))[0];
   if(!request)throw Error('Demande introuvable ou déjà activée.');
-  const plan=plans.find(p=>p.id===request.planId);if(!plan)throw Error('Offre inconnue.');
+  const plan=findPlan(request.planId);if(!plan)throw Error('Offre inconnue.');
   await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${'yombal-billing:'+request.userId}))`);
   const current=(await tx.select().from(subscriptions).where(eq(subscriptions.userId,request.userId)).limit(1))[0];
   const base=current&&current.status==='active'&&current.expiresAt&&Date.parse(current.expiresAt)>Date.now()?current.expiresAt:now;
