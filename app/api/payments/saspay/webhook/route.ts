@@ -11,14 +11,15 @@ export async function POST(request:Request){
  try{
   if(Number(request.headers.get('content-length')||0)>65536)return json({error:'Requête trop longue.'},413);
   const raw=await request.text();if(new TextEncoder().encode(raw).length>65536)return json({error:'Requête trop longue.'},413);
-  const credentials=await paymentCredentials();if(!credentials)return json({error:'Configuration manquante.'},503);
-  if(!await validSasPaySignature(raw,request.headers,credentials.webhookSecret))return json({error:'Signature invalide.'},401);
+  const credentials=await paymentCredentials();if(!credentials){console.warn(JSON.stringify({event:'saspay_webhook',result:'no_config'}));return json({error:'Configuration manquante.'},503);}
+  if(!await validSasPaySignature(raw,request.headers,credentials.webhookSecret)){console.warn(JSON.stringify({event:'saspay_webhook',result:'bad_signature',hasSignature:!!request.headers.get('x-webhook-signature'),hasTimestamp:!!request.headers.get('x-webhook-timestamp'),type:request.headers.get('x-webhook-event')}));return json({error:'Signature invalide.'},401);}
   const envelope=object(JSON.parse(raw)),event=envelope.event;
   if(typeof event!=='string'||event!==request.headers.get('x-webhook-event'))return json({error:'Événement invalide.'},400);
   await getDb().update(paymentConfig).set({lastWebhookAt:new Date().toISOString()}).where(eq(paymentConfig.provider,'saspay'));
+  console.info(JSON.stringify({event:'saspay_webhook',result:'accepted',type:event}));
   if(event!=='transaction.success')return json({received:true,ignored:true});
   const data=object(envelope.data),id=providerId(data.id);
   if(!id||data.status!=='SUCCESS'||data.type!=='PAIEMENT')return json({error:'Transaction invalide.'},400);
-  const result=await reconcileWebhook(id,credentials);return json({received:true,result});
- }catch{return json({error:'Confirmation temporairement indisponible. Réessayez.'},503);}
+  const result=await reconcileWebhook(id,credentials);console.info(JSON.stringify({event:'saspay_webhook',result:'reconciled',outcome:result}));return json({received:true,result});
+ }catch(error){console.warn(JSON.stringify({event:'saspay_webhook',result:'error',message:error instanceof Error?error.message.slice(0,120):'unknown'}));return json({error:'Confirmation temporairement indisponible. Réessayez.'},503);}
 }

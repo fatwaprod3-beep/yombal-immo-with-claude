@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.22.1 — 5 novembre 2026
+
+- Webhook SasPay : journal de diagnostic (reçu, signature refusée, rapproché, erreur), sans secret ni données de paiement.
+
 ## 0.22.0 — 5 novembre 2026
 
 - Administration : champ pour coller le secret de signature fourni par SasPay à la création du webhook, et affichage de la date du dernier webhook reçu.
