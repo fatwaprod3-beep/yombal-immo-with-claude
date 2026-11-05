@@ -47,12 +47,9 @@
  .is-home .overview-analytics>.portfolio-statistics>.panel>.donut-layout{margin-top:auto;margin-bottom:auto}
 
  /* Menu réductible : rail d'icônes */
- .sidebar-toggle{position:fixed;top:30px;left:235px;z-index:45;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#674580;border:1px solid #e3d8ea;box-shadow:0 4px 14px #21152e26;cursor:pointer;transition:left .22s ease,transform .15s}
- .sidebar-toggle:hover{transform:scale(1.08)}
  .sidebar,.main-shell{transition:width .22s ease,margin-left .22s ease,padding .22s ease}
  .nav-collapsed .sidebar{width:74px;padding-left:12px;padding-right:12px;overflow-x:hidden}
  .nav-collapsed .main-shell{margin-left:74px}
- .nav-collapsed .sidebar-toggle{left:61px}
  .nav-collapsed .brand>span:not(.brand-symbol),.nav-collapsed .nav-item>span,.nav-collapsed .nav-item>small,.nav-collapsed .workspace-switch>span:not(.workspace-icon),.nav-collapsed .workspace-switch>svg,
  .nav-collapsed .pro-sidebar>span,.nav-collapsed .pro-sidebar>svg:last-child,.nav-collapsed .profile-button>span,.nav-collapsed .profile-button>svg{display:none}
  .nav-collapsed .sidebar-brand{justify-content:center;padding-left:0;padding-right:0}
@@ -63,5 +60,21 @@
  .nav-collapsed .sidebar-tools button{font-size:0;justify-content:center;gap:0}
  .nav-collapsed .profile-button{justify-content:center;padding-left:0;padding-right:0}
 }
-@media(min-width:851px) and (max-width:1250px){.sidebar-toggle{left:212px}}
-@media(max-width:850px){.sidebar-toggle,.nav-divider{display:none}}
+@media(max-width:850px){.nav-toggle,.nav-divider{display:none}}
+
+/* v0.30 — bouton du menu discret dans la barre du haut */
+.nav-toggle{color:#7d6a88}
+.nav-toggle:hover{color:#674580;background:#f4eef8}
+.nav-collapsed .nav-toggle{color:#674580;background:#f4eef8}
+
+/* Accueil : plus d'indicateur de synchronisation quand tout va bien */
+.main-content.is-home .workspace-status.sync-healthy{display:none}
+
+/* Salutation permanente, alignée avec « Ajouter un bien » */
+@media(min-width:851px){
+ .overview-heading.hello-row{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}
+ .overview-heading.hello-row .overview-intro{min-width:0}
+ .overview-heading.hello-row .overview-intro h1{font-size:28px;letter-spacing:-.8px;margin:0}
+ .overview-heading.hello-row .overview-tools{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+}
+.hello-row .hello-dot{color:#c86f55}

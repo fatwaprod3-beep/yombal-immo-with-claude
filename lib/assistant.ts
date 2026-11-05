@@ -14,7 +14,7 @@ export const aiProviders:Record<AiProvider,{label:string;base:string;model:strin
 };
 export async function assistantConfig(){
  const raw=await getSetting('assistant_config');if(!raw)return null;
- try{const c=JSON.parse(raw) as {provider:AiProvider;model:string;key:string};if(!c.key||!aiProviders[c.provider])return null;return {provider:c.provider,model:c.model||aiProviders[c.provider].model,apiKey:await decryptPaymentSecret(c.key,'ai-key')};}
+ try{const c=JSON.parse(raw) as {provider:AiProvider;model:string;key:string};if(!c.key||!aiProviders[c.provider])return null;return {provider:c.provider,model:(c.model&&/^[\w.:/-]{2,80}$/.test(c.model)?c.model:aiProviders[c.provider].model),apiKey:await decryptPaymentSecret(c.key,'ai-key')};}
  catch{return null;}
 }
 

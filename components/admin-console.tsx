@@ -1,5 +1,5 @@
 'use client';
-import {useCallback,useEffect,useMemo,useState} from 'react';
+import {useCallback,useEffect,useMemo,useState,type CSSProperties} from 'react';
 import Link from 'next/link';
 import {Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
@@ -133,8 +133,8 @@ function AssistantTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?
    <section className="adm-card"><div className="adm-card-h"><div><h3>Configuration</h3><p>L’assistant répond à vos clients depuis le bouton en bas à droite de Yombal.</p></div><span className={'adm-status '+(data.aiConfig.configured&&data.flags.assistant?'g':'r')}><i/>{!data.aiConfig.configured?'Clé manquante':data.flags.assistant?'Actif':'Coupé'}</span></div>
     <form className="adm-form" onSubmit={async e=>{e.preventDefault();setSaving(true);const ok=await act({action:'ai_config',provider,model,...(key.trim()?{apiKey:key.trim()}:{})});if(ok)setKey('');setSaving(false);}}>
      <label><span>Fournisseur</span><select value={provider} onChange={e=>{setProvider(e.target.value);setModel(providers[e.target.value].model);}}>{Object.entries(providers).map(([k,p])=><option key={k} value={k}>{p.label}</option>)}</select></label>
-     <label><span>Modèle</span><input value={model} onChange={e=>setModel(e.target.value)} placeholder={providers[provider]?.model}/></label>
-     <label><span>{data.aiConfig.configured?'Remplacer la clé API (facultatif)':'Clé API'}</span><input type="password" value={key} onChange={e=>setKey(e.target.value)} autoComplete="off" spellCheck={false} placeholder="Collez la clé ici"/></label>
+     <label><span>Modèle</span><input name="ai-model" autoComplete="off" spellCheck={false} value={model} onChange={e=>setModel(e.target.value)} placeholder={providers[provider]?.model}/></label>
+     <label><span>{data.aiConfig.configured?'Remplacer la clé API (facultatif)':'Clé API'}</span><input type="text" name="ai-api-key" data-lpignore="true" data-1p-ignore style={{WebkitTextSecurity:'disc'} as CSSProperties} value={key} onChange={e=>setKey(e.target.value)} autoComplete="off" spellCheck={false} placeholder="Collez la clé ici"/></label>
      <p className="adm-hint">Créez une clé gratuite sur <a href={providers[provider]?.url} target="_blank" rel="noreferrer">{providers[provider]?.url.replace('https://','')}</a>. Elle est chiffrée et n’apparaît jamais dans le code.</p>
      <div className="adm-inline"><button className="adm-btn" type="submit" disabled={saving}>{saving?<LoaderCircle size={15} className="spin"/>:<KeyRound size={15}/>}Enregistrer</button><button type="button" className={'adm-btn '+(data.flags.assistant?'ghost':'green')} onClick={()=>void act({action:'flag',flag:'assistant',value:!data.flags.assistant})}><Power size={15}/>{data.flags.assistant?'Couper l’assistant':'Activer l’assistant'}</button></div>
     </form></section>

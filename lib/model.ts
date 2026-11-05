@@ -2,7 +2,7 @@ import type {Activity} from './activity';
 import type {Asset,AssetMovement,AssetCost} from './inventory';
 import type {RentalContract} from './contracts';
 export type Mode = 'owner' | 'agency';
-export type Profile = { activity?: Activity; name: string; company: string; mode: Mode; city: string; phone: string; email: string; browserAlerts: boolean; configured: boolean; address?: string; signature?: string; paymentInstructions?: string; lateMessage?:string; invoiceTemplate?:'classic'|'studio'|'prestige'|'minimal';image?:string;imageStyle?:'photo'|'logo';ninea?:string;rccm?:string;agencyNumber?:string };
+export type Profile = { activity?: Activity; name: string; company: string; mode: Mode; city: string; phone: string; email: string; browserAlerts: boolean; configured: boolean; address?: string; signature?: string; paymentInstructions?: string; lateMessage?:string; invoiceTemplate?:'classic'|'studio'|'prestige'|'minimal'|'emerald'|'horizon';image?:string;imageStyle?:'photo'|'logo';ninea?:string;rccm?:string;agencyNumber?:string };
 export type Owner = { id: string; name: string; phone: string; email: string;status?:'active'|'inactive' };
 export type Property = { id: string; name: string; type: string; city: string; address: string; rent: number; charges: number; area: number; rooms: number; ownerId: string; description: string; image: string; createdAt: string; availability?:'available'|'occupied'|'reserved';parentId?:string;unitLabel?:string;floor?:string;reference?:string };
 export type Tenant = { id: string; name: string; phone: string; email: string; notes: string; photo?:string; identityNumber?:string };

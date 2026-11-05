@@ -1,5 +1,14 @@
 # Versions de Yombal.immo
 
+## 0.30.0 — 5 novembre 2026
+
+- Accueil : « Votre espace est synchronisé » retiré (les alertes de connexion restent affichées si besoin). Salutation « Bonjour / Bon après-midi / Bonsoir + prénom » permanente, animée à l’arrivée, alignée sur la même ligne que le mois et « Ajouter un bien ».
+- Bulletin d’accueil animé : tous les messages utiles (retards, alertes, échéances, bonnes nouvelles, conseils) défilent un par un toutes les 15 secondes, avec sortie et entrée animées, points de progression et fonds dégradés selon la couleur (rouge, corail, vert, prune).
+- Menu : le bouton rond flottant est remplacé par une icône discrète dans la barre du haut pour masquer ou afficher le menu.
+- Factures : deux nouveaux modèles Pro, « Émeraude » (vert profond, bande latérale) et « Horizon » (dégradé prune et corail).
+- Assistant IA : le champ « Modèle » n’est plus rempli par le navigateur (l’e-mail y était inséré) ; un modèle invalide revient au modèle par défaut. Le champ de clé n’est plus proposé au remplissage automatique.
+- Page de présentation accessible à tous sur /presentation (lien à partager).
+
 ## 0.29.0 — 5 novembre 2026
 
 - Administration : la vue d’ensemble se charge à nouveau (requête des revenus corrigée : alias SQL réservé « month »). Utilisateurs, sécurité, assistant et contrôles d’urgence sont de nouveau alimentés.

@@ -20,17 +20,12 @@ import { Badge, Empty, SectionTitle, Panel, RecordMenu, PropertyArt } from './ui
 export type Actions = {canPro?:boolean;pro?:(feature:import('../lib/billing').ProFeature)=>void;contract:(leaseId?:string)=>void; selectMonth:(month:string)=>void; tenant:(id:string)=>void; add: (entity: Entity, defaults?: Record<string, unknown>) => void; edit: (entity: Entity, item: unknown) => void; remove: (entity: Entity, id: string) => void; go: (page: string) => void; pay: (leaseId: string, period: string) => void; inspect: (property: Property) => void; mutate: (mutation: Mutation) => Promise<boolean>; notice: (message: string) => void; remind: (leaseId: string, period: string) => void; importProperties: () => void };
 type Props = { state: State; period: string; actions: Actions; search?: string };
 export function SmallChart({state,period,actions,simple=false}:{state:State;period:string;actions?:Actions;simple?:boolean}) {return <AnalyticsChart state={state} period={period} actions={actions} simple={simple}/>;}
-// Une fois par ouverture de Yombal (connexion, rechargement), pas à chaque retour sur l’accueil.
-let helloShown=false;
 export function Overview({ state, period, actions }: Props) {
   const [mobileLayout,setMobileLayout]=useState(false);
-  // Salutation animée à chaque nouvelle connexion : entrée, 10 secondes, puis sortie ; la page reprend la place.
-  const [hello,setHello]=useState<'in'|'out'|'gone'>(()=>helloShown?'gone':'in');
+  // Salutation permanente, animée à l’arrivée.
   useEffect(()=>{
     const mobile=window.matchMedia('(max-width:850px)');const update=()=>setMobileLayout(mobile.matches);update();mobile.addEventListener('change',update);
-    if(helloShown){setHello('gone');return()=>mobile.removeEventListener('change',update);}
-    const out=setTimeout(()=>setHello('out'),10000),gone=setTimeout(()=>{setHello('gone');},10700);helloShown=true;
-    return()=>{clearTimeout(out);clearTimeout(gone);mobile.removeEventListener('change',update);};
+    return()=>mobile.removeEventListener('change',update);
   },[]);
   const hour=Number(new Intl.DateTimeFormat('fr-FR',{hour:'numeric',hourCycle:'h23',timeZone:'Africa/Dakar'}).format(new Date()));
   const salute=hour<12?'Bonjour':hour<18?'Bon après-midi':'Bonsoir';
@@ -43,8 +38,8 @@ export function Overview({ state, period, actions }: Props) {
   const propertiesPanel=<Panel title="Un œil sur vos biens" action="Tous les biens" onAction={() => actions.go('biens')}>{state.properties.length ? <div className="mini-properties">{rentalProperties(state).slice(0, 3).map((p, index) => <button className="mini-property" key={p.id} onClick={() => actions.inspect(p)}><span className="mini-art">{p.image ? <PrivateImage src={p.image} alt="" /> : <PropertyArt index={index} type={p.type} />}</span><span><strong>{p.name}</strong><small>{p.city} · {p.type}</small></span><span className={'mini-status ' + propertyStatus(state, p)}>{propertyStatus(state, p) === 'available' ? 'À louer' : propertyStatus(state, p) === 'reserved' ? 'Réservé' : 'Occupé'}</span></button>)}</div> : <Empty title="Votre premier bien vous attend" detail="Ajoutez un logement pour commencer votre suivi." action="Ajouter un bien" onAction={() => actions.add('properties')} />}</Panel>;
   const movementsPanel=<Panel title="Derniers mouvements" action="Paiements" onAction={() => actions.go('loyers')}>{activity.length ? <div className="activity-list">{activity.map(item => <div className="activity" key={item.id}><span className={'activity-icon ' + (item.positive ? 'positive' : '')}>{item.positive ? <ArrowDownLeft size={17} /> : <ArrowUpRight size={17} />}</span><div><strong>{item.title}</strong><small>{item.detail} · {dateLabel(item.date, true)}</small></div><b className={item.positive ? 'positive-text' : ''}>{item.positive ? '+' : '−'}{money(item.amount)}</b></div>)}</div> : <div className="calm-state"><Wallet size={29} /><strong>Les premiers mouvements arrivent ici</strong><p>Enregistrez un loyer ou une dépense.</p></div>}</Panel>;
   return <div className="overview-page">
-    <header className={'overview-heading hello-'+hello}>
-      {hello!=='gone'?<div className={'overview-intro hello-v28 '+hello}><h1>{salute}{state.profile.name ? ', ' + state.profile.name.split(' ')[0] : ''}<span className="hello-dot">.</span></h1><p className="welcome-description">Gardez l’esprit libre. Votre immobilier est ici.</p></div>:<h1 className="sr-only">Tableau de bord</h1>}
+    <header className="overview-heading hello-row">
+      <div className="overview-intro hello-v28"><h1>{salute}{state.profile.name ? ', ' + state.profile.name.split(' ')[0] : ''}<span className="hello-dot">.</span></h1><p className="welcome-description">Gardez l’esprit libre. Votre immobilier est ici.</p></div>
       <div className="overview-tools">
         <div className="overview-period"><DateInput month value={period} onChange={v=>{if(v)actions.selectMonth(v);}} required label="Mois du tableau de bord"/></div>
         <button className="button primary overview-add" onClick={()=>actions.add('properties')}><Plus size={17}/><span>Ajouter un bien</span></button>

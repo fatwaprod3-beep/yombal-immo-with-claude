@@ -49,3 +49,24 @@
 .home-bulletin.tone-success{background:#f0f8f3;border-color:#cfe6d7;color:#357357}.home-bulletin.tone-success small{color:#6f9883}.home-bulletin.tone-success:hover{background:#e6f4eb}
 .home-bulletin.tone-tip{background:#f7f2fa;border-color:#e7dcef;color:#674580}.home-bulletin.tone-tip small{color:#94809f}.home-bulletin.tone-tip:hover{background:#f1e9f7}
 .brand-home{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;display:flex;align-items:center}.brand-home:hover{opacity:.85}
+/* v0.30 — bulletin animé : un message à la fois, rotation toutes les 15 s */
+.home-bulletin-wrap{overflow:hidden;border-radius:16px}
+.home-bulletin.is-entering{animation:bulletin-in .5s cubic-bezier(.2,.8,.2,1) both}
+.home-bulletin.is-leaving{animation:bulletin-out .45s ease forwards}
+@keyframes bulletin-in{from{opacity:0;transform:translateY(14px)}}
+@keyframes bulletin-out{to{opacity:0;transform:translateY(-14px)}}
+.home-bulletin .bulletin-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;flex:0 0 auto;background:#ffffffb3}
+.home-bulletin.tone-danger{background:linear-gradient(100deg,#fdeae6,#fff5f3);border-color:#efc9c2}
+.home-bulletin.tone-warning{background:linear-gradient(100deg,#fdeee5,#fff7f2);border-color:#f0d3c2}
+.home-bulletin.tone-success{background:linear-gradient(100deg,#e3f3e9,#f3faf6);border-color:#c6e2d1}
+.home-bulletin.tone-tip{background:linear-gradient(100deg,#efe5f6,#f9f5fc);border-color:#e1d2ec}
+.bulletin-dots{display:flex;gap:5px;margin-left:auto;flex:0 0 auto}
+.bulletin-dots i{width:6px;height:6px;border-radius:99px;background:currentColor;opacity:.25;transition:width .3s,opacity .3s}
+.bulletin-dots i.on{width:16px;opacity:.7}
+@media(prefers-reduced-motion:reduce){.home-bulletin.is-entering,.home-bulletin.is-leaving{animation:none}}
+.overview-page .home-bulletin-wrap{margin:0 0 18px}
+.overview-summary-stack .home-bulletin-wrap{margin:0}
+.home-bulletin-wrap>.home-bulletin{display:flex;align-items:center;gap:12px;width:100%;min-width:0;min-height:60px;margin:0;padding:12px 16px;text-align:left;border:1px solid;border-radius:16px}
+.home-bulletin-wrap>.home-bulletin>span:nth-child(2){flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.home-bulletin-wrap>.home-bulletin>svg{flex:0 0 auto}
+.home-bulletin-wrap>.home-bulletin strong{font-size:14px}.home-bulletin-wrap>.home-bulletin small{font-size:12.5px}
