@@ -10,3 +10,6 @@
 .emerald .template-miniature>strong{background:#0f5c4a}
 .horizon .template-miniature>i{background:linear-gradient(115deg,#2c1d38,#674580 55%,#c86f55);height:27px;margin:-11px -10px 12px;border:0}
 .horizon .template-miniature>strong{background:#f3dccf}
+.sahel .template-miniature{background:#fffaf3}.sahel .template-miniature>i{border-color:#a4502e}.sahel .template-miniature>strong{background:#a4502e}
+.atlantique .template-miniature{border-top:5px solid #0b2545}.atlantique .template-miniature>i{border-color:#13b5c9}.atlantique .template-miniature>strong{background:#0b2545}
+.ardoise .template-miniature>i{border-color:#e9b949;border-width:3px}.ardoise .template-miniature>strong{background:#22262e}

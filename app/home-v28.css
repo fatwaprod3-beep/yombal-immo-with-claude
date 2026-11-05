@@ -78,3 +78,16 @@
  .overview-heading.hello-row .overview-tools{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
 }
 .hello-row .hello-dot{color:#c86f55}
+
+/* v0.31 — bascule Admin / Client pour le propriétaire */
+.admin-view-switch{display:grid;gap:6px;margin-bottom:10px;padding:8px;border-radius:12px;background:#ffffff0d;border:1px solid #ffffff14}
+.admin-view-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border-radius:9px;background:#00000026}
+.admin-view-tabs button{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 6px;border-radius:7px;font-size:12px;font-weight:650;color:#cbb9d8;transition:background .2s,color .2s}
+.admin-view-tabs button.on{background:#fff;color:#4e335f;box-shadow:0 2px 8px #0000002e}
+.admin-view-tabs button:not(.on):hover{color:#fff}
+.admin-view-link{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;font-size:12px;font-weight:600;color:#f4d4bd}
+.admin-view-link span{flex:1}
+.admin-view-link:hover{background:#ffffff10}
+.nav-collapsed .admin-view-tabs{grid-template-columns:1fr}
+.nav-collapsed .admin-view-tabs span,.nav-collapsed .admin-view-link span,.nav-collapsed .admin-view-link svg:last-child{display:none}
+.nav-collapsed .admin-view-link{justify-content:center}

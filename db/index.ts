@@ -14,7 +14,7 @@ export function getDb() {
   if (db) return db;
   const url = databaseUrl();
   if (!url) throw new Error("Base de données non configurée : définissez DATABASE_URL (Supabase).");
-  const client = postgres(url, { prepare: false, max: 1, idle_timeout: 20, connect_timeout: 10 });
+  const client = postgres(url, { prepare: false, max: 5, idle_timeout: 20, connect_timeout: 10 });
   db = drizzle(client, { schema });
   return db;
 }

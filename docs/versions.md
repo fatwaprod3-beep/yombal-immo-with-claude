@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.31.0 — 5 novembre 2026
+
+- Factures : trois nouveaux modèles Pro — « Sahel » (sable et terre cuite, titres à empattement), « Atlantique » (bleu marine et turquoise, cartes arrondies), « Ardoise » (anthracite et jaune, typographie affirmée). Neuf modèles au total.
+- Propriétaire : bascule « Admin / Client » en bas du menu. En vue Admin, raccourci « Ouvrir l’administration » ; en vue Client, Yombal s’affiche exactement comme pour un client. Choix mémorisé.
+- Performance : jusqu’à 5 connexions simultanées à la base par instance (au lieu d’une seule) pour éviter les chargements bloqués quand plusieurs requêtes arrivent ensemble.
+- Domaine personnalisé yombal-immo.pro (et www) ajouté au projet Vercel.
+
 ## 0.30.1 — 5 novembre 2026
 
 - Assistant IA : si le modèle choisi n’est pas accessible avec la clé (droits du projet Groq, modèle retiré), l’assistant essaie automatiquement d’autres modèles gratuits (gpt-oss-120b, gpt-oss-20b, llama-3.1-8b) et retient celui qui fonctionne.
