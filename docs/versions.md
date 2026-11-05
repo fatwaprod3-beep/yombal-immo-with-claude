@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.23.1 — 5 novembre 2026
+
+- Paiement : diagnostic détaillé quand SasPay refuse la création d’une session (statut HTTP, code et champs refusés, forme de la réponse), sans clé ni secret.
+
 ## 0.23.0 — 5 novembre 2026
 
 - Paiement : la page SasPay s’ouvre dans un nouvel onglet ; Yombal reste ouvert avec le bouton « Actualiser mon accès ».

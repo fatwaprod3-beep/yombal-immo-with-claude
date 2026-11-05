@@ -15,6 +15,7 @@ const failureMessages:Record<SasPayFailure,string>={
  network:'Yombal n’a pas pu joindre SasPay. Réessayez dans un instant ; votre clé n’a pas été modifiée.',
 };
 export class SasPayError extends Error {
+ public detail='';
  constructor(public readonly code:SasPayFailure='invalid_response',public readonly httpStatus?:number){super(failureMessages[code]);this.name='SasPayError';}
 }
 function httpFailure(status:number){return new SasPayError(status===401?'authentication':status===403?'forbidden':status===429?'rate_limit':status>=300&&status<400?'redirect':'upstream',status);}
@@ -32,7 +33,12 @@ export async function sasPayRequest(apiKey:string,path:string,body?:SasPayObject
   // Workers rejects redirect:"error" before making any request. Manual mode
   // plus the non-2xx check also prevents sending the key to a redirect target.
   const response=await fetch(apiOrigin+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+apiKey,Accept:'application/json',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),cache:'no-store',redirect:'manual',signal:AbortSignal.timeout(8000)});
-  if(!response.ok)throw httpFailure(response.status);
+  if(!response.ok){
+   const failure=httpFailure(response.status);
+   // Diagnostic interne : code d’erreur et noms des champs refusés uniquement (aucun secret).
+   try{const body=object(JSON.parse((await response.text()).slice(0,20000)));const err=object(body.error);const fields=Object.keys(object(err.details??err.fields??body.errors??(body.success===false?{}:body)));failure.detail=JSON.stringify({code:typeof body.code==='string'||typeof body.code==='number'?body.code:err.code??null,message:typeof err.message==='string'?err.message.slice(0,200):typeof body.message==='string'?String(body.message).slice(0,200):null,fields:fields.slice(0,12)});}catch{}
+   throw failure;
+  }
   const raw=await response.text();if(raw.length>1_000_000)throw new SasPayError();
   let value:unknown;try{value=JSON.parse(raw);}catch{throw new SasPayError();}
   if(object(value).success===false){const status=object(value).code;throw typeof status==='number'&&status>=400?httpFailure(status):new SasPayError();}return value;
