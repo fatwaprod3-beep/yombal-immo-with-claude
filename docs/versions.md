@@ -1,5 +1,13 @@
 # Versions de Yombal.immo
 
+## 0.25.0 — 5 novembre 2026
+
+- Abonnés Pro : « Mon abonnement » affiche les avantages Pro, l’offre et la date de fin au lieu des tarifs, avec un bouton « Prolonger mon abonnement ».
+- Paiement : nouvel onglet ouvert directement sur une page Yombal de transition (`/paiement`), soignée, qui prépare la session et redirige vers SasPay — plus de page blanche.
+- Retour : après le paiement, SasPay ramène sur Yombal ; l’onglet d’origine détecte aussi l’activation automatiquement (vérification toutes les 6 s).
+- Message de bienvenue Pro : popup de remerciement animé (couronne, avantages, bouton « Commencer avec Pro »), affiché une fois par période payée.
+- Badge de plan à côté du profil : couronne dorée « Pro » ou pousse verte « Gratuit », et couronne sur l’avatar des abonnés.
+
 ## 0.24.1 — 5 novembre 2026
 
 - Paiement réel validé de bout en bout (200 F, Pro mensuel) : session SasPay, webhook `transaction.success` signé reçu, paiement enregistré une seule fois, abonnement prolongé d’un mois calendaire à la suite de l’accès existant.
