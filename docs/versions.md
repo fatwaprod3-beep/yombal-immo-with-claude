@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.23.2 — 5 novembre 2026
+
+- Paiement : accepte le format actuel des liens SasPay (`https://checkout.saspay.me/<slug>`). Les sessions étaient bien créées mais leur lien était refusé par la vérification de sécurité.
+
 ## 0.23.1 — 5 novembre 2026
 
 - Paiement : diagnostic détaillé quand SasPay refuse la création d’une session (statut HTTP, code et champs refusés, forme de la réponse), sans clé ni secret.

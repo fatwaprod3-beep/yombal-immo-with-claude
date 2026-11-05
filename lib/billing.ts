@@ -15,7 +15,10 @@ export function isSasPayPaymentLink(value:unknown):value is string {
 }
 export function isSasPayCheckoutUrl(value:unknown):value is string {
  if(typeof value!=='string'||value.length>1000)return false;
- try{const url=new URL(value);return url.protocol==='https:'&&url.hostname==='pay.saspay.me'&&!url.port&&!url.username&&!url.password&&/^\/checkout\/[^/]+\/?$/.test(url.pathname)&&!url.search&&!url.hash;}catch{return false;}
+ try{const url=new URL(value);if(url.protocol!=='https:'||url.port||url.username||url.password||url.hash)return false;
+  // Format actuel : https://checkout.saspay.me/<slug> ; ancien format : https://pay.saspay.me/checkout/<slug>
+  if(url.hostname==='checkout.saspay.me')return /^\/[A-Za-z0-9_-]+\/?$/.test(url.pathname)&&!url.search;
+  return url.hostname==='pay.saspay.me'&&/^\/checkout\/[^/]+\/?$/.test(url.pathname)&&!url.search;}catch{return false;}
 }
 export type ProFeature='discover'|'reports'|'contracts'|'bulk'|'spaces'|'owners'|'import'|'signature'|'invoiceTemplates'|'properties'|'tenants'|'invoices';
 export const proFeatures:Record<ProFeature,{title:string;description:string}>={
