@@ -43,19 +43,9 @@
  .pro-dialog .pro-plan>small{font-size:10px;grid-column:2;grid-row:2;margin:0;text-align:right}
  .pro-dialog .pro-popular{display:none}
 }
-.home-bulletin{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;width:100%;text-align:left;border-radius:16px;padding:16px 18px;border:1px solid;cursor:pointer;transition:transform .16s,box-shadow .16s}
-.home-bulletin:hover{transform:translateY(-1px);box-shadow:0 8px 22px #2a173a14}
-.home-bulletin::after{content:'';position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;opacity:.35;pointer-events:none}
-.home-bulletin-icon{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;border-radius:13px;color:#fff}
-.home-bulletin-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.home-bulletin-copy em{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
-.home-bulletin-copy strong{font-size:14.5px;line-height:1.35}
-.home-bulletin-copy small{font-size:12px;line-height:1.5;opacity:.85}
-.home-bulletin-bar{display:block;height:6px;border-radius:99px;margin-top:8px;max-width:340px;background:#ffffffaa;overflow:hidden}.home-bulletin-bar>i{display:block;height:100%;border-radius:99px}
-.home-bulletin-cta{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;position:relative;z-index:1}
-.home-bulletin.tone-danger{background:linear-gradient(110deg,#fff1ee,#fff8f6);border-color:#f2cfc8;color:#9b3a2e}.tone-danger .home-bulletin-icon,.tone-danger .home-bulletin-cta{background:#d04a37}.tone-danger::after{background:#f7c9c0}
-.home-bulletin.tone-warning{background:linear-gradient(110deg,#fff6e9,#fffbf4);border-color:#f3dcb4;color:#94601a}.tone-warning .home-bulletin-icon,.tone-warning .home-bulletin-cta{background:#e08a1e}.tone-warning::after{background:#fbe0b5}
-.home-bulletin.tone-success{background:linear-gradient(110deg,#ebf8f0,#f6fcf8);border-color:#cbe8d6;color:#2f7353}.tone-success .home-bulletin-icon,.tone-success .home-bulletin-cta{background:#3d9a6c}.tone-success::after{background:#c7ecd6}.tone-success .home-bulletin-bar>i{background:#3d9a6c}
-.home-bulletin.tone-tip{background:linear-gradient(110deg,#f5eefa,#fff6f0);border-color:#e7daef;color:#5b3d6e}.tone-tip .home-bulletin-icon,.tone-tip .home-bulletin-cta{background:linear-gradient(135deg,#674580,#c86f55)}.tone-tip::after{background:#f1dcef}
-@media(max-width:850px){.home-bulletin{padding:13px 14px;gap:11px;border-radius:14px}.home-bulletin-icon{width:36px;height:36px;border-radius:11px}.home-bulletin-copy strong{font-size:13.5px}.home-bulletin-copy small{display:block!important;font-size:11px}.home-bulletin-cta{padding:7px 10px;font-size:11px}.overview-page>.overview-summary-stack .home-bulletin .home-bulletin-icon{display:grid!important}}
-@media(max-width:480px){.home-bulletin-cta{display:none}.home-bulletin-copy small{-webkit-line-clamp:2;display:-webkit-box!important;-webkit-box-orient:vertical;overflow:hidden}}
+/* Bulletin d’accueil : même forme que l’ancien bandeau, couleurs Yombal douces. */
+.home-bulletin.tone-danger{background:#fff3f1;border-color:#f2d4cf;color:#a64a3e}.home-bulletin.tone-danger small{color:#a2756e}.home-bulletin.tone-danger:hover{background:#fce9e5}
+.home-bulletin.tone-warning{background:#fff6f1;border-color:#f3dccf;color:#a85f45}.home-bulletin.tone-warning small{color:#a88070}.home-bulletin.tone-warning:hover{background:#fdeee6}
+.home-bulletin.tone-success{background:#f0f8f3;border-color:#cfe6d7;color:#357357}.home-bulletin.tone-success small{color:#6f9883}.home-bulletin.tone-success:hover{background:#e6f4eb}
+.home-bulletin.tone-tip{background:#f7f2fa;border-color:#e7dcef;color:#674580}.home-bulletin.tone-tip small{color:#94809f}.home-bulletin.tone-tip:hover{background:#f1e9f7}
+.brand-home{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;display:flex;align-items:center}.brand-home:hover{opacity:.85}

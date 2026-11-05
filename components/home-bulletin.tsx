@@ -1,5 +1,5 @@
 'use client';
-import {CircleAlert,TriangleAlert,PartyPopper,Lightbulb,ArrowRight,TrendingUp} from 'lucide-react';
+import {CircleAlert,TriangleAlert,PartyPopper,Lightbulb,ArrowRight} from 'lucide-react';
 import {type State,type Alert,money,today} from '../lib/model';
 
 // Bandeau d’accueil, toujours présent. Code couleur Yombal :
@@ -29,12 +29,9 @@ export function bulletinFor(state:State,notifications:Alert[],metrics:{expected:
  const day=Math.floor(Date.parse(today()+'T12:00:00Z')/86400000);return {tone:'tip',...tips[day%tips.length]};
 }
 const icons={danger:CircleAlert,warning:TriangleAlert,success:PartyPopper,tip:Lightbulb};
-const labels={danger:'À traiter',warning:'À surveiller',success:'Bonne nouvelle',tip:'Conseil Yombal'};
 export default function HomeBulletin({state,notifications,metrics,go}:{state:State;notifications:Alert[];metrics:{expected:number;collected:number};go:(page:string)=>void}){
  const b=bulletinFor(state,notifications,metrics);const Icon=icons[b.tone];
  return <button type="button" className={'overview-late home-bulletin tone-'+b.tone} onClick={()=>go(b.page)}>
-  <span className="home-bulletin-icon"><Icon size={20}/></span>
-  <span className="home-bulletin-copy"><em>{labels[b.tone]}</em><strong>{b.title}</strong><small>{b.detail}</small>{b.progress!==undefined&&<i className="home-bulletin-bar" aria-hidden="true"><i style={{width:b.progress+'%'}}/></i>}</span>
-  <span className="home-bulletin-cta">{b.tone==='success'&&b.progress!==100?<TrendingUp size={15}/>:null}{b.cta}<ArrowRight size={15}/></span>
+  <Icon size={18}/><span><strong>{b.title}</strong><small>{b.detail}</small></span><ArrowRight size={17}/>
  </button>;
 }

@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.27.0 — 5 novembre 2026
+
+- Accueil : bulletin simplifié, même forme que l’ancien bandeau, couleurs Yombal douces (rouge clair pour les retards, corail pour les alertes, vert pour les bonnes nouvelles, prune pour les conseils).
+- Navigation : le logo ramène à l’accueil.
+- Calendrier : suppression du bouton « Choisir <mois> » ; un clic sur un jour choisit le mois.
+- Analyse : nouvelle analyse approfondie — taux de recouvrement et d’occupation, revenu net du mois avec évolution, cumul annuel, tableau des 12 derniers mois, classement des biens par rentabilité, locataires à relancer, dépenses par catégorie.
+
 ## 0.26.0 — 5 novembre 2026
 
 - Accueil : le bandeau « loyers en retard » devient un bulletin toujours présent, avec le code couleur Yombal — rouge (impayés, retards, urgences), orange (alertes à surveiller, échéances à venir), vert (bonnes nouvelles : loyers encaissés, avec barre de progression), prune (conseil du jour, 7 conseils en rotation). Icône, libellé, message et bouton d’action adaptés.
