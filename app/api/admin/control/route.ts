@@ -5,7 +5,8 @@ import {users,subscriptions} from '../../../../db/schema';
 import {requireAdmin,adminJson} from '../../../../lib/admin-guard';
 import {setSetting,getSetting} from '../../../../lib/app-settings';
 import {logSecurity} from '../../../../lib/security';
-import {encryptPaymentSecret} from '../../../../lib/payment-config';
+import {encryptPaymentSecret,paymentCredentials} from '../../../../lib/payment-config';
+import {sasPayPrices} from '../../../../lib/saspay-prices';
 import {createSessionToken,sessionCookieHeader,hashPassword} from '../../../auth';
 import {aiProviders,type AiProvider} from '../../../../lib/assistant';
 export const dynamic='force-dynamic';
@@ -46,7 +47,8 @@ export async function POST(request:Request){
    const current=JSON.parse(await getSetting('plan_prices')||'{}') as Record<string,number>;
    for(const [k,v] of Object.entries(a.prices)){if(v==null)delete current[k];else current[k]=v;}
    await setSetting('plan_prices',JSON.stringify(current));await audit('Prix modifiés : '+(Object.entries(current).map(([k,v])=>k+'='+v).join(', ')||'prix SasPay'));
-   return adminJson({ok:true,message:Object.keys(current).length?'Nouveaux prix enregistrés. Ils s’appliquent tout de suite aux prochains paiements.':'Les prix suivent à nouveau vos liens SasPay.'});
+   const merged=await sasPayPrices((await paymentCredentials())?.apiKey||null).catch(()=>null);
+   return adminJson({ok:true,message:Object.keys(current).length?'Nouveaux prix enregistrés. Ils s’appliquent tout de suite aux prochains paiements.':'Les prix suivent à nouveau vos liens SasPay.',prices:merged?.prices,source:merged?.source});
   }
   if(a.action==='create_user'){
    if((await db.select({id:users.id}).from(users).where(eq(users.email,a.email)).limit(1))[0])return adminJson({error:'Un compte existe déjà avec cet e-mail.'},409);

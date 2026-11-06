@@ -47,3 +47,9 @@
 .direct-crop-stage{cursor:grab;touch-action:none}.direct-crop-stage:active{cursor:grabbing}
 .crop-controls .crop-rotate{display:inline-flex;align-items:center;gap:6px}
 .crop-zoom-value{font-size:12px;font-weight:700;color:#cdbfd9;min-width:44px;text-align:right}
+.hc-simple{gap:12px}
+.hc-simple-top{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hc-simple .hc-search{flex:1;min-width:220px;box-shadow:none;border:1px solid #e7dcef;padding:10px 14px}
+.hc-simple-actions{display:flex;gap:8px;flex-wrap:wrap}.hc-simple-actions .button{display:inline-flex;gap:6px;align-items:center}
+.hc-simple .hc-panel{padding:14px 18px}.hc-simple .hc-panel h3{font-size:15px;margin-bottom:2px}
+.hc-simple .hc-item button{padding:12px 2px;font-size:14px}

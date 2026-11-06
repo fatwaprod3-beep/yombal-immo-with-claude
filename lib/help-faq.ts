@@ -22,7 +22,7 @@ export const helpTopics:HelpTopic[]=[
  {id:'factures',icon:'invoice',title:'Factures, reçus & contrats',intro:'Des documents professionnels en PDF.',items:[
   ['Créer une facture ou un appel de loyer','Factures & contrats → Ajouter une facture : choisissez le locataire, la situation (à payer, déjà payée, plusieurs mois impayés), vérifiez le récapitulatif puis enregistrez. « Envoyer / télécharger » génère le PDF.'],
   ['Reçu après paiement','Chaque paiement enregistré permet d’éditer un reçu : icône imprimante dans l’historique des paiements, ou « Suivi / reçu ».'],
-  ['Modèles de facture','Paramètres → Factures : Classique (gratuit) et 8 modèles Pro — Studio, Prestige, Essentiel, Émeraude, Horizon, Sahel, Atlantique, Ardoise. L’aperçu se met à jour immédiatement.'],
+  ['Modèles de facture','Paramètres → Factures : Classique et Essentiel (gratuits), plus 7 modèles Pro — Studio, Prestige, Émeraude, Horizon, Sahel, Atlantique, Ardoise. L’aperçu se met à jour immédiatement.'],
   ['Signature, NINEA et RCCM','Ajoutez votre signature (Pro) et vos identifiants légaux dans Paramètres → Profil et Factures ; ils apparaissent sur les documents.'],
  ]},
  {id:'agenda',icon:'calendar',title:'Calendrier & rappels',intro:'Ne plus rien oublier.',items:[
@@ -31,7 +31,7 @@ export const helpTopics:HelpTopic[]=[
  ]},
  {id:'pro',icon:'pro',title:'Abonnement Pro',intro:'Plus de biens, documents illimités, outils avancés.',items:[
   ['Que comprend la version gratuite ?','Par espace : 6 biens ou logements et 7 locataires. Par compte : 3 documents de loyer exportés. Les paiements, rappels et brouillons restent illimités.'],
-  ['Que débloque Pro ?','Biens et locataires illimités, factures et reçus sans quota, 8 modèles de facture, signature, deuxième espace, contrats, rapports avancés, imports et reversements propriétaires. Les fonctions sont identiques en mensuel, trimestriel et annuel.'],
+  ['Que débloque Pro ?','Biens et locataires illimités, factures et reçus sans quota, 7 modèles de facture supplémentaires, signature, deuxième espace, contrats, rapports avancés, imports et reversements propriétaires. Les fonctions sont identiques en mensuel, trimestriel et annuel.'],
   ['Comment payer ?','Bouton « Découvrir Yombal Pro » ou « Abonnement » : choisissez la durée, puis payez sur SasPay (Orange Money, Wave, carte) dans un nouvel onglet. L’accès Pro s’active automatiquement dès la confirmation.'],
   ['Renouvellement','Aucun prélèvement automatique. Pour prolonger, choisissez une nouvelle durée : elle s’ajoute à la suite de votre date de fin actuelle.'],
  ]},

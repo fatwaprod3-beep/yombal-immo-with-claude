@@ -1,0 +1,69 @@
+/* v0.34 — Visite guidée + mobile plus compact (tailles d'application) */
+.tour{position:fixed;inset:0;z-index:2000}
+.tour-dim{position:fixed;inset:0;background:#170e20b3;animation:tour-fade .25s ease both}
+.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px #170e20b3,0 0 0 3px #ffd27a;transition:all .3s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.tour-card{position:fixed;background:#fff;border-radius:18px;padding:16px 16px 14px;box-shadow:0 24px 60px #0000004d;animation:tour-pop .3s cubic-bezier(.2,.8,.2,1) both;transition:top .3s,left .3s}
+.tour-top{display:flex;justify-content:space-between;align-items:center}
+.tour-step{display:inline-flex;gap:5px;align-items:center;padding:4px 9px;border-radius:99px;background:#f4eef8;color:#674580;font-size:11.5px;font-weight:800}
+.tour-x{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;color:#9a879f}.tour-x:hover{background:#f4eef8}
+.tour-card h3{font-size:17px;color:#281b34;margin:10px 0 4px}.tour-card p{font-size:13.5px;line-height:1.55;color:#6f6478;margin:0}
+.tour-dots{display:flex;gap:4px;margin:12px 0}.tour-dots i{width:6px;height:6px;border-radius:99px;background:#e6dcec;transition:width .3s}.tour-dots i.on{width:18px;background:#674580}
+.tour-actions{display:flex;justify-content:space-between;align-items:center;gap:8px}.tour-end{display:flex;gap:8px}
+.tour-prev{display:inline-flex;gap:5px;align-items:center;padding:9px 12px;border-radius:11px;font-size:13px;font-weight:700;color:#6d5a79}.tour-prev:hover{background:#f4eef8}
+.tour-next{display:inline-flex;gap:6px;align-items:center;padding:10px 16px;border-radius:11px;background:#674580;color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 8px 20px #67458040}
+@keyframes tour-fade{from{opacity:0}}@keyframes tour-pop{from{opacity:0;transform:translateY(8px) scale(.97)}}
+
+/* Bandeau d'accueil : sans contour */
+.home-bulletin-wrap>.home-bulletin{border:0!important;box-shadow:none!important}
+
+@media(max-width:850px){
+ /* En-tête : le mois en haut, puis Bonjour + Ajouter un bien sur la même ligne */
+ .overview-heading.hello-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"period period" "intro add";gap:10px 10px;align-items:center;margin-bottom:12px}
+ .overview-heading.hello-row .overview-tools{display:contents}
+ .overview-heading.hello-row .overview-period{grid-area:period;width:100%}
+ .overview-heading.hello-row .overview-intro{grid-area:intro;min-width:0}
+ .overview-heading.hello-row .overview-add{grid-area:add;min-height:38px!important;padding:8px 12px!important;font-size:13px!important;border-radius:11px!important}
+ .overview-heading.hello-row h1{font-size:21px!important;letter-spacing:-.5px;line-height:1.15;margin:0}
+ .overview-heading.hello-row .welcome-description{font-size:12.5px!important;margin-top:2px}
+ /* Cartes de chiffres plus compactes */
+ .stats-grid{gap:8px!important}
+ .stats-grid .stat{padding:11px 12px!important;min-height:0!important;border-radius:14px!important}
+ .stats-grid .stat strong{font-size:19px!important;line-height:1.2!important;margin:6px 0 2px!important}
+ .stats-grid .stat small,.stats-grid .stat span{font-size:11.5px!important}
+ .stats-grid .stat svg{width:16px;height:16px}
+ .home-bulletin-wrap>.home-bulletin{min-height:0;padding:10px 12px;gap:10px}
+ .home-bulletin-wrap>.home-bulletin strong{font-size:13px}.home-bulletin-wrap>.home-bulletin small{font-size:12px}
+ .home-bulletin .bulletin-icon{width:30px;height:30px}
+ /* Les graphiques circulaires ne s'affichent plus sur téléphone (voir Analyses) */
+ .portfolio-statistics{display:none!important}
+ .overview-analytics{gap:12px!important}
+ .panel{border-radius:16px}
+ .panel-heading h2,.panel-heading h3{font-size:15.5px!important}
+ .section-title h2{font-size:20px!important}.section-title p{font-size:13px!important}
+ /* Fenêtres (popups) : plus petites, comme une vraie application */
+ dialog.dialog:not(.photo-crop-dialog){width:calc(100% - 20px)!important;max-width:440px!important;max-height:86dvh!important;margin:auto!important;border-radius:20px!important}
+ dialog.dialog .dialog-header{padding:12px 14px!important;gap:8px}
+ dialog.dialog .dialog-header h2{font-size:17px!important;line-height:1.25}
+ dialog.dialog .dialog-header p{font-size:12.5px!important;margin-top:2px}
+ dialog.dialog .form-body{padding:12px 14px!important}
+ dialog.dialog .form-grid{gap:10px!important}
+ dialog.dialog .field>span{font-size:12.5px!important}
+ dialog.dialog input:not([type=checkbox]):not([type=radio]):not([type=range]),dialog.dialog select,dialog.dialog textarea{min-height:42px!important;font-size:15px!important;padding:9px 11px!important}
+ dialog.dialog .dialog-footer{padding:10px 14px!important;gap:8px}
+ dialog.dialog .dialog-footer .button{min-height:42px!important;font-size:14px!important;padding:9px 14px!important}
+ .button{min-height:40px}
+ .topbar{min-height:56px}
+ .ya-fab{transform:scale(.88);transform-origin:bottom right}
+}
+@media(max-width:850px){
+ .an-deep{gap:12px!important}
+ .an-kpis{grid-template-columns:1fr 1fr!important;gap:8px!important}
+ .an-kpi{padding:11px 12px!important;border-radius:14px!important}
+ .an-kpi strong{font-size:18px!important}
+ .an-kpi small,.an-kpi span{font-size:11.5px!important}
+ .an-split{grid-template-columns:1fr!important;gap:12px!important}
+ .an-months .an-row:nth-child(n+8){display:none}
+ .an-table .an-row:nth-child(n+6){display:none}
+ .an-row{padding:8px 0!important;font-size:12.5px!important}
+ .reports-main-chart .chart-legend{font-size:11.5px}
+}

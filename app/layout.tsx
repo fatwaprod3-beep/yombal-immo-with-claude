@@ -18,6 +18,7 @@ import "./admin.css";
 import "./assistant.css";
 import "./home-v28.css";
 import "./landing.css";
+import "./mobile-compact.css";
 export const viewport: Viewport = {
   width: 'device-width', initialScale: 1, viewportFit: 'cover',
   interactiveWidget: 'resizes-content', colorScheme: 'light',

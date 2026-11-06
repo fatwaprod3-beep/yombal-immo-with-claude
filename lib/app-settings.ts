@@ -9,6 +9,8 @@ export async function getSetting(key:SettingKey):Promise<string|null>{
  try{const row=(await getDb().select().from(appSettings).where(eq(appSettings.key,key)).limit(1))[0];const value=row?.value??null;cache.set(key,{value,at:Date.now()});return value;}
  catch{return hit?.value??null;}
 }
+// Lecture sans cache (prix : doit refléter immédiatement le dernier enregistrement).
+export async function getSettingFresh(key:SettingKey):Promise<string|null>{try{const row=(await getDb().select().from(appSettings).where(eq(appSettings.key,key)).limit(1))[0];const value=row?.value??null;cache.set(key,{value,at:Date.now()});return value;}catch{return getSetting(key);}}
 export async function setSetting(key:SettingKey,value:string){
  const now=new Date().toISOString();
  await getDb().insert(appSettings).values({key,value,updatedAt:now}).onConflictDoUpdate({target:appSettings.key,set:{value,updatedAt:now}});

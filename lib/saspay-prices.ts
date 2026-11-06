@@ -1,6 +1,6 @@
 import {plans,findPlan} from './billing';
 import {object,sasPayRequest,unwrap,xofAmount} from './saspay';
-import {getSetting} from './app-settings';
+import {getSettingFresh} from './app-settings';
 
 // Les prix des offres sont fixés dans SasPay, sur les liens de paiement du propriétaire.
 // Yombal lit ces liens (par leur slug) et utilise leur montant pour afficher le prix
@@ -37,7 +37,7 @@ export async function priceFor(planId:string,apiKey:string|null){
 
 // Prix fixés depuis l’administration : ils passent avant ceux des liens SasPay.
 export async function adminPrices():Promise<Prices>{
- try{const raw=await getSetting('plan_prices');if(!raw)return {};const data=JSON.parse(raw) as Record<string,unknown>;
+ try{const raw=await getSettingFresh('plan_prices');if(!raw)return {};const data=JSON.parse(raw) as Record<string,unknown>;
   return Object.fromEntries(plans.map(p=>[p.id,Number(data[p.id])]).filter(([,v])=>Number.isInteger(v)&&(v as number)>=100&&(v as number)<=10_000_000)) as Prices;}catch{return {};}
 }
 export async function sasPayPrices(apiKey:string|null):Promise<{prices:Prices;source:'saspay'|'default'|'admin'}>{

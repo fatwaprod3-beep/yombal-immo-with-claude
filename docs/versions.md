@@ -1,5 +1,15 @@
 # Versions de Yombal.immo
 
+## 0.34.0 — 6 novembre 2026
+
+- Visite guidée façon application pour les nouveaux comptes : zone éclairée + bulle d’explication, 9 étapes (ajouter un bien, locataires, loyers, chiffres du mois, alertes, factures, paramètres, assistant), sur ordinateur et téléphone. Relançable depuis Aide → « Revoir le guide ». Remplace la grande carte « Premiers pas ».
+- Mobile : barre du bas réorganisée (Accueil, Locataires, Loyers, Biens, Plus) ; menu latéral trié par usage (Loyers et Locataires en premier) ; mois du tableau de bord en haut, « Bonjour + prénom » aligné avec « Ajouter un bien » ; cartes, textes et boutons à taille d’application ; fenêtres (popups) plus petites ; graphiques circulaires masqués sur téléphone.
+- Analyses : page simplifiée (graphique + analyse approfondie, sans doublons ni graphiques circulaires) ; version compacte sur téléphone.
+- Accueil : bandeau d’alertes et conseils sans contour.
+- Aide dans l’application : Contact en premier, questions fréquentes simples avec recherche, boutons « Revoir le guide » et « Voir la démo ».
+- Factures : deux modèles gratuits (Classique et Essentiel).
+- Administration : enregistrement des prix avec confirmation visible et valeurs à jour immédiatement (lecture sans cache) ; réponse aux messages via Gmail, autre messagerie ou copie de l’e-mail.
+
 ## 0.33.2 — 6 novembre 2026
 
 - Paramètres → Préférences : « Changer mon mot de passe » (ancien mot de passe obligatoire, 8 caractères minimum, essais limités). Le mot de passe du compte propriétaire sert aussi pour l’administration.

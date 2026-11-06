@@ -46,7 +46,7 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
     tab==='messages'?<MessagesTab/>:
     tab==='security'?<SecurityTab data={data}/>:
     tab==='assistant'?<AssistantTab data={data} act={act}/>:
-    tab==='payments'?<div className="adm-stack"><AdminPrices act={act}/><AdminRequests/><AdminPayments/></div>:
+    tab==='payments'?<div className="adm-stack"><AdminPrices/><AdminRequests/><AdminPayments/></div>:
     <ControlsTab data={data} act={act}/>}
   </main>
  </div>;
@@ -108,25 +108,40 @@ function UsersTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:str
  </div>;
 }
 
-function AdminPrices({act}:{act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
+function AdminPrices(){
  const names:Record<string,string>={monthly:'Pro mensuel · 1 mois',quarterly:'Pro trimestriel · 3 mois',annual:'Pro annuel · 12 mois'};
- const [prices,setPrices]=useState<Record<string,string>>({}),[source,setSource]=useState(''),[busy,setBusy]=useState(false);
- const load=useCallback(async()=>{try{const r=await fetch('/api/prices',{cache:'no-store'});const d=await r.json() as {prices:Record<string,number>;source:string};setPrices(Object.fromEntries(Object.entries(d.prices).map(([k,v])=>[k,String(v)])));setSource(d.source);}catch{}},[]);
+ const [prices,setPrices]=useState<Record<string,string>>({}),[source,setSource]=useState(''),[busy,setBusy]=useState(false),[msg,setMsg]=useState(''),[err,setErr]=useState('');
+ const load=useCallback(async()=>{try{const r=await fetch('/api/prices?t='+Date.now(),{cache:'no-store'});const d=await r.json() as {prices:Record<string,number>;source:string};setPrices(Object.fromEntries(Object.entries(d.prices).map(([k,v])=>[k,String(v)])));setSource(d.source);}catch{}},[]);
  useEffect(()=>{void load();},[load]);
- async function save(reset=false){setBusy(true);const body=reset?{monthly:null,quarterly:null,annual:null}:Object.fromEntries(Object.keys(names).map(k=>[k,Number(String(prices[k]||'').replace(/\D/g,''))||null]));
-  const ok=await act({action:'set_prices',prices:body},reset?'Revenir aux prix de vos liens SasPay ?':'Appliquer ces nouveaux prix ? Ils seront utilisés immédiatement pour tous les prochains paiements et affichés partout (page de présentation, offres, assistant).');if(ok)await load();setBusy(false);}
+ async function save(reset=false){
+  setMsg('');setErr('');
+  const body=reset?{monthly:null,quarterly:null,annual:null}:Object.fromEntries(Object.keys(names).map(k=>[k,Number(String(prices[k]||'').replace(/\D/g,''))||null]));
+  if(!reset&&Object.values(body).some(v=>v!==null&&(v as number)<100)){setErr('Chaque prix doit être d’au moins 100 F.');return;}
+  if(!await askConfirm(reset?'Revenir aux prix de vos liens SasPay ?':'Appliquer ces prix ? Ils seront utilisés tout de suite pour les prochains paiements et affichés partout.',{title:'Prix des abonnements',confirmLabel:reset?'Revenir':'Appliquer',danger:false}))return;
+  setBusy(true);
+  try{const r=await apiFetch('/api/admin/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'set_prices',prices:body})});const d=await r.json() as {message?:string;error?:string;prices?:Record<string,number>;source?:string};if(!r.ok)throw Error(d.error||'Enregistrement impossible.');
+   if(d.prices){setPrices(Object.fromEntries(Object.entries(d.prices).map(([k,v])=>[k,String(v)])));setSource(d.source||'admin');}setMsg(d.message||'Prix enregistrés.');}
+  catch(e){setErr(e instanceof Error?e.message:'Réessayez.');}finally{setBusy(false);}
+ }
  return <section className="adm-card">
   <div className="adm-card-h"><h3>Prix des abonnements</h3><span className={'adm-tag '+(source==='admin'?'gold':'g')}>{source==='admin'?'Prix fixés ici':source==='saspay'?'Prix lus sur SasPay':'Prix par défaut'}</span></div>
   <p className="adm-hint">Les prix saisis ici passent avant ceux de vos liens SasPay et s’appliquent tout de suite : affichage, création du paiement et vérification du montant payé.</p>
   <div className="adm-prices">{Object.entries(names).map(([k,label])=><label key={k}><span>{label}</span><div className="adm-price-input"><input inputMode="numeric" value={prices[k]||''} onChange={e=>setPrices(p=>({...p,[k]:e.target.value.replace(/[^\d]/g,'')}))} autoComplete="off"/><em>F CFA</em></div></label>)}</div>
-  <div className="adm-inline"><button type="button" className="adm-btn" disabled={busy} onClick={()=>void save()}>Enregistrer les prix</button>{source==='admin'&&<button type="button" className="adm-btn ghost" disabled={busy} onClick={()=>void save(true)}>Revenir aux prix SasPay</button>}</div>
+  {msg&&<p className="adm-notice g" role="status">✓ {msg}</p>}{err&&<p className="adm-notice r" role="alert">{err}</p>}
+  <div className="adm-inline"><button type="button" className="adm-btn" disabled={busy} onClick={()=>void save()}>{busy?'Enregistrement…':'Enregistrer les prix'}</button>{source==='admin'&&<button type="button" className="adm-btn ghost" disabled={busy} onClick={()=>void save(true)}>Revenir aux prix SasPay</button>}</div>
  </section>;
+}
+function ReplyButtons({email,subject,message}:{email:string;subject:string;message:string}){
+ const [copied,setCopied]=useState(false);
+ const su='Re: '+subject+' — Yombal';const body='Bonjour,\n\nMerci pour votre message.\n\n\n\n— L’équipe Yombal.immo\n\n> '+message.slice(0,500).replace(/\n/g,'\n> ');
+ const gmail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(email)+'&su='+encodeURIComponent(su)+'&body='+encodeURIComponent(body);
+ return <div className="adm-inline"><a className="adm-btn sm" href={gmail} target="_blank" rel="noopener noreferrer"><Mail size={14}/>Répondre avec Gmail</a><a className="adm-btn ghost sm" href={'mailto:'+email+'?subject='+encodeURIComponent(su)+'&body='+encodeURIComponent(body)}>Autre messagerie</a><button type="button" className="adm-btn ghost sm" onClick={async()=>{try{await navigator.clipboard.writeText(email);}catch{}setCopied(true);setTimeout(()=>setCopied(false),1500);}}>{copied?'Copié':'Copier l’e-mail'}</button><span className="adm-muted">{email}</span></div>;
 }
 function MessagesTab(){
  const [rows,setRows]=useState<{id:string;userId:string;subject:string;email:string;message:string;createdAt:string}[]|null>(null);
  useEffect(()=>{void apiFetch('/api/admin/support',{cache:'no-store'}).then(r=>r.json()).then((d:{messages?:typeof rows})=>setRows(d.messages||[])).catch(()=>setRows([]));},[]);
  if(!rows)return <div className="adm-card adm-loading"><LoaderCircle className="spin" size={22}/>Chargement…</div>;
- return <div className="adm-stack">{rows.map(m=><article key={m.id} className="adm-card adm-msg"><header><span className="adm-tag">{m.subject}</span><span className={'adm-tag '+(m.userId==='visiteur'?'gold':'g')}>{m.userId==='visiteur'?'Visiteur':'Client'}</span><small>{new Date(m.createdAt).toLocaleString('fr-FR',{timeZone:'Africa/Dakar'})}</small></header><p>{m.message}</p><a className="adm-btn ghost sm" href={'mailto:'+m.email+'?subject='+encodeURIComponent('Re: '+m.subject+' — Yombal')}><Mail size={14}/>Répondre à {m.email}</a></article>)}{!rows.length&&<div className="adm-card adm-empty">Aucun message pour le moment.</div>}</div>;
+ return <div className="adm-stack">{rows.map(m=><article key={m.id} className="adm-card adm-msg"><header><span className="adm-tag">{m.subject}</span><span className={'adm-tag '+(m.userId==='visiteur'?'gold':'g')}>{m.userId==='visiteur'?'Visiteur':'Client'}</span><small>{new Date(m.createdAt).toLocaleString('fr-FR',{timeZone:'Africa/Dakar'})}</small></header><p>{m.message}</p><ReplyButtons email={m.email} subject={m.subject} message={m.message}/></article>)}{!rows.length&&<div className="adm-card adm-empty">Aucun message pour le moment.</div>}</div>;
 }
 function StatusTag({status}:{status:string}){return status==='restricted'?<span className="adm-tag gold"><Lock size={12}/>Accès limité</span>:status==='suspended'?<span className="adm-tag r"><UserX size={12}/>Bloqué</span>:<span className="adm-tag g">Actif</span>;}
 function AddMember({act}:{act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){

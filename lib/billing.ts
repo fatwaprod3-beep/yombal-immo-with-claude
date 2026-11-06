@@ -1,3 +1,5 @@
+// Modèles de facture accessibles sans abonnement.
+export const freeInvoiceTemplates=['classic','minimal'];
 export const plans=[
  {id:'monthly',name:'Pro mensuel',price:4900,currency:'XOF',checkoutUrl:'https://link.saspay.me/rq9ukd8p6j4',months:1,period:'1 mois',detail:'Pour avancer à votre rythme.'},
  {id:'quarterly',name:'Pro trimestriel',price:9900,currency:'XOF',checkoutUrl:'https://link.saspay.me/b5mk93gecf0',months:3,period:'3 mois',detail:'4 800 F économisés sur 3 mois.'},
@@ -39,7 +41,7 @@ export type Subscription={isAdmin?:boolean;development?:boolean;isPro:boolean;st
 export const freeSubscription:Subscription={isPro:false,status:'free',planId:null,expiresAt:null};
 export function activeSubscription(row:{status:string;expiresAt:string|null}|undefined,at=Date.now()){return !!row&&row.status==='active'&&!!row.expiresAt&&Date.parse(row.expiresAt)>at;}
 export function requiredProFeature(m:{action?:string;data?:unknown},current?:{signature?:string;invoiceTemplate?:string}):ProFeature|null{
- if(m.action==='profile'||m.action==='restore'){const data=m.data as {signature?:string;invoiceTemplate?:string;profile?:{signature?:string;invoiceTemplate?:string}}|undefined;const p=m.action==='restore'?data?.profile:data;if(p?.signature&&p.signature!==current?.signature)return 'signature';if(p?.invoiceTemplate&&p.invoiceTemplate!=='classic'&&p.invoiceTemplate!==current?.invoiceTemplate)return 'invoiceTemplates';}
+ if(m.action==='profile'||m.action==='restore'){const data=m.data as {signature?:string;invoiceTemplate?:string;profile?:{signature?:string;invoiceTemplate?:string}}|undefined;const p=m.action==='restore'?data?.profile:data;if(p?.signature&&p.signature!==current?.signature)return 'signature';if(p?.invoiceTemplate&&!freeInvoiceTemplates.includes(p.invoiceTemplate)&&p.invoiceTemplate!==current?.invoiceTemplate)return 'invoiceTemplates';}
  if(m.action==='createContract'||m.action==='signContract')return 'contracts';
  if(m.action==='ownerTransfer'||m.action==='cancelOwnerTransfer')return 'owners';
  if(m.action==='import')return 'import';
