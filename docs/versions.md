@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.36.3 — 6 novembre 2026
+
+- Paramètres mobile : les 4 onglets tiennent sur la largeur de l’écran.
+
 ## 0.36.2 — 6 novembre 2026
 
 - Paramètres mobile : nouvel onglet « Mon compte » (nom et e-mail de connexion, abonnement Gratuit/Pro avec date de fin, Passer Pro / Prolonger, mot de passe, déconnexion). « Préférences » garde notifications, application et sauvegarde.
