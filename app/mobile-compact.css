@@ -123,3 +123,35 @@
  .tenant-actions .button{min-height:36px!important;font-size:12.5px!important;padding:6px 10px!important}
  .tenant-history,.tenant-unlinked{font-size:12px!important}
 }
+
+/* v0.35.1 — locataires et ronds encore plus compacts (mobile) */
+@media(max-width:850px){
+ dialog.dialog:not(.photo-crop-dialog){width:calc(100% - 28px)!important}
+ .tenant-card header{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:10px!important;min-height:0!important}
+ .tenant-card header>div:nth-child(2){flex:1;min-width:0}
+ .tenant-card header h3{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .tenant-card .tenant-activity-status .badge{padding:3px 8px!important;font-size:11px!important}
+ .tenant-card .tenant-activity-status .badge svg{display:none}
+ .tenant-rental{display:grid!important;grid-template-columns:1fr auto;gap:6px 10px!important;align-items:center}
+ .tenant-rental>.tenant-property{grid-column:1/-1}
+ .tenant-rental>.tenant-rent{display:contents!important}
+ .tenant-rental>.tenant-rent strong{grid-column:1;font-size:15px!important}
+ .tenant-rental>.tenant-rent .badge{grid-column:2;justify-self:end;padding:3px 8px!important;font-size:11px!important}
+ .tenant-rental .deadline-alert{grid-column:1/-1;padding:7px 10px!important;min-height:0!important;gap:8px!important;border-radius:10px!important}
+ .tenant-rental .deadline-alert>svg{width:16px;height:16px}
+ .tenant-rental .deadline-alert>b{display:none!important}
+ .tenant-rental .deadline-alert strong{font-size:12.5px!important}.tenant-rental .deadline-alert span{font-size:11.5px!important}
+ .tenant-rental .tenant-partial{grid-column:1/-1}
+ .tenant-actions{grid-column:1/-1}
+ .portfolio-preview-heading{min-height:0!important;padding:0 2px!important;margin-bottom:2px}
+ .portfolio-preview-heading strong{font-size:14px}.portfolio-preview-heading .text-button{min-height:30px!important;font-size:12.5px}
+ .portfolio-statistics{grid-template-columns:1fr 1fr!important}
+ .portfolio-statistics>.portfolio-preview-heading,.portfolio-statistics>:not(.panel){grid-column:1/-1}
+ .portfolio-statistics .panel{padding:10px!important}
+ .portfolio-statistics .panel-heading h3{font-size:13px!important;line-height:1.25}
+ .portfolio-statistics .donut-layout{grid-template-columns:1fr!important;justify-items:center;gap:8px!important}
+ .portfolio-statistics .donut-visual,.portfolio-statistics .donut-visual svg{width:84px!important;height:84px!important}
+ .portfolio-statistics .donut-legend{width:100%;font-size:11.5px!important}
+ .portfolio-statistics .donut-legend small,.portfolio-statistics .donut-legend em{font-size:10.5px!important}
+ .portfolio-statistics .text-button{font-size:12px!important;min-height:28px!important}
+}

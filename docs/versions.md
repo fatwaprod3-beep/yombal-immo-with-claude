@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.35.1 — 6 novembre 2026
+
+- Mobile : cartes locataires environ deux fois moins hautes (en-tête sur une ligne, loyer et statut côte à côte, échéance compacte) ; les deux ronds côte à côte ; fenêtres légèrement plus étroites.
+
 ## 0.35.0 — 6 novembre 2026
 
 - Mobile uniquement : fenêtres (popups) et sections Paramètres encore plus compactes ; les deux graphiques ronds reviennent, en format compact, sous le grand graphique ; grand graphique sans l’échelle (2 M, 1,5 M…) et moins haut ; cartes Locataires denses (moins de défilement) ; sélecteur de mois de l’accueil sans contour.
