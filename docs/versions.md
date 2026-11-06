@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.35.3 — 6 novembre 2026
+
+- Mobile : carte locataire refaite (en-tête nom + menu, logement sur une ligne, loyer et statut côte à côte, échéance en petit, boutons côte à côte ; plus de doublons « Actif » ni d’encadré d’échéance) ; ronds lisibles (centre simplifié, légende alignée, titres centrés) ; sélecteur de mois sur fond blanc sans contour.
+
 ## 0.35.2 — 6 novembre 2026
 
 - Mobile : marges internes des cartes locataires supprimées (cartes plus courtes).
