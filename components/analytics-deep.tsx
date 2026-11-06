@@ -1,5 +1,5 @@
 'use client';
-import {useMemo} from 'react';
+import {useMemo,useState} from 'react';
 import {TrendingUp,TrendingDown,Percent,Building2,Wallet,CalendarRange,Users,ReceiptText,Trophy} from 'lucide-react';
 import {type State,money,monthLabel,addMonth,totals,bills,billed,rentalProperties,propertyStatus} from '../lib/model';
 
@@ -29,7 +29,11 @@ export default function AnalyticsDeep({state,period}:{state:State;period:string}
   const categories=[...cats].sort((a,b)=>b[1]-a[1]);
   return {rows,cur,prev,occupancy:pct(occupied,props.length),occupied,total:props.length,ytdCollected:ytd.reduce((s,r)=>s+r.collected,0),ytdNet:ytd.reduce((s,r)=>s+r.net,0),perProperty,debtors,categories,year};
  },[state,period]);
- const max=Math.max(1,...data.rows.map(r=>Math.max(r.expected,r.collected)));const maxCat=Math.max(1,...data.categories.map(c=>c[1]));
+ // Tableau mensuel : l’année en cours par défaut, les autres années sur demande.
+ const thisYear=period.slice(0,4);const [yearSel,setYearSel]=useState(thisYear);const [showYears,setShowYears]=useState(false);
+ const years=useMemo(()=>{const firsts=[...state.leases.map(l=>l.startDate),...state.payments.map(p=>p.period),...state.expenses.map(e=>e.date)].filter(Boolean).map(d=>Number(String(d).slice(0,4))).filter(n=>n>2000);const from=Math.min(Number(thisYear),...firsts);const out:string[]=[];for(let y=Number(thisYear);y>=from;y--)out.push(String(y));return out;},[state,thisYear]);
+ const yearRows=useMemo(()=>{const last=yearSel===thisYear?Number(period.slice(5,7)):12;return Array.from({length:last},(_,i)=>{const m=yearSel+'-'+String(i+1).padStart(2,'0');const t=totals(state,m);return {m,expected:t.expected,collected:t.collected+t.seasonal,expenses:t.expenses,net:t.net};}).reverse();},[state,yearSel,thisYear,period]);
+ const max=Math.max(1,...yearRows.map(r=>Math.max(r.expected,r.collected)));const maxCat=Math.max(1,...data.categories.map(c=>c[1]));
  return <div className="an-deep">
   <div className="an-kpis">
    <div className="an-kpi"><span className="an-ico green"><Percent size={18}/></span><em>Taux de recouvrement</em><strong>{pct(data.cur.collected,data.cur.expected)} %</strong><small>{money(data.cur.collected)} sur {money(data.cur.expected)}</small><Delta now={pct(data.cur.collected,data.cur.expected)} before={pct(data.prev.collected,data.prev.expected)}/></div>
@@ -37,8 +41,8 @@ export default function AnalyticsDeep({state,period}:{state:State;period:string}
    <div className="an-kpi"><span className="an-ico coral"><Wallet size={18}/></span><em>Revenu net du mois</em><strong>{money(data.cur.net)}</strong><small>Encaissé moins dépenses{state.profile.mode==='agency'?' et commissions':''}</small><Delta now={data.cur.net} before={data.prev.net}/></div>
    <div className="an-kpi"><span className="an-ico sand"><CalendarRange size={18}/></span><em>Cumul {data.year}</em><strong>{money(data.ytdCollected)}</strong><small>Net de l’année : {money(data.ytdNet)}</small></div>
   </div>
-  <section className="panel an-panel"><header><h3>Les 12 derniers mois</h3><p>Loyers attendus, encaissés, dépenses et résultat net, mois par mois.</p></header>
-   <div className="an-months">{data.rows.map(r=><div key={r.m} className={'an-month'+(r.m===period?' current':'')}>
+  <section className="panel an-panel"><header className="an-year-head"><div><h3>Année {yearSel}</h3><p>Encaissé, dépenses et résultat net, mois par mois.</p></div>{years.length>1&&<div className="an-years">{showYears?years.map(y=><button type="button" key={y} className={y===yearSel?'on':''} onClick={()=>{setYearSel(y);if(y===thisYear)setShowYears(false);}}>{y}</button>):<button type="button" onClick={()=>setShowYears(true)}>Autres années</button>}</div>}</header>
+   <div className="an-months">{yearRows.map(r=><div key={r.m} className={'an-month'+(r.m===period?' current':'')}>
     <span className="an-month-label">{monthLabel(r.m,true)}</span>
     <span className="an-bars"><i className="exp" style={{width:pct(r.expected,max)+'%'}}/><i className="col" style={{width:pct(r.collected,max)+'%'}}/></span>
     <span className="an-month-num"><b>{money(r.collected)}</b><small>{pct(r.collected,r.expected)} % · dép. {money(r.expenses)}</small></span>

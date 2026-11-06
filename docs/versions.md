@@ -1,5 +1,13 @@
 # Versions de Yombal.immo
 
+## 0.36.0 — 6 novembre 2026
+
+- Assistant : fenêtre flottante sur téléphone (plus de plein écran).
+- Ordinateur : même carte locataire que sur mobile.
+- Paramètres mobile : onglets « Mon espace » (type, coordonnées et logo réunis), « Factures », « Préférences » ; barre « Enregistrer » discrète qui n’apparaît qu’en cas de modification. Ordinateur : onglet « Profil » renommé « Mon espace ».
+- Loyers mobile : résumé et cartes d’échéance compacts.
+- Analyse : seule l’année en cours s’affiche ; « Autres années » pour consulter les précédentes.
+
 ## 0.35.3 — 6 novembre 2026
 
 - Mobile : carte locataire refaite (en-tête nom + menu, logement sur une ligne, loyer et statut côte à côte, échéance en petit, boutons côte à côte ; plus de doublons « Actif » ni d’encadré d’échéance) ; ronds lisibles (centre simplifié, légende alignée, titres centrés) ; sélecteur de mois sur fond blanc sans contour.

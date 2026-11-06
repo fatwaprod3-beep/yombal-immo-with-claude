@@ -210,3 +210,102 @@
  .portfolio-statistics .donut-legend>* small,.portfolio-statistics .donut-legend>* em{display:none!important}
  .portfolio-statistics .donut-legend b,.portfolio-statistics .donut-legend strong{font-size:11.5px!important}
 }
+/* Assistant : fenêtre flottante sur téléphone (plus de plein écran) */
+@media(max-width:850px){
+ .ya-panel{left:10px!important;right:10px!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;top:auto!important;width:auto!important;height:min(560px,72dvh)!important;border-radius:20px!important;box-shadow:0 24px 60px #21152e59!important}
+}
+
+/* v0.36 — même carte locataire sur ordinateur */
+@media(min-width:851px){
+ .tenant-grid{gap:14px!important}
+ .tenant-card .avatar{width:40px!important;height:40px!important;font-size:13px!important}
+ .tenant-card h3{font-size:15px!important;margin:0!important}
+ .tenant-card header a,.tenant-card header small{font-size:12.5px!important}
+ .tenant-card{padding:14px 16px!important;border:1px solid #efe8f2!important;box-shadow:none!important}
+ .tenant-card header{display:flex!important;align-items:center!important;gap:12px!important;padding:0 0 12px!important;border-bottom:1px solid #f4eff7}
+ .tenant-card .tenant-activity-status{display:none!important}
+ .tenant-card header .record-menu{margin-left:auto}
+ .tenant-rental,.tenant-rental.tenant-late{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:4px 10px!important;padding:10px 0 0!important;margin:0!important;border:0!important;background:transparent!important}
+ .tenant-rental+.tenant-rental{border-top:1px solid #f4eff7!important;margin-top:10px!important}
+ .tenant-rental>.tenant-property{grid-column:1/-1;display:flex!important;align-items:center;gap:8px!important;padding:0!important;min-height:0!important;background:transparent!important;border:0!important;box-shadow:none!important;text-align:left}
+ .tenant-rental>.tenant-property>svg:first-child{width:15px;height:15px;color:#9a879f;flex:0 0 auto}
+ .tenant-rental>.tenant-property>svg:last-child{width:14px;height:14px;color:#c4b5cf;margin-left:auto}
+ .tenant-rental>.tenant-property span{display:flex!important;flex-direction:row!important;gap:6px;align-items:baseline;min-width:0;flex-wrap:wrap}
+ .tenant-rental>.tenant-property strong{font-size:13px!important;color:#4e335f}
+ .tenant-rental>.tenant-property small{font-size:11.5px!important;color:#9a879f}
+ .tenant-rental>.tenant-rent{display:contents!important}
+ .tenant-rental>.tenant-rent strong{grid-column:1;grid-row:2;font-size:17px!important;color:#281b34;align-self:center}
+ .tenant-rental>.tenant-rent strong small{font-size:11px!important;font-weight:500;color:#9a879f}
+ .tenant-rental>.tenant-rent .badge{grid-column:2;grid-row:2;justify-self:end;align-self:center;padding:4px 9px!important;font-size:11px!important;border-radius:99px!important;white-space:nowrap}
+ .tenant-rental>.tenant-rent .badge svg{width:12px;height:12px}
+ .tenant-rental .deadline-alert{grid-column:1/-1;grid-row:3;display:block!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important;box-shadow:none!important;min-height:0!important}
+ .tenant-rental .deadline-alert>svg,.tenant-rental .deadline-alert>b,.tenant-rental .deadline-alert strong{display:none!important}
+ .tenant-rental .deadline-alert div{display:block!important}
+ .tenant-rental .deadline-alert span{font-size:11.5px!important;color:#8b7a94!important;margin:0!important}
+ .tenant-rental.tenant-late .deadline-alert span{color:#ac5c63!important}
+ .tenant-rental .tenant-partial{grid-column:1/-1;font-size:11.5px!important}
+ .tenant-rental .tenant-actions{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px!important;margin:8px 0 0!important}
+ .tenant-rental .tenant-actions .button{width:100%;min-height:36px!important;font-size:12.5px!important;padding:6px 8px!important;border-radius:10px!important;justify-content:center;white-space:nowrap}
+ .tenant-rental .tenant-actions .button svg{width:14px;height:14px}
+
+ .tenant-card header>div:nth-child(2){flex:1;min-width:0}
+ .tenant-rental .tenant-actions{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+}
+
+/* v0.36 — Paramètres mobile : Mon espace, barre d’enregistrement discrète */
+@media(max-width:850px){
+ .settings-identity{display:grid;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid #f1ebf4}
+ .settings-identity>h4{margin:0;font-size:13.5px;color:#4e335f}
+ .settings-identity-logo .image-field-top{flex-direction:row!important;align-items:center!important;gap:12px!important}
+ .settings-identity-logo .image-field-preview{width:64px!important;min-width:64px!important}
+ .settings-identity .form-grid{gap:10px!important}
+ .settings-mobile-grouped .profile-choices{gap:8px!important}
+ .settings-mobile-grouped .profile-choices button{padding:10px 12px!important;min-height:0!important}
+ .settings-tab-hint{margin:0 0 4px!important;color:#8b7a94}
+ .mobile-settings-save{display:flex!important;align-items:center;gap:10px;padding:8px 8px 8px 14px!important;border-radius:16px!important;bottom:calc(74px + env(safe-area-inset-bottom))!important;animation:msave .2s ease-out}
+ .mobile-settings-save>span{flex:1;font-size:12.5px;color:#6d5a78;font-weight:500}
+ .mobile-settings-save>.form-error{flex:1;margin:0!important;font-size:12px!important}
+ .mobile-settings-save>.button{width:auto!important;min-height:40px!important;padding:8px 18px!important;font-size:13.5px!important;border-radius:12px!important}
+ .main-content:has(.settings-mobile-grouped){padding-bottom:150px!important}
+ .settings-prefs-block{display:grid;gap:10px;margin-top:10px}
+ .settings-prefs-block .settings-side{display:grid;gap:10px}
+}
+@keyframes msave{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+
+/* v0.36 — Loyers mobile : cartes d’échéance compactes */
+@media(max-width:850px){
+ .rent-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;margin-bottom:10px!important}
+ .rent-summary>div{padding:8px 9px!important;border-radius:12px!important;min-width:0;box-shadow:none!important}
+ .rent-summary span{font-size:10.5px!important;line-height:1.25;display:block}
+ .rent-summary strong{font-size:13.5px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+ .rents-page-table>tbody,.rents-pay-table>tbody{gap:8px!important;padding:0!important;background:transparent!important}
+ .rents-page-table>tbody>tr{grid-template-columns:minmax(0,1fr) auto!important;gap:6px 10px!important;padding:11px 12px!important;border-radius:14px!important;border-color:#efe8f2!important}
+ .rents-page-table>tbody>tr>td::before,.rents-pay-table>tbody>tr>td::before{display:none!important}
+ .rents-page-table>tbody>tr>td{font-size:12.5px!important;line-height:1.35!important}
+ .rents-page-table>tbody>tr>td:nth-child(1){grid-column:1;grid-row:1}
+ .rents-page-table>tbody>tr>td:nth-child(4){grid-column:2;grid-row:1;justify-self:end;align-self:start}
+ .rents-page-table>tbody>tr>td:nth-child(3){grid-column:1;grid-row:2}
+ .rents-page-table>tbody>tr>td:nth-child(2){grid-column:2;grid-row:2;text-align:right;color:#8b7a94}
+ .rents-page-table>tbody>tr>td:nth-child(5){grid-column:1/-1;grid-row:3}
+ .rents-page-table .person-cell{gap:9px!important}
+ .rents-page-table .person-cell .avatar{width:32px!important;height:32px!important;font-size:11.5px!important}
+ .rents-page-table .person-cell strong{font-size:13.5px!important}
+ .rents-page-table td small{display:block;font-size:11px!important;color:#9a879f}
+ .rents-page-table td:nth-child(3) strong{font-size:15.5px!important;color:#281b34}
+ .rents-page-table .badge{padding:3px 8px!important;font-size:11px!important}
+ .rents-page-table .row-actions{display:grid!important;grid-template-columns:1fr 1fr;gap:6px!important;margin-top:2px}
+ .rents-page-table .button.small,.rents-page-table td:nth-child(5)>.button{min-height:34px!important;padding:5px 8px!important;font-size:12px!important;border-radius:10px!important;width:100%;justify-content:center;white-space:nowrap}
+ .rents-page-table .button svg{width:14px;height:14px}
+ .rents-pay-table>tbody>tr{grid-template-columns:minmax(0,1fr) auto auto auto!important;align-items:center;gap:4px 8px!important;padding:10px 12px!important;border-radius:14px!important}
+ .rents-pay-table>tbody>tr>td{font-size:12px!important}
+ .rents-pay-table>tbody>tr>td:nth-child(1){grid-column:1;grid-row:1}
+ .rents-pay-table>tbody>tr>td:nth-child(2){grid-column:1;grid-row:2;color:#8b7a94}
+ .rents-pay-table>tbody>tr>td:nth-child(3){grid-column:2;grid-row:1/3}
+ .rents-pay-table>tbody>tr>td:nth-child(4){display:none!important}
+ .rents-pay-table>tbody>tr>td:nth-child(5){grid-column:3;grid-row:1/3}
+ .rents-pay-table>tbody>tr>td:nth-child(6){grid-column:4;grid-row:1/3}
+ .rents-pay-table td small{display:block;font-size:11px!important;color:#9a879f}
+ .table-caption{font-size:11.5px!important;margin:0 0 6px!important;padding:0 2px!important}
+ .filter-row{gap:8px!important;margin-bottom:8px!important}
+ .filter-tabs button{min-height:34px!important;font-size:12.5px!important;padding:6px 10px!important}
+}
