@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.36.1 — 6 novembre 2026
+
+- Ordinateur : la page Locataires affiche désormais les mêmes cartes que sur mobile (grille de cartes).
+
 ## 0.36.0 — 6 novembre 2026
 
 - Assistant : fenêtre flottante sur téléphone (plus de plein écran).
