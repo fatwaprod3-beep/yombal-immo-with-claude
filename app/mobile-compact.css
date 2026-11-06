@@ -277,7 +277,7 @@
  .rent-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;margin-bottom:10px!important}
  .rent-summary>div{padding:8px 9px!important;border-radius:12px!important;min-width:0;box-shadow:none!important}
  .rent-summary span{font-size:10.5px!important;line-height:1.25;display:block}
- .rent-summary strong{font-size:13.5px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+ .rent-summary strong{font-size:12.5px!important;white-space:nowrap;display:block;letter-spacing:-.2px}
  .rents-page-table>tbody,.rents-pay-table>tbody{gap:8px!important;padding:0!important;background:transparent!important}
  .rents-page-table>tbody>tr{grid-template-columns:minmax(0,1fr) auto!important;gap:6px 10px!important;padding:11px 12px!important;border-radius:14px!important;border-color:#efe8f2!important}
  .rents-page-table>tbody>tr>td::before,.rents-pay-table>tbody>tr>td::before{display:none!important}

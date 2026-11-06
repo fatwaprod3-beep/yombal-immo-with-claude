@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.36.4 — 6 novembre 2026
+
+- Loyers mobile : les montants du résumé ne sont plus coupés (« 670… »).
+
 ## 0.36.3 — 6 novembre 2026
 
 - Paramètres mobile : les 4 onglets tiennent sur la largeur de l’écran.
