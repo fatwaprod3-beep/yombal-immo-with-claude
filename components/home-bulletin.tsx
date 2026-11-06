@@ -29,6 +29,13 @@ export function bulletinsFor(state:State,notifications:Alert[],metrics:{expected
  if(soon.length)out.push({tone:'warning',title:soon.length+' échéance'+(soon.length>1?'s':'')+' de loyer à venir',detail:'Pensez à prévenir vos locataires avant la date de paiement.',cta:'Voir le suivi',page:'loyers'});
  if(metrics.expected>0&&metrics.collected>=metrics.expected)out.push({tone:'success',title:'Bravo, tous les loyers du mois sont encaissés',detail:money(metrics.collected)+' reçus. Votre suivi est parfaitement à jour.',cta:'Voir le bilan',page:'rapports',progress:100});
  else if(metrics.expected>0&&metrics.collected>0){const p=Math.min(99,Math.round(metrics.collected/metrics.expected*100));out.push({tone:'success',title:'Bonne nouvelle : '+p+' % des loyers déjà encaissés',detail:money(metrics.collected)+' reçus sur '+money(metrics.expected)+' attendus.',cta:'Voir le suivi',page:'loyers',progress:p});}
+ // Nouveaux comptes : conseils de configuration avant les conseils de gestion.
+ const p=state.profile;
+ if(!p.company||!p.phone)out.push({tone:'tip',title:'Premier pas : complétez votre profil',detail:'Nom, téléphone et ville apparaissent sur vos factures et reçus. Deux minutes dans Paramètres.',cta:'Ouvrir les paramètres',page:'parametres'});
+ if(!p.image)out.push({tone:'tip',title:'Conseil : ajoutez votre logo',detail:'Vos documents deviennent professionnels et vos locataires vous reconnaissent tout de suite.',cta:'Ajouter mon logo',page:'parametres'});
+ if(!state.properties.length)out.push({tone:'tip',title:'Commencez par votre premier bien',detail:'Appartement, villa, chambre ou immeuble entier : ajoutez-le, puis son locataire et son loyer.',cta:'Mes biens',page:'biens'});
+ if(state.properties.length&&!state.leases.length)out.push({tone:'tip',title:'Étape suivante : ajoutez un locataire',detail:'Avec son loyer et son jour de paiement, les échéances de chaque mois se préparent seules.',cta:'Locataires',page:'locataires'});
+ if(!p.paymentInstructions)out.push({tone:'tip',title:'Conseil : indiquez comment vous payer',detail:'Votre numéro Wave ou Orange Money s’affichera sur chaque facture. Paramètres → Factures.',cta:'Régler mes factures',page:'parametres'});
  const day=Math.floor(Date.parse(today()+'T12:00:00Z')/86400000);
  out.push({tone:'tip',...tips[day%tips.length]},{tone:'tip',...tips[(day+1)%tips.length]});
  return out;

@@ -2,7 +2,7 @@ import {eq} from 'drizzle-orm';
 import {getDb} from '../db';
 import {appSettings} from '../db/schema';
 // Réglages globaux contrôlés depuis l'administration. Cache court pour ne pas solliciter la base à chaque requête.
-export type SettingKey='registrations'|'maintenance'|'assistant'|'assistant_config'|'sessions_after';
+export type SettingKey='registrations'|'maintenance'|'assistant'|'assistant_config'|'sessions_after'|'plan_prices';
 const cache=new Map<string,{value:string|null;at:number}>();
 export async function getSetting(key:SettingKey):Promise<string|null>{
  const hit=cache.get(key);if(hit&&Date.now()-hit.at<15000)return hit.value;

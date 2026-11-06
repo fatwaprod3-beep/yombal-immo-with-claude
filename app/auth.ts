@@ -12,6 +12,7 @@ export type AppUser = {
   displayName: string;
   email: string;
   fullName: string | null;
+  status?: string;
 };
 
 export const sessionCookie = "yombal_session";
@@ -68,7 +69,7 @@ export async function getCurrentUser(): Promise<AppUser | null> {
     const session = await verifySessionToken(token);
     if (!session) return null;
     const row = (await getDb().select().from(users).where(eq(users.id, session.userId)).limit(1))[0];
-    if (!row || row.status !== "active") return null;
+    if (!row || row.status === "suspended") return null;
     // Sessions révoquées par l'administration (compte précis ou tous les comptes).
     const globalAfter = Number((await getSetting("sessions_after")) || 0);
     if (session.issuedAt < Math.max(Number(row.sessionsAfter || 0), globalAfter)) return null;
@@ -76,7 +77,7 @@ export async function getCurrentUser(): Promise<AppUser | null> {
     if (!row.lastSeenAt || now - Date.parse(row.lastSeenAt) > 10 * 60 * 1000) {
       await getDb().update(users).set({ lastSeenAt: new Date(now).toISOString() }).where(eq(users.id, row.id)).catch(() => {});
     }
-    return { userId: row.id, email: row.email, fullName: row.name || null, displayName: row.name || row.email };
+    return { userId: row.id, email: row.email, fullName: row.name || null, displayName: row.name || row.email, status: row.status };
   } catch {
     return null;
   }

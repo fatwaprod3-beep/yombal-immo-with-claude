@@ -1,0 +1,4 @@
+import PublicShell from '../../components/public-shell';
+import {helpDocuments,policyDate} from '../../lib/help-documents';
+export const metadata={title:'Politique de confidentialité',description:'Politique de confidentialité de Yombal.immo.',alternates:{canonical:'/confidentialite'}};
+export default function Page(){const doc=helpDocuments.privacy;return <PublicShell eyebrow={'VERSION DU '+policyDate.toUpperCase()} title="Politique de confidentialité"><div className="lp-legal"><nav className="lp-legal-toc">{doc.sections.map(([t],i)=><a key={t} href={'#s'+i}>{i+1}. {t}</a>)}</nav><div>{doc.sections.map(([t,c],i)=><section key={t} id={'s'+i}><h2>{i+1}. {t}</h2><p>{c}</p></section>)}<p className="lp-legal-contact">Une question sur ce document ? <a href="/contact">Contactez-nous</a>.</p></div></div></PublicShell>;}

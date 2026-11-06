@@ -20,5 +20,5 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
     try { prices = (await sasPayPrices((await paymentCredentials())?.apiKey || null)).prices; } catch {}
     return <Landing prices={prices} />;
   }
-  return <Dashboard userName={user?.fullName || ''} userEmail={user?.email || ''} authenticated={!!user} localMode={localMode} />;
+  return <Dashboard userName={user?.fullName || ''} userEmail={user?.email || ''} authenticated={!!user} localMode={localMode} accountStatus={user?.status || 'active'} />;
 }

@@ -1,4 +1,4 @@
-import {ArrowRight,Bell,Bot,Building2,CalendarDays,Check,FileText,LineChart,ShieldCheck,Smartphone,Sparkles,Users,Wallet} from 'lucide-react';
+import {ArrowRight,Bell,Bot,Building2,CalendarDays,Check,FileText,LineChart,ShieldCheck,Smartphone,Sparkles,Wallet} from 'lucide-react';
 import {plans} from '../lib/billing';
 
 const fmt=(n:number)=>new Intl.NumberFormat('fr-FR').format(n).replace(/ | /g,' ')+' F';
@@ -18,7 +18,8 @@ const steps=[
 
 export default function Landing({prices}:{prices:Record<string,number>}){
  const priceOf=(id:string,fallback:number)=>prices[id]??fallback;
- return <div className="lp">
+ const ld={'@context':'https://schema.org','@type':'SoftwareApplication',name:'Yombal.immo',alternateName:['Yombal','Yombal immo'],applicationCategory:'BusinessApplication',operatingSystem:'Web, Android, iOS',url:'https://yombal-immo.pro',description:'Logiciel de gestion locative pour propriétaires et agences : loyers, paiements partiels, retards, quittances, factures, baux et bilans.',inLanguage:'fr',offers:[{'@type':'Offer',price:'0',priceCurrency:'XOF',name:'Gratuit'},...plans.map(p=>({'@type':'Offer',price:String(priceOf(p.id,p.price)),priceCurrency:'XOF',name:p.name}))],publisher:{'@type':'Organization',name:'Yombal.immo',url:'https://yombal-immo.pro',logo:'https://yombal-immo.pro/icons/yombal-512.png'}};
+ return <div className="lp"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(ld).replace(/</g,'\\u003c')}}/>
   <header className="lp-nav"><a href="/" className="lp-brand"><img src="/yombal-logo.png" alt=""/><span>yombal<em>.immo</em></span></a>
    <nav><a href="#fonctions">Fonctionnalités</a><a href="#comment">Comment ça marche</a><a href="#tarifs">Tarifs</a></nav>
    <div className="lp-nav-actions"><a className="lp-link" href="/connexion">Se connecter</a><a className="lp-btn" href="/connexion?mode=inscription">Commencer gratuitement</a></div></header>
@@ -67,6 +68,6 @@ export default function Landing({prices}:{prices:Record<string,number>}){
 
   <section className="lp-final"><h2>Votre immobilier mérite d’être simple.</h2><p>Rejoignez les propriétaires et agences qui gèrent avec Yombal.</p><a className="lp-btn lp-btn-lg lp-btn-light" href="/connexion?mode=inscription">Commencer gratuitement<ArrowRight size={18}/></a></section>
 
-  <footer className="lp-footer"><span>© {new Date().getFullYear()} Yombal.immo</span><span><Users size={14}/>Fait pour les propriétaires et les agences</span><a href="/connexion">Se connecter</a></footer>
+  <footer className="lp-footer"><span>© {new Date().getFullYear()} Yombal.immo</span><nav className="lp-footer-links"><a href="/aide">Aide</a><a href="/contact">Contact</a><a href="/conditions">Conditions d’utilisation</a><a href="/confidentialite">Confidentialité</a></nav><a href="/connexion">Se connecter</a></footer>
  </div>;
 }

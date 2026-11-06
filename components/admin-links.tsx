@@ -3,6 +3,7 @@ import {useCallback,useEffect,useMemo,useState,type FormEvent} from 'react';
 import {Archive,Check,Copy,Crown,LoaderCircle,MousePointerClick,Plus,RotateCcw,Trash2,TrendingUp,Trophy,UserPlus,Wallet} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
 import {askConfirm} from './confirm-dialog';
+import Choice from './choice';
 
 type Link={id:string;code:string;name:string;channel:string;destination:string;cost:number;archived:boolean;createdAt:string;clicks:number;visitors:number;clicks7:number;mobile:number;lastClick:string|null;signups:number;pro:number;payments:number;revenue:number;daily:{d:string;n:number}[]};
 const channels:Record<string,{label:string;color:string}>={influenceur:{label:'Influenceur',color:'#674580'},facebook:{label:'Facebook',color:'#1877f2'},instagram:{label:'Instagram',color:'#d6249f'},tiktok:{label:'TikTok',color:'#111111'},whatsapp:{label:'WhatsApp',color:'#25a35a'},google:{label:'Google',color:'#ea8a00'},youtube:{label:'YouTube',color:'#e62117'},partenaire:{label:'Partenaire',color:'#c86f55'},autre:{label:'Autre',color:'#8a7795'}};
@@ -39,8 +40,8 @@ export default function AdminLinks(){
    <form className="adm-card adm-form lk-form" onSubmit={submit}>
     <div className="adm-card-h"><h3>Créer un lien de suivi</h3><span className="adm-muted">Pour un influenceur, une pub, un partenaire…</span></div>
     <label><span>Nom de la campagne</span><input value={name} onChange={e=>setName(e.target.value)} placeholder="Ex. : Aïcha Dakar · TikTok novembre" maxLength={80} required/></label>
-    <div className="lk-row"><label><span>Canal</span><select value={channel} onChange={e=>setChannel(e.target.value)}>{Object.entries(channels).map(([k,c])=><option key={k} value={k}>{c.label}</option>)}</select></label>
-    <label><span>Arrivée sur</span><select value={destination} onChange={e=>setDestination(e.target.value)}><option value="/presentation">Page de présentation</option><option value="/connexion?mode=inscription">Inscription directe</option><option value="/">Accueil du site</option></select></label></div>
+    <div className="lk-row"><label><span>Canal</span><Choice label="Canal" value={channel} onChange={setChannel} options={Object.entries(channels).map(([k,c])=>({value:k,label:c.label}))}/></label>
+    <label><span>Arrivée sur</span><Choice label="Arrivée sur" value={destination} onChange={setDestination} options={[{value:'/presentation',label:'Page de présentation'},{value:'/connexion?mode=inscription',label:'Inscription directe'},{value:'/',label:'Accueil du site'}]}/></label></div>
     <div className="lk-row"><label><span>Code du lien (facultatif)</span><input value={code} onChange={e=>setCode(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,''))} placeholder="aicha" maxLength={40} autoComplete="off"/></label>
     <label><span>Coût payé (F, facultatif)</span><input value={cost} onChange={e=>setCost(e.target.value.replace(/[^\d ]/g,''))} inputMode="numeric" placeholder="0" autoComplete="off"/></label></div>
     <p className="lk-preview">{origin}/r/<b>{code||'code-auto'}</b></p>
@@ -56,7 +57,7 @@ export default function AdminLinks(){
   </div>
 
   <div className="adm-card adm-table-card">
-   <div className="adm-card-h lk-table-h"><h3>Vos liens</h3><div className="lk-tools"><select value={sort} onChange={e=>setSort(e.target.value as typeof sort)} aria-label="Trier"><option value="signups">Trier : inscriptions</option><option value="clicks">Trier : clics</option><option value="pro">Trier : clients Pro</option><option value="revenue">Trier : revenus</option><option value="conv">Trier : conversion</option></select><label className="lk-check"><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/>Afficher les liens en pause</label></div></div>
+   <div className="adm-card-h lk-table-h"><h3>Vos liens</h3><div className="lk-tools"><div className="lk-sort"><Choice label="Trier" value={sort} onChange={v=>setSort(v as typeof sort)} options={[{value:'signups',label:'Trier : inscriptions'},{value:'clicks',label:'Trier : clics'},{value:'pro',label:'Trier : clients Pro'},{value:'revenue',label:'Trier : revenus'},{value:'conv',label:'Trier : conversion'}]}/></div><label className="lk-check"><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/>Afficher les liens en pause</label></div></div>
    <div className="adm-table-wrap"><table className="adm-table lk-table"><thead><tr><th>Lien</th><th>Clics</th><th>Visiteurs</th><th>Inscrits</th><th>Conversion</th><th>Pro</th><th>Revenus</th><th>14 jours</th><th/></tr></thead>
     <tbody>{sorted.map(l=><tr key={l.id} className={l.archived?'is-archived':''}>
      <td><div className="lk-name"><span className="lk-dot" style={{background:channels[l.channel]?.color}}/><div><b>{l.name}</b><small>{channels[l.channel]?.label} · /r/{l.code} · {ago(l.lastClick)}</small></div></div></td>

@@ -120,3 +120,17 @@
 .lk-hint{display:flex;gap:8px;align-items:flex-start}
 @media(max-width:1100px){.lk-split{grid-template-columns:1fr}}
 @media(max-width:600px){.lk-row{grid-template-columns:1fr}.lk-bar{grid-template-columns:110px 1fr 44px}}
+/* v0.33 — prix, membres, statuts */
+.adm-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.adm-prices label{display:grid;gap:6px;font-size:12.5px;font-weight:650;color:#6d5a79}
+.adm-price-input{display:flex;align-items:center;border:1px solid #e2d6ea;border-radius:12px;background:#fff;overflow:hidden}
+.adm-price-input input{flex:1;min-width:0;border:0;outline:0;padding:12px;font:inherit;font-size:18px;font-weight:750;color:#281b34}
+.adm-price-input em{font-style:normal;font-size:12px;color:#9a879f;padding:0 12px}
+.adm-price-input:focus-within{border-color:#674580;box-shadow:0 0 0 3px #67458022}
+.adm-add-row{display:flex;justify-content:flex-end}
+.adm-add-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.adm-created p{font-size:14px;margin:0 0 10px}.adm-pass{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.adm-pass code{flex:1;padding:12px 14px;border-radius:12px;background:#21152e;color:#ffd27a;font-size:18px;letter-spacing:1px}
+.adm-choice{min-width:150px}.lk-sort{min-width:220px}
+@media(max-width:900px){.adm-prices,.adm-add-form{grid-template-columns:1fr}}
+.adm-msg header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.adm-msg header small{margin-left:auto;color:#9a879f}.adm-msg p{white-space:pre-wrap;font-size:14px;line-height:1.6;margin:0 0 12px;color:#4f4757}

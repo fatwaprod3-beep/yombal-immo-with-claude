@@ -1,21 +1,22 @@
 'use client';
-import {useCallback,useEffect,useMemo,useState,type CSSProperties} from 'react';
+import {useCallback,useEffect,useMemo,useState,type CSSProperties,type FormEvent} from 'react';
 import Link from 'next/link';
-import {Link2,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
+import {Mail,Link2,UserPlus,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
 import {askConfirm} from './confirm-dialog';
 import {money} from '../lib/model';
 import AdminPayments from './admin-payments';
 import AdminRequests from './admin-requests';
 import AdminLinks from './admin-links';
+import Choice from './choice';
 
 type AdminUser={id:string;email:string;name:string;status:string;createdAt:string;lastSeenAt:string|null;plan:string;expiresAt:string|null;properties:number;tenants:number;spaces:number;paid:number;aiMessages:number;flagged:number};
 type Event={id:string;kind:string;email:string|null;userId:string|null;ip:string|null;userAgent:string|null;detail:string|null;createdAt:string};
 type Overview={stats:Record<string,number>;signups:{d:string;n:number}[];users:AdminUser[];events:Event[];suspiciousIps:{ip:string;n:number;last:string;emails:string}[];flags:{registrationsOpen:boolean;maintenance:boolean;assistant:boolean;sessionsAfter:number};aiConfig:{provider:string;model:string;configured:boolean}};
 type Conversation={id:string;title:string;flagged:number;flagReason:string|null;messageCount:number;updatedAt:string;userId:string;email:string|null;name:string|null};
-type Tab='overview'|'users'|'links'|'security'|'assistant'|'payments'|'controls';
+type Tab='overview'|'users'|'links'|'messages'|'security'|'assistant'|'payments'|'controls';
 
-const tabs:{id:Tab;label:string;icon:typeof Users}[]=[{id:'overview',label:'Vue d’ensemble',icon:LayoutDashboard},{id:'users',label:'Utilisateurs',icon:Users},{id:'links',label:'Liens & campagnes',icon:Link2},{id:'security',label:'Sécurité',icon:ShieldAlert},{id:'assistant',label:'Assistant IA',icon:Bot},{id:'payments',label:'Paiements',icon:CreditCard},{id:'controls',label:'Contrôles d’urgence',icon:Power}];
+const tabs:{id:Tab;label:string;icon:typeof Users}[]=[{id:'overview',label:'Vue d’ensemble',icon:LayoutDashboard},{id:'users',label:'Utilisateurs',icon:Users},{id:'links',label:'Liens & campagnes',icon:Link2},{id:'messages',label:'Messages',icon:Mail},{id:'security',label:'Sécurité',icon:ShieldAlert},{id:'assistant',label:'Assistant IA',icon:Bot},{id:'payments',label:'Paiements',icon:CreditCard},{id:'controls',label:'Contrôles d’urgence',icon:Power}];
 const kinds:Record<string,{label:string;tone:'g'|'r'|'c'|'p'}>={login:{label:'Connexion',tone:'g'},login_failed:{label:'Échec de connexion',tone:'c'},login_blocked:{label:'Connexion bloquée',tone:'r'},login_suspended:{label:'Compte suspendu refusé',tone:'r'},register:{label:'Inscription',tone:'p'},register_blocked:{label:'Inscription refusée',tone:'c'},admin_login:{label:'Accès admin',tone:'p'},admin_failed:{label:'Échec accès admin',tone:'r'},admin_action:{label:'Action admin',tone:'p'},ai_flagged:{label:'Message IA signalé',tone:'r'},ai_limited:{label:'Limite IA atteinte',tone:'c'}};
 const planLabel:Record<string,string>={free:'Gratuit',monthly:'Pro mensuel',quarterly:'Pro trimestriel',annual:'Pro annuel',test:'Pro (test)'};
 const when=(iso:string|null)=>{if(!iso)return 'Jamais';const d=Date.now()-Date.parse(iso);if(d<60e3)return 'À l’instant';if(d<3600e3)return 'Il y a '+Math.round(d/60e3)+' min';if(d<864e5)return 'Il y a '+Math.round(d/3600e3)+' h';if(d<30*864e5)return 'Il y a '+Math.round(d/864e5)+' j';return new Date(iso).toLocaleDateString('fr-FR');};
@@ -26,7 +27,7 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
  const [tab,setTab]=useState<Tab>('overview'),[data,setData]=useState<Overview|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const load=useCallback(async()=>{setLoading(true);setError('');try{const r=await apiFetch('/api/admin/overview',{cache:'no-store'});const d=await r.json() as Overview&{error?:string};if(!r.ok)throw Error(d.error||'Lecture impossible.');setData(d);}catch(e){setError(e instanceof Error?e.message:'Réessayez.');}finally{setLoading(false);}},[]);
  useEffect(()=>{void load();const t=setInterval(()=>void load(),60000);return()=>clearInterval(t);},[load]);
- const act=useCallback(async(body:Record<string,unknown>,confirmText?:string)=>{if(confirmText&&!await askConfirm(confirmText))return false;setNotice('');setError('');try{const r=await apiFetch('/api/admin/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json() as {message?:string;error?:string};if(!r.ok)throw Error(d.error||'Action impossible.');setNotice(d.message||'Fait.');await load();return true;}catch(e){setError(e instanceof Error?e.message:'Réessayez.');return false;}},[load]);
+ const act=useCallback(async(body:Record<string,unknown>,confirmText?:string)=>{if(confirmText&&!await askConfirm(confirmText))return false;setNotice('');setError('');try{const r=await apiFetch('/api/admin/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json() as {message?:string;error?:string;password?:string};if(!r.ok)throw Error(d.error||'Action impossible.');setNotice(d.message||'Fait.');await load();return d.password?{password:d.password}:true;}catch(e){setError(e instanceof Error?e.message:'Réessayez.');return false;}},[load]);
  const alerts=(data?.stats.failed24||0)+(data?.stats.blocked24||0)+(data?.suspiciousIps.length||0);
  return <div className="adm">
   <aside className="adm-side">
@@ -42,9 +43,10 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
     tab==='overview'?<OverviewTab data={data} go={setTab}/>:
     tab==='users'?<UsersTab data={data} act={act}/>:
     tab==='links'?<AdminLinks/>:
+    tab==='messages'?<MessagesTab/>:
     tab==='security'?<SecurityTab data={data}/>:
     tab==='assistant'?<AssistantTab data={data} act={act}/>:
-    tab==='payments'?<div className="adm-stack"><AdminRequests/><AdminPayments/></div>:
+    tab==='payments'?<div className="adm-stack"><AdminPrices act={act}/><AdminRequests/><AdminPayments/></div>:
     <ControlsTab data={data} act={act}/>}
   </main>
  </div>;
@@ -84,25 +86,58 @@ function OverviewTab({data,go}:{data:Overview;go:(t:Tab)=>void}){
 
 function PlanTag({u}:{u:AdminUser}){return u.status!=='active'?<span className="adm-tag r">Suspendu</span>:u.plan==='free'?<span className="adm-tag">Gratuit</span>:<span className="adm-tag gold"><Crown size={12}/>{planLabel[u.plan]||'Pro'}</span>;}
 
-function UsersTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean>}){
+function UsersTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
  const [q,setQ]=useState(''),[filter,setFilter]=useState<'all'|'pro'|'free'|'active'|'inactive'|'suspended'>('all'),[open,setOpen]=useState<AdminUser|null>(null),[months,setMonths]=useState(1);
  const list=data.users.filter(u=>(u.email+u.name).toLowerCase().includes(q.toLowerCase())&&(filter==='all'||(filter==='pro'&&u.plan!=='free')||(filter==='free'&&u.plan==='free')||(filter==='active'&&activeUser(u))||(filter==='inactive'&&!activeUser(u))||(filter==='suspended'&&u.status!=='active')));
  const counts={all:data.users.length,pro:data.stats.pro,free:data.stats.free,active:data.stats.active30,inactive:data.stats.inactive,suspended:data.stats.suspended};
- const labels={all:'Tous',pro:'Pro',free:'Gratuits',active:'Actifs',inactive:'Inactifs',suspended:'Suspendus'};
+ const labels={all:'Tous',pro:'Pro',free:'Gratuits',active:'Actifs',inactive:'Inactifs',suspended:'Limités / bloqués'};
  useEffect(()=>{if(open){const fresh=data.users.find(u=>u.id===open.id);if(fresh&&fresh!==open)setOpen(fresh);}},[data.users,open]);
  return <div className="adm-stack">
+  <AddMember act={act}/>
   <div className="adm-toolbar"><label className="adm-search"><Search size={16}/><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher un nom ou un e-mail"/></label><div className="adm-chips">{(Object.keys(labels) as (keyof typeof labels)[]).map(k=><button key={k} type="button" className={filter===k?'on':''} onClick={()=>setFilter(k)}>{labels[k]} <em>{counts[k]}</em></button>)}</div></div>
   <section className="adm-card adm-table-card"><div className="adm-table-wrap"><table className="adm-table"><thead><tr><th>Utilisateur</th><th>Formule</th><th>Activité</th><th>Patrimoine</th><th>Inscrit</th><th/></tr></thead><tbody>
-   {list.map(u=><tr key={u.id} onClick={()=>setOpen(u)}><td><div className="adm-user"><span className="adm-av">{(u.name||u.email)[0]?.toUpperCase()}</span><div><b>{u.name||'—'}</b><small>{u.email}</small></div></div></td><td><PlanTag u={u}/>{u.expiresAt&&<small className="adm-sub">jusqu’au {new Date(u.expiresAt).toLocaleDateString('fr-FR')}</small>}</td><td><span className={'adm-dot '+(activeUser(u)?'g':'')}/>{when(u.lastSeenAt)}</td><td><small>{u.properties} bien(s) · {u.tenants} locataire(s)</small></td><td><small>{new Date(u.createdAt).toLocaleDateString('fr-FR')}</small></td><td><Eye size={16} className="adm-muted"/></td></tr>)}
+   {list.map(u=><tr key={u.id} onClick={()=>setOpen(u)}><td><div className="adm-user"><span className="adm-av">{(u.name||u.email)[0]?.toUpperCase()}</span><div><b>{u.name||'—'}</b><small>{u.email}</small></div></div></td><td><PlanTag u={u}/>{u.status!=='active'&&<StatusTag status={u.status}/>}{u.expiresAt&&<small className="adm-sub">jusqu’au {new Date(u.expiresAt).toLocaleDateString('fr-FR')}</small>}</td><td><span className={'adm-dot '+(activeUser(u)?'g':'')}/>{when(u.lastSeenAt)}</td><td><small>{u.properties} bien(s) · {u.tenants} locataire(s)</small></td><td><small>{new Date(u.createdAt).toLocaleDateString('fr-FR')}</small></td><td><Eye size={16} className="adm-muted"/></td></tr>)}
    {!list.length&&<tr><td colSpan={6} className="adm-empty">Aucun compte ne correspond.</td></tr>}
   </tbody></table></div></section>
   {open&&<div className="adm-drawer-scrim" onClick={()=>setOpen(null)}><aside className="adm-drawer" onClick={e=>e.stopPropagation()} role="dialog" aria-label={'Compte '+open.email}>
    <header><span className="adm-av lg">{(open.name||open.email)[0]?.toUpperCase()}</span><div><h3>{open.name||'—'}</h3><small>{open.email}</small></div><button type="button" className="adm-icon" onClick={()=>setOpen(null)} aria-label="Fermer"><X size={18}/></button></header>
-   <div className="adm-facts"><div><span>Formule</span><PlanTag u={open}/></div><div><span>Fin Pro</span><b>{open.expiresAt?new Date(open.expiresAt).toLocaleDateString('fr-FR'):'—'}</b></div><div><span>Inscrit le</span><b>{new Date(open.createdAt).toLocaleDateString('fr-FR')}</b></div><div><span>Dernière activité</span><b>{when(open.lastSeenAt)}</b></div><div><span>Biens / locataires</span><b>{open.properties} / {open.tenants}</b></div><div><span>Espaces</span><b>{open.spaces||1}</b></div><div><span>Total payé</span><b>{money(open.paid)}</b></div><div><span>Messages IA</span><b>{open.aiMessages}{open.flagged?` · ${open.flagged} signalé(s)`:''}</b></div></div>
-   <h4>Abonnement</h4><div className="adm-inline"><select value={months} onChange={e=>setMonths(Number(e.target.value))} aria-label="Durée offerte"><option value={1}>1 mois</option><option value={3}>3 mois</option><option value={6}>6 mois</option><option value={12}>12 mois</option></select><button type="button" className="adm-btn gold" onClick={()=>void act({action:'grant_pro',userId:open.id,months},`Offrir ${months} mois de Pro à ${open.email} ?`)}><Crown size={15}/>Offrir Pro</button>{open.plan!=='free'&&<button type="button" className="adm-btn ghost" onClick={()=>void act({action:'revoke_pro',userId:open.id},`Retirer l’accès Pro de ${open.email} ?`)}>Retirer Pro</button>}</div>
-   <h4>Sécurité du compte</h4><div className="adm-inline"><button type="button" className="adm-btn ghost" onClick={()=>void act({action:'logout_user',userId:open.id},`Fermer toutes les sessions de ${open.email} ?`)}><LogOut size={15}/>Déconnecter partout</button>{open.status==='active'?<button type="button" className="adm-btn danger" onClick={()=>void act({action:'suspend',userId:open.id},`Suspendre ${open.email} ? Il ne pourra plus se connecter.`)}><UserX size={15}/>Suspendre</button>:<button type="button" className="adm-btn green" onClick={()=>void act({action:'activate',userId:open.id})}><UserCheck size={15}/>Réactiver</button>}</div>
+   <div className="adm-facts"><div><span>Statut</span><StatusTag status={open.status}/></div><div><span>Formule</span><PlanTag u={open}/></div><div><span>Fin Pro</span><b>{open.expiresAt?new Date(open.expiresAt).toLocaleDateString('fr-FR'):'—'}</b></div><div><span>Inscrit le</span><b>{new Date(open.createdAt).toLocaleDateString('fr-FR')}</b></div><div><span>Dernière activité</span><b>{when(open.lastSeenAt)}</b></div><div><span>Biens / locataires</span><b>{open.properties} / {open.tenants}</b></div><div><span>Espaces</span><b>{open.spaces||1}</b></div><div><span>Total payé</span><b>{money(open.paid)}</b></div><div><span>Messages IA</span><b>{open.aiMessages}{open.flagged?` · ${open.flagged} signalé(s)`:''}</b></div></div>
+   <h4>Abonnement</h4><div className="adm-inline"><div className="adm-choice"><Choice label="Durée offerte" value={String(months)} onChange={v=>setMonths(Number(v))} options={[{value:'1',label:'1 mois'},{value:'3',label:'3 mois'},{value:'6',label:'6 mois'},{value:'12',label:'12 mois'}]}/></div><button type="button" className="adm-btn gold" onClick={()=>void act({action:'grant_pro',userId:open.id,months},`Offrir ${months} mois de Pro à ${open.email} ?`)}><Crown size={15}/>Offrir Pro</button>{open.plan!=='free'&&<button type="button" className="adm-btn ghost" onClick={()=>void act({action:'revoke_pro',userId:open.id},`Retirer l’accès Pro de ${open.email} ?`)}>Retirer Pro</button>}</div>
+   <h4>Sécurité du compte</h4><div className="adm-inline"><button type="button" className="adm-btn ghost" onClick={()=>void act({action:'logout_user',userId:open.id},`Fermer toutes les sessions de ${open.email} ?`)}><LogOut size={15}/>Déconnecter partout</button>{open.status==='active'&&<button type="button" className="adm-btn ghost" onClick={()=>void act({action:'restrict',userId:open.id},`Limiter l’accès de ${open.email} ? Il reste connecté mais Factures, Documents, Analyses, Paramètres et les exports sont bloqués avec un message d’avertissement, le temps de votre vérification.`)}><Lock size={15}/>Limiter l’accès</button>}{open.status!=='suspended'&&<button type="button" className="adm-btn danger" onClick={()=>void act({action:'suspend',userId:open.id},`Bloquer ${open.email} ? Il est déconnecté et voit un message de vérification de sécurité à la connexion. Ses données restent protégées.`)}><UserX size={15}/>Bloquer le compte</button>}{open.status!=='active'&&<button type="button" className="adm-btn green" onClick={()=>void act({action:'activate',userId:open.id})}><UserCheck size={15}/>Rétablir l’accès complet</button>}</div><p className="adm-hint">{open.status==='restricted'?'Accès limité en cours : menus sensibles bloqués.':open.status==='suspended'?'Compte bloqué : connexion refusée avec un message de vérification.':'Accès complet.'}</p><div className="adm-inline"></div>
   </aside></div>}
  </div>;
+}
+
+function AdminPrices({act}:{act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
+ const names:Record<string,string>={monthly:'Pro mensuel · 1 mois',quarterly:'Pro trimestriel · 3 mois',annual:'Pro annuel · 12 mois'};
+ const [prices,setPrices]=useState<Record<string,string>>({}),[source,setSource]=useState(''),[busy,setBusy]=useState(false);
+ const load=useCallback(async()=>{try{const r=await fetch('/api/prices',{cache:'no-store'});const d=await r.json() as {prices:Record<string,number>;source:string};setPrices(Object.fromEntries(Object.entries(d.prices).map(([k,v])=>[k,String(v)])));setSource(d.source);}catch{}},[]);
+ useEffect(()=>{void load();},[load]);
+ async function save(reset=false){setBusy(true);const body=reset?{monthly:null,quarterly:null,annual:null}:Object.fromEntries(Object.keys(names).map(k=>[k,Number(String(prices[k]||'').replace(/\D/g,''))||null]));
+  const ok=await act({action:'set_prices',prices:body},reset?'Revenir aux prix de vos liens SasPay ?':'Appliquer ces nouveaux prix ? Ils seront utilisés immédiatement pour tous les prochains paiements et affichés partout (page de présentation, offres, assistant).');if(ok)await load();setBusy(false);}
+ return <section className="adm-card">
+  <div className="adm-card-h"><h3>Prix des abonnements</h3><span className={'adm-tag '+(source==='admin'?'gold':'g')}>{source==='admin'?'Prix fixés ici':source==='saspay'?'Prix lus sur SasPay':'Prix par défaut'}</span></div>
+  <p className="adm-hint">Les prix saisis ici passent avant ceux de vos liens SasPay et s’appliquent tout de suite : affichage, création du paiement et vérification du montant payé.</p>
+  <div className="adm-prices">{Object.entries(names).map(([k,label])=><label key={k}><span>{label}</span><div className="adm-price-input"><input inputMode="numeric" value={prices[k]||''} onChange={e=>setPrices(p=>({...p,[k]:e.target.value.replace(/[^\d]/g,'')}))} autoComplete="off"/><em>F CFA</em></div></label>)}</div>
+  <div className="adm-inline"><button type="button" className="adm-btn" disabled={busy} onClick={()=>void save()}>Enregistrer les prix</button>{source==='admin'&&<button type="button" className="adm-btn ghost" disabled={busy} onClick={()=>void save(true)}>Revenir aux prix SasPay</button>}</div>
+ </section>;
+}
+function MessagesTab(){
+ const [rows,setRows]=useState<{id:string;userId:string;subject:string;email:string;message:string;createdAt:string}[]|null>(null);
+ useEffect(()=>{void apiFetch('/api/admin/support',{cache:'no-store'}).then(r=>r.json()).then((d:{messages?:typeof rows})=>setRows(d.messages||[])).catch(()=>setRows([]));},[]);
+ if(!rows)return <div className="adm-card adm-loading"><LoaderCircle className="spin" size={22}/>Chargement…</div>;
+ return <div className="adm-stack">{rows.map(m=><article key={m.id} className="adm-card adm-msg"><header><span className="adm-tag">{m.subject}</span><span className={'adm-tag '+(m.userId==='visiteur'?'gold':'g')}>{m.userId==='visiteur'?'Visiteur':'Client'}</span><small>{new Date(m.createdAt).toLocaleString('fr-FR',{timeZone:'Africa/Dakar'})}</small></header><p>{m.message}</p><a className="adm-btn ghost sm" href={'mailto:'+m.email+'?subject='+encodeURIComponent('Re: '+m.subject+' — Yombal')}><Mail size={14}/>Répondre à {m.email}</a></article>)}{!rows.length&&<div className="adm-card adm-empty">Aucun message pour le moment.</div>}</div>;
+}
+function StatusTag({status}:{status:string}){return status==='restricted'?<span className="adm-tag gold"><Lock size={12}/>Accès limité</span>:status==='suspended'?<span className="adm-tag r"><UserX size={12}/>Bloqué</span>:<span className="adm-tag g">Actif</span>;}
+function AddMember({act}:{act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
+ const [open,setOpen]=useState(false),[email,setEmail]=useState(''),[name,setName]=useState(''),[months,setMonths]=useState('0'),[busy,setBusy]=useState(false),[created,setCreated]=useState<{email:string;password:string}|null>(null),[copied,setCopied]=useState(false);
+ async function submit(e:FormEvent){e.preventDefault();setBusy(true);const r=await act({action:'create_user',email,name,months:Number(months)});setBusy(false);if(r&&typeof r==='object'&&r.password){setCreated({email,password:r.password});setEmail('');setName('');}}
+ if(!open)return <div className="adm-add-row"><button type="button" className="adm-btn" onClick={()=>setOpen(true)}><UserPlus size={15}/>Ajouter un membre</button></div>;
+ return <section className="adm-card adm-add">
+  <div className="adm-card-h"><h3>Ajouter un membre</h3><button type="button" className="adm-icon" onClick={()=>{setOpen(false);setCreated(null);}} aria-label="Fermer"><X size={17}/></button></div>
+  {created?<div className="adm-created"><p>Compte créé pour <b>{created.email}</b>. Transmettez-lui ce mot de passe provisoire (il ne sera plus affiché) :</p><div className="adm-pass"><code>{created.password}</code><button type="button" className="adm-btn ghost sm" onClick={async()=>{try{await navigator.clipboard.writeText(created.password);}catch{}setCopied(true);setTimeout(()=>setCopied(false),1500);}}>{copied?'Copié':'Copier'}</button></div><p className="adm-hint">Il pourra se connecter sur yombal-immo.pro/connexion avec son e-mail et ce mot de passe.</p><button type="button" className="adm-btn ghost" onClick={()=>setCreated(null)}>Ajouter un autre membre</button></div>
+  :<form className="adm-form adm-add-form" onSubmit={submit}><label><span>Nom complet</span><input value={name} onChange={e=>setName(e.target.value)} required minLength={2} maxLength={120} autoComplete="off"/></label><label><span>E-mail</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} required maxLength={200} autoComplete="off"/></label><label><span>Formule</span><Choice label="Formule" value={months} onChange={setMonths} options={[{value:'0',label:'Gratuit'},{value:'1',label:'Pro offert · 1 mois'},{value:'3',label:'Pro offert · 3 mois'},{value:'6',label:'Pro offert · 6 mois'},{value:'12',label:'Pro offert · 12 mois'}]}/></label><button className="adm-btn" disabled={busy}><UserPlus size={15}/>{busy?'Création…':'Créer le compte'}</button></form>}
+ </section>;
 }
 
 function SecurityTab({data}:{data:Overview}){
@@ -122,7 +157,7 @@ function SecurityTab({data}:{data:Overview}){
  </div>;
 }
 
-function AssistantTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean>}){
+function AssistantTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
  const [list,setList]=useState<Conversation[]|null>(null),[open,setOpen]=useState<Conversation|null>(null),[messages,setMessages]=useState<{role:string;content:string;flagged:number;createdAt:string}[]>([]),[onlyFlagged,setOnlyFlagged]=useState(false);
  const [provider,setProvider]=useState(data.aiConfig.provider||'groq'),[model,setModel]=useState(data.aiConfig.model||''),[key,setKey]=useState(''),[saving,setSaving]=useState(false);
  const loadList=useCallback(async()=>{const r=await apiFetch('/api/admin/conversations',{cache:'no-store'});const d=await r.json() as {conversations?:Conversation[]};setList(d.conversations||[]);},[]);
@@ -135,7 +170,7 @@ function AssistantTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?
   <div className="adm-grid-2">
    <section className="adm-card"><div className="adm-card-h"><div><h3>Configuration</h3><p>L’assistant répond à vos clients depuis le bouton en bas à droite de Yombal.</p></div><span className={'adm-status '+(data.aiConfig.configured&&data.flags.assistant?'g':'r')}><i/>{!data.aiConfig.configured?'Clé manquante':data.flags.assistant?'Actif':'Coupé'}</span></div>
     <form className="adm-form" onSubmit={async e=>{e.preventDefault();setSaving(true);const ok=await act({action:'ai_config',provider,model,...(key.trim()?{apiKey:key.trim()}:{})});if(ok)setKey('');setSaving(false);}}>
-     <label><span>Fournisseur</span><select value={provider} onChange={e=>{setProvider(e.target.value);setModel(providers[e.target.value].model);}}>{Object.entries(providers).map(([k,p])=><option key={k} value={k}>{p.label}</option>)}</select></label>
+     <label><span>Fournisseur</span><Choice label="Fournisseur" value={provider} onChange={v=>{setProvider(v);setModel(providers[v].model);}} options={Object.entries(providers).map(([k,p])=>({value:k,label:p.label}))}/></label>
      <label><span>Modèle</span><input name="ai-model" autoComplete="off" spellCheck={false} value={model} onChange={e=>setModel(e.target.value)} placeholder={providers[provider]?.model}/></label>
      <label><span>{data.aiConfig.configured?'Remplacer la clé API (facultatif)':'Clé API'}</span><input type="text" name="ai-api-key" data-lpignore="true" data-1p-ignore style={{WebkitTextSecurity:'disc'} as CSSProperties} value={key} onChange={e=>setKey(e.target.value)} autoComplete="off" spellCheck={false} placeholder="Collez la clé ici"/></label>
      <p className="adm-hint">Créez une clé gratuite sur <a href={providers[provider]?.url} target="_blank" rel="noreferrer">{providers[provider]?.url.replace('https://','')}</a>. Elle est chiffrée et n’apparaît jamais dans le code.</p>
@@ -156,7 +191,7 @@ function AssistantTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?
  </div>;
 }
 
-function ControlsTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean>}){
+function ControlsTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
  const f=data.flags;
  const Row=({icon:Icon,title,text,on,tone,onToggle,label}:{icon:typeof Users;title:string;text:string;on:boolean;tone:'g'|'r';onToggle:()=>void;label:string})=><div className="adm-control"><span className={'adm-ico '+tone}><Icon size={18}/></span><div><b>{title}</b><small>{text}</small></div><button type="button" className={'adm-switch '+(on?'on':'')} role="switch" aria-checked={on} aria-label={label} onClick={onToggle}><i/></button></div>;
  return <div className="adm-stack">

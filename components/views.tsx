@@ -7,6 +7,7 @@ import { Plus, ArrowUpRight, ArrowDownLeft, Wallet, Building2, MapPin, BedDouble
 import { type State, type Entity, type Property, type Payment, type Mutation, type Alert, money, today, currentMonth, monthLabel, dateLabel, addMonth, totals, bills, paidFor, balanceFor, propertyStatus, leaseFor, followPeriod, alerts, rentalProperties } from '../lib/model';
 import { csv, printReceipt, printReport, calendarFile } from '../lib/exports';
 import Choice from './choice';
+import GettingStarted from './getting-started';
 import HomeBulletin from './home-bulletin';
 import AnalyticsDeep from './analytics-deep';
 import Properties from './properties-page';
@@ -17,7 +18,7 @@ import {useMobileSettings} from './mobile-settings-section';
 import TenantsPage from './tenants-page';
 import OwnersPage from './owners-page';
 import { Badge, Empty, SectionTitle, Panel, RecordMenu, PropertyArt } from './ui';
-export type Actions = {canPro?:boolean;pro?:(feature:import('../lib/billing').ProFeature)=>void;contract:(leaseId?:string)=>void; selectMonth:(month:string)=>void; tenant:(id:string)=>void; add: (entity: Entity, defaults?: Record<string, unknown>) => void; edit: (entity: Entity, item: unknown) => void; remove: (entity: Entity, id: string) => void; go: (page: string) => void; pay: (leaseId: string, period: string) => void; inspect: (property: Property) => void; mutate: (mutation: Mutation) => Promise<boolean>; notice: (message: string) => void; remind: (leaseId: string, period: string) => void; importProperties: () => void };
+export type Actions = {canPro?:boolean;pro?:(feature:import('../lib/billing').ProFeature)=>void;contract:(leaseId?:string)=>void; selectMonth:(month:string)=>void; tenant:(id:string)=>void; add: (entity: Entity, defaults?: Record<string, unknown>) => void; edit: (entity: Entity, item: unknown) => void; remove: (entity: Entity, id: string) => void; go: (page: string) => void; pay: (leaseId: string, period: string) => void; inspect: (property: Property) => void; mutate: (mutation: Mutation) => Promise<boolean>; notice: (message: string) => void; remind: (leaseId: string, period: string) => void; importProperties: () => void; demo?: () => void; isDemo?: boolean };
 type Props = { state: State; period: string; actions: Actions; search?: string };
 export function SmallChart({state,period,actions,simple=false}:{state:State;period:string;actions?:Actions;simple?:boolean}) {return <AnalyticsChart state={state} period={period} actions={actions} simple={simple}/>;}
 export function Overview({ state, period, actions }: Props) {
@@ -45,6 +46,7 @@ export function Overview({ state, period, actions }: Props) {
         <button className="button primary overview-add" onClick={()=>actions.add('properties')}><Plus size={17}/><span>Ajouter un bien</span></button>
       </div>
     </header>
+    <GettingStarted state={state} actions={actions}/>
     <div className="stats-grid"><Stat onClick={()=>actions.go('loyers')} label="Loyers encaissés" value={money(metrics.collected)} detail={'sur ' + money(metrics.expected) + ' attendus'} icon={<Wallet size={20} />} tone="green" progress={progress} /><Stat onClick={()=>actions.go('loyers')} label="À recevoir ce mois" value={money(metrics.balance)} detail={metrics.balance ? 'Suivez vos échéances de près' : 'Votre suivi est à jour'} icon={<Clock3 size={20} />} tone="coral" /><Stat onClick={()=>actions.go('biens')} label="Logements occupés" shortLabel="Occupés" value={metrics.occupied + ' / ' + rentalProperties(state).length} detail={rentalProperties(state).length ? Math.round(metrics.occupied / rentalProperties(state).length * 100) + ' % des logements occupés' : 'Ajoutez votre premier logement'} icon={<Building2 size={20} />} tone="purple" /><Stat onClick={()=>actions.go('entretien')} label="Dépenses du mois" shortLabel="Dépenses" value={money(metrics.expenses)} detail={state.expenses.filter(e => e.date.startsWith(period)).length + ' dépense(s) enregistrée(s)'} icon={<ReceiptText size={20} />} tone="sand" /></div>
     {mobileLayout?summary:lateNotice}
     <div className="overview-analytics" aria-label="Analyses de votre immobilier">

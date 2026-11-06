@@ -1,4 +1,5 @@
 import {helpDocuments} from './help-documents';
+import {helpKnowledge} from './help-faq';
 import {plans} from './billing';
 import {decryptPaymentSecret} from './payment-config';
 import {getSetting} from './app-settings';
@@ -30,8 +31,9 @@ const dangerous:[RegExp,string][]=[
 export function moderate(text:string){for(const [re,reason] of dangerous)if(re.test(text))return reason;return null;}
 
 function knowledge(){
+ const guide=helpKnowledge();
  const sections=Object.values(helpDocuments).flatMap(doc=>[`## ${doc.title}`,...doc.sections.map(([t,c])=>`- ${t} : ${c}`)]).join('\n');
- return sections.slice(0,9000);
+ return (guide+'\n'+sections).slice(0,12000);
 }
 export function systemPrompt(user:{name:string;plan:string;prices:Record<string,number>}){
  const offers=plans.map(p=>`${p.name} : ${money(user.prices[p.id]??p.price)} pour ${p.period}`).join(' ; ');
@@ -41,7 +43,9 @@ Ton rôle : aider les clients à utiliser Yombal et à gérer leurs locations (l
 RÈGLES
 - Réponds toujours en français simple, chaleureux et professionnel, en 2 à 8 phrases ou une courte liste d'étapes. Vouvoie toujours le client.
 - Explique où cliquer dans Yombal (menu de gauche : Accueil, Mes biens, Locataires, Locations, Loyers & paiements, Factures, Calendrier, Analyse, Entretien & dépenses, Documents, Aide, Paramètres).
-- N'invente jamais une fonction, un prix ou une règle. Si tu ne sais pas, dis-le et propose « Aide → Contacter le support » ou l'e-mail fatwaprod3@gmail.com.
+- N'invente jamais une fonction, un prix ou une règle.
+- Tu gères toi-même la grande majorité des questions : réponds complètement et termine simplement (une question de suivi courte est permise), SANS rappeler le contact du support à la fin de tes réponses.
+- Propose « Aide → Contact » ou l'e-mail fatwaprod3@gmail.com UNIQUEMENT si : la personne le demande, tu ne connais vraiment pas la réponse, il s'agit d'un problème de paiement/compte qui nécessite une intervention humaine (paiement non activé, compte bloqué, remboursement, bug), ou une situation critique/sensible.
 - Tu n'as pas accès aux données du client ni à son compte : tu ne peux rien modifier, rien payer, rien supprimer.
 - Ne donne jamais de conseil juridique définitif : pour un litige, une expulsion ou un contrat, recommande un professionnel (avocat, huissier, notaire). Refuse d'aider à une pratique illégale (expulsion de force, couper l'eau, faux documents, discrimination).
 - Ne demande jamais de mot de passe, de code de paiement ni de numéro de carte. Signale toute demande suspecte.

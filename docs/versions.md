@@ -1,5 +1,16 @@
 # Versions de Yombal.immo
 
+## 0.33.0 — 6 novembre 2026
+
+- Référencement : titre et description optimisés (« Yombal », « Yombal immo », gestion locative), mots-clés, Open Graph, données structurées SoftwareApplication, sitemap.xml et robots.txt, adresse canonique yombal-immo.pro.
+- Domaine : l’ancienne adresse yombal-immo-with-claude.vercel.app redirige vers https://yombal-immo.pro (les API, dont le webhook SasPay, restent joignables sur les deux adresses).
+- Pages publiques : centre d’aide détaillé (/aide) avec recherche et thèmes, contact (/contact, formulaire ouvert aux visiteurs), conditions d’utilisation (/conditions) et confidentialité (/confidentialite) avec sommaire.
+- Aide dans l’application : nouveau centre d’aide (recherche, 7 thèmes, réponses détaillées, démonstration).
+- Administration : prix des abonnements modifiables (priorité sur les liens SasPay, retour possible aux prix SasPay) ; ajout d’un membre (gratuit ou Pro offert, mot de passe provisoire affiché une fois) ; statut « Accès limité » (menus sensibles bloqués avec message, création de documents refusée côté serveur) et « Bloqué » (message de vérification à la connexion) ; onglet Messages (demandes de contact) ; listes déroulantes au style Yombal.
+- Assistant : ne rappelle plus le contact du support à chaque réponse ; seulement si demandé, inconnu ou cas sensible. Connaît tout le centre d’aide.
+- Images : recadrage amélioré — pivoter, zoom jusqu’à 400 % (molette, pincement, curseur), grille de cadrage, pourcentage de zoom ; photos enregistrées en JPEG plus léger, logos en PNG.
+- Nouveaux comptes : carte « Premiers pas » (6 étapes avec progression, bouton Voir la démonstration) et conseils de configuration dans le bandeau d’accueil (profil, logo, premier bien, locataire, moyens de paiement).
+
 ## 0.32.0 — 6 novembre 2026
 
 - Administration : nouvel onglet « Liens & campagnes ». Création de liens de suivi /r/<code> pour influenceurs, publicités (Facebook, TikTok, Instagram, Google…), partenaires. Pour chaque lien : clics, visiteurs uniques, part mobile, inscriptions, taux de conversion, clients Pro, paiements et revenus attribués, coût et retour sur investissement, activité sur 14 jours. Comparaison des sources (y compris inscriptions directes), meilleur lien, tri, mise en pause, suppression. Attribution au dernier lien cliqué pendant 60 jours ; robots d’aperçu ignorés.
