@@ -15,6 +15,13 @@
       "when": 1793930000000,
       "tag": "0001_admin_assistant",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793950000000,
+      "tag": "0002_tracking_links",
+      "breakpoints": true
     }
   ]
 }

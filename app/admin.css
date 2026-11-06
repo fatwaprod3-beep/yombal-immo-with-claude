@@ -88,3 +88,35 @@
 .adm-main .admin-payments h2{font-size:22px}
 @media(max-width:1100px){.adm-kpis{grid-template-columns:repeat(2,1fr)}.adm-grid-2,.adm-grid-3{grid-template-columns:1fr}}
 @media(max-width:800px){.adm{grid-template-columns:1fr}.adm-side{position:static;height:auto;padding:14px}.adm-side nav{flex-direction:row;overflow:auto}.adm-side nav button{white-space:nowrap}.adm-side-foot{flex-direction:row;flex-wrap:wrap;border:0;padding:0}.adm-main{padding:18px 16px 40px}.adm-split{grid-template-columns:1fr}.adm-table th:nth-child(4),.adm-table td:nth-child(4),.adm-table th:nth-child(5),.adm-table td:nth-child(5){display:none}}
+/* Fenêtre de confirmation Yombal (remplace la fenêtre du navigateur) */
+.yc-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:#21152e73;backdrop-filter:blur(3px);animation:yc-fade .18s ease both}
+.yc-dialog{width:min(420px,100%);background:#fff;border-radius:20px;padding:26px 24px 20px;box-shadow:0 30px 80px #21152e40;text-align:center;font-family:'DM Sans',sans-serif;animation:yc-pop .22s cubic-bezier(.2,.8,.2,1) both}
+.yc-icon{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:16px;background:#f1e8f7;color:#674580;margin-bottom:12px}.yc-icon.danger{background:#fdeee8;color:#b0644a}
+.yc-dialog h2{font-family:'Manrope',sans-serif;font-size:18px;color:#281b34;margin:0 0 8px}
+.yc-dialog p{font-size:14px;line-height:1.55;color:#6f6478;margin:0 0 20px}
+.yc-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yc-actions button{padding:12px;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer}
+.yc-cancel{background:#f4f0f6;color:#4e335f}.yc-cancel:hover{background:#ebe4f0}
+.yc-ok{background:#674580;color:#fff}.yc-ok.danger{background:#c25b45}.yc-ok:hover{filter:brightness(1.08)}
+@keyframes yc-fade{from{opacity:0}}@keyframes yc-pop{from{opacity:0;transform:translateY(10px) scale(.97)}}
+/* Liens & campagnes */
+.lk-split{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.lk-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lk-preview{margin:0;padding:10px 12px;border-radius:11px;background:#faf6fc;border:1px dashed #e2d6ea;font-size:13px;color:#7d6a88;overflow-wrap:anywhere}.lk-preview b{color:#674580}
+.lk-best{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:linear-gradient(110deg,#fbf2e0,#fff8ec);border:1px solid #f1dfb8;color:#8a5a12;margin-bottom:14px}.lk-best b{display:block;font-size:13.5px;color:#5f3a0c}.lk-best small{font-size:12px}
+.lk-bars{display:grid;gap:10px}
+.lk-bar{display:grid;grid-template-columns:minmax(0,170px) 1fr 52px;gap:10px;align-items:center;font-size:12.5px}
+.lk-bar-name{display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4e335f;font-weight:600}.lk-bar-name i{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:#c9bcd2}
+.lk-bar-track{height:10px;border-radius:99px;background:#f3eef6;overflow:hidden}.lk-bar-track i{display:block;height:100%;border-radius:99px;transition:width .5s ease}
+.lk-bar.direct .lk-bar-track i{background:#d8cde0}.lk-bar b{text-align:right;color:#281b34}
+.lk-table-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px 4px}
+.lk-tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.lk-tools select{padding:8px 10px;border:1px solid #e2d6ea;border-radius:10px;font:inherit;font-size:12.5px;background:#fff}
+.lk-check{display:flex;gap:6px;align-items:center;font-size:12.5px;color:#6d5a79}
+.lk-table tbody tr{cursor:default}.lk-table td{white-space:nowrap}.lk-table tr.is-archived{opacity:.55}
+.lk-name{display:flex;gap:10px;align-items:center}.lk-name b{display:block;color:#281b34}.lk-name small,.lk-sub{display:block;font-size:11.5px;color:#9a879f}
+.lk-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.lk-spark{width:84px;height:24px}.lk-spark rect{fill:#9a6fb3}
+.lk-actions{display:flex;gap:6px;justify-content:flex-end}
+.lk-hint{display:flex;gap:8px;align-items:flex-start}
+@media(max-width:1100px){.lk-split{grid-template-columns:1fr}}
+@media(max-width:600px){.lk-row{grid-template-columns:1fr}.lk-bar{grid-template-columns:110px 1fr 44px}}

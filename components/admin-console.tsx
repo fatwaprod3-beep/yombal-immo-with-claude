@@ -1,19 +1,21 @@
 'use client';
 import {useCallback,useEffect,useMemo,useState,type CSSProperties} from 'react';
 import Link from 'next/link';
-import {Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
+import {Link2,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
+import {askConfirm} from './confirm-dialog';
 import {money} from '../lib/model';
 import AdminPayments from './admin-payments';
 import AdminRequests from './admin-requests';
+import AdminLinks from './admin-links';
 
 type AdminUser={id:string;email:string;name:string;status:string;createdAt:string;lastSeenAt:string|null;plan:string;expiresAt:string|null;properties:number;tenants:number;spaces:number;paid:number;aiMessages:number;flagged:number};
 type Event={id:string;kind:string;email:string|null;userId:string|null;ip:string|null;userAgent:string|null;detail:string|null;createdAt:string};
 type Overview={stats:Record<string,number>;signups:{d:string;n:number}[];users:AdminUser[];events:Event[];suspiciousIps:{ip:string;n:number;last:string;emails:string}[];flags:{registrationsOpen:boolean;maintenance:boolean;assistant:boolean;sessionsAfter:number};aiConfig:{provider:string;model:string;configured:boolean}};
 type Conversation={id:string;title:string;flagged:number;flagReason:string|null;messageCount:number;updatedAt:string;userId:string;email:string|null;name:string|null};
-type Tab='overview'|'users'|'security'|'assistant'|'payments'|'controls';
+type Tab='overview'|'users'|'links'|'security'|'assistant'|'payments'|'controls';
 
-const tabs:{id:Tab;label:string;icon:typeof Users}[]=[{id:'overview',label:'Vue d’ensemble',icon:LayoutDashboard},{id:'users',label:'Utilisateurs',icon:Users},{id:'security',label:'Sécurité',icon:ShieldAlert},{id:'assistant',label:'Assistant IA',icon:Bot},{id:'payments',label:'Paiements',icon:CreditCard},{id:'controls',label:'Contrôles d’urgence',icon:Power}];
+const tabs:{id:Tab;label:string;icon:typeof Users}[]=[{id:'overview',label:'Vue d’ensemble',icon:LayoutDashboard},{id:'users',label:'Utilisateurs',icon:Users},{id:'links',label:'Liens & campagnes',icon:Link2},{id:'security',label:'Sécurité',icon:ShieldAlert},{id:'assistant',label:'Assistant IA',icon:Bot},{id:'payments',label:'Paiements',icon:CreditCard},{id:'controls',label:'Contrôles d’urgence',icon:Power}];
 const kinds:Record<string,{label:string;tone:'g'|'r'|'c'|'p'}>={login:{label:'Connexion',tone:'g'},login_failed:{label:'Échec de connexion',tone:'c'},login_blocked:{label:'Connexion bloquée',tone:'r'},login_suspended:{label:'Compte suspendu refusé',tone:'r'},register:{label:'Inscription',tone:'p'},register_blocked:{label:'Inscription refusée',tone:'c'},admin_login:{label:'Accès admin',tone:'p'},admin_failed:{label:'Échec accès admin',tone:'r'},admin_action:{label:'Action admin',tone:'p'},ai_flagged:{label:'Message IA signalé',tone:'r'},ai_limited:{label:'Limite IA atteinte',tone:'c'}};
 const planLabel:Record<string,string>={free:'Gratuit',monthly:'Pro mensuel',quarterly:'Pro trimestriel',annual:'Pro annuel',test:'Pro (test)'};
 const when=(iso:string|null)=>{if(!iso)return 'Jamais';const d=Date.now()-Date.parse(iso);if(d<60e3)return 'À l’instant';if(d<3600e3)return 'Il y a '+Math.round(d/60e3)+' min';if(d<864e5)return 'Il y a '+Math.round(d/3600e3)+' h';if(d<30*864e5)return 'Il y a '+Math.round(d/864e5)+' j';return new Date(iso).toLocaleDateString('fr-FR');};
@@ -24,7 +26,7 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
  const [tab,setTab]=useState<Tab>('overview'),[data,setData]=useState<Overview|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const load=useCallback(async()=>{setLoading(true);setError('');try{const r=await apiFetch('/api/admin/overview',{cache:'no-store'});const d=await r.json() as Overview&{error?:string};if(!r.ok)throw Error(d.error||'Lecture impossible.');setData(d);}catch(e){setError(e instanceof Error?e.message:'Réessayez.');}finally{setLoading(false);}},[]);
  useEffect(()=>{void load();const t=setInterval(()=>void load(),60000);return()=>clearInterval(t);},[load]);
- const act=useCallback(async(body:Record<string,unknown>,confirmText?:string)=>{if(confirmText&&!window.confirm(confirmText))return false;setNotice('');setError('');try{const r=await apiFetch('/api/admin/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json() as {message?:string;error?:string};if(!r.ok)throw Error(d.error||'Action impossible.');setNotice(d.message||'Fait.');await load();return true;}catch(e){setError(e instanceof Error?e.message:'Réessayez.');return false;}},[load]);
+ const act=useCallback(async(body:Record<string,unknown>,confirmText?:string)=>{if(confirmText&&!await askConfirm(confirmText))return false;setNotice('');setError('');try{const r=await apiFetch('/api/admin/control',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json() as {message?:string;error?:string};if(!r.ok)throw Error(d.error||'Action impossible.');setNotice(d.message||'Fait.');await load();return true;}catch(e){setError(e instanceof Error?e.message:'Réessayez.');return false;}},[load]);
  const alerts=(data?.stats.failed24||0)+(data?.stats.blocked24||0)+(data?.suspiciousIps.length||0);
  return <div className="adm">
   <aside className="adm-side">
@@ -39,6 +41,7 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
    {!data?<div className="adm-card adm-loading"><LoaderCircle className="spin" size={22}/>Chargement des données…</div>:
     tab==='overview'?<OverviewTab data={data} go={setTab}/>:
     tab==='users'?<UsersTab data={data} act={act}/>:
+    tab==='links'?<AdminLinks/>:
     tab==='security'?<SecurityTab data={data}/>:
     tab==='assistant'?<AssistantTab data={data} act={act}/>:
     tab==='payments'?<div className="adm-stack"><AdminRequests/><AdminPayments/></div>:

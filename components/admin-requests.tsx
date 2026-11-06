@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';
 import {Check,LoaderCircle,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
+import {askConfirm} from './confirm-dialog';
 import {findPlan} from '../lib/billing';
 import {money} from '../lib/model';
 
@@ -11,7 +12,7 @@ export default function AdminRequests(){
  const [requests,setRequests]=useState<Request[]|null>(null),[busy,setBusy]=useState(''),[message,setMessage]=useState(''),[error,setError]=useState('');
  useEffect(()=>{void apiFetch('/api/admin/payments',{cache:'no-store'}).then(async r=>{const d=await r.json() as {requests?:Request[];error?:string};if(!r.ok)throw Error(d.error||'Lecture impossible.');setRequests(d.requests||[]);}).catch(e=>setError(e instanceof Error?e.message:'Réessayez.'));},[]);
  async function act(id:string,action:'activate_request'|'dismiss_request'){
-  if(busy)return;if(action==='activate_request'&&!window.confirm('Avez-vous vérifié ce paiement dans votre tableau de bord SasPay ?'))return;
+  if(busy)return;if(action==='activate_request'&&!await askConfirm('Avez-vous vérifié ce paiement dans votre tableau de bord SasPay ?',{title:'Activer cet abonnement',confirmLabel:'Oui, activer',danger:false}))return;
   setBusy(id);setError('');setMessage('');
   try{const r=await apiFetch('/api/admin/payments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,id})});const d=await r.json() as {requests?:Request[];expiresAt?:string;error?:string};if(!r.ok)throw Error(d.error||'Action impossible.');setRequests(d.requests||[]);setMessage(action==='activate_request'?'Accès Pro activé jusqu’au '+new Date(d.expiresAt||'').toLocaleDateString('fr-FR')+'.':'Demande retirée.');}
   catch(e){setError(e instanceof Error?e.message:'Réessayez.');}finally{setBusy('');}

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import ConfirmHost from "../components/confirm-dialog";
 import "./mobile.css";
 import "./analytics.css";
 import "./pro.css";
@@ -29,5 +30,5 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "Yombal.immo", statusBarStyle: "default" },
 };
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode}>) {
-  return <html lang="fr"><head><link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials"/><script src="/install-bootstrap.js"/></head><body>{children}</body></html>;
+  return <html lang="fr"><head><link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials"/><script src="/install-bootstrap.js"/></head><body>{children}<ConfirmHost/></body></html>;
 }

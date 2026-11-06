@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.32.0 — 6 novembre 2026
+
+- Administration : nouvel onglet « Liens & campagnes ». Création de liens de suivi /r/<code> pour influenceurs, publicités (Facebook, TikTok, Instagram, Google…), partenaires. Pour chaque lien : clics, visiteurs uniques, part mobile, inscriptions, taux de conversion, clients Pro, paiements et revenus attribués, coût et retour sur investissement, activité sur 14 jours. Comparaison des sources (y compris inscriptions directes), meilleur lien, tri, mise en pause, suppression. Attribution au dernier lien cliqué pendant 60 jours ; robots d’aperçu ignorés.
+- Base : migration `0002_tracking_links` (tables de liens et de clics, colonne d’attribution des comptes).
+- Confirmations : fenêtre aux couleurs de Yombal à la place de la fenêtre du navigateur (contrôles d’urgence, activations, suppressions).
+- Paiement : journal de diagnostic de l’adresse de retour envoyée à SasPay.
+
 ## 0.31.1 — 5 novembre 2026
 
 - Accueil : pendant le chargement de l’espace (quelques secondes après la connexion), les chiffres affichent un squelette animé au lieu de « 0 F », pour ne plus donner l’impression que les données ont disparu.

@@ -61,6 +61,8 @@ export async function createSasPayCheckout(user:Customer,planId:string,origin:st
    metadata:{yombal_checkout_id:id,yombal_plan:plan.id},expires_at:expiresAt,
   }));
   const sessionId=providerId(session.id);
+  // Diagnostic de redirection après paiement (aucune donnée personnelle).
+  console.log(JSON.stringify({event:'saspay_checkout_created',returnUrlSent:origin+'/?paiement=retour',returnUrlEcho:String((session as unknown as Record<string,unknown>).return_url??(session as unknown as Record<string,unknown>).success_url??'absent').replace(/commande=[^&]+/,'commande=<id>'),keys:Object.keys(session).slice(0,40)}));
   if(!sessionId||!trustedCheckoutUrl(session.checkout_url)||xofAmount(session.amount)!==price||session.currency!=='XOF'){
    let checkoutHost='',checkoutPath='';try{const u=new URL(String(session.checkout_url));checkoutHost=u.hostname;checkoutPath=u.pathname.replace(/[A-Za-z0-9_-]{8,}/g,'<id>');}catch{}
    console.warn(JSON.stringify({event:'saspay_checkout_mismatch',idOk:!!sessionId,idType:typeof session.id,idSample:String(session.id??'').replace(/[A-Za-z0-9]/g,'x').slice(0,40),checkoutHost,checkoutPath,amount:String(session.amount??''),currency:String(session.currency??''),keys:Object.keys(session).slice(0,30)}));
