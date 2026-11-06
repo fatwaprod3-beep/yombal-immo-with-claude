@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.35.0 — 6 novembre 2026
+
+- Mobile uniquement : fenêtres (popups) et sections Paramètres encore plus compactes ; les deux graphiques ronds reviennent, en format compact, sous le grand graphique ; grand graphique sans l’échelle (2 M, 1,5 M…) et moins haut ; cartes Locataires denses (moins de défilement) ; sélecteur de mois de l’accueil sans contour.
+- Analyses : les deux graphiques ronds réaffichés en bas de la page.
+- Nouveau guide illustré public /guide : chaque menu (accueil, biens, locataires, loyers, factures, calendrier, analyses, paramètres) avec un aperçu en direct dans un téléphone (données d’exemple) et ses gestes essentiels ; liens depuis la présentation, l’aide et le pied de page.
+- Démo : l’adresse /?demo=1 ouvre directement l’espace d’exemple (bouton « Voir la démo » de la présentation).
+
 ## 0.34.0 — 6 novembre 2026
 
 - Visite guidée façon application pour les nouveaux comptes : zone éclairée + bulle d’explication, 9 étapes (ajouter un bien, locataires, loyers, chiffres du mois, alertes, factures, paramètres, assistant), sur ordinateur et téléphone. Relançable depuis Aide → « Revoir le guide ». Remplace la grande carte « Premiers pas ».

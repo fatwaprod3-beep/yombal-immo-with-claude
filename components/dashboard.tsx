@@ -59,7 +59,9 @@ export default function Dashboard({ userName, userEmail, authenticated, signInHr
   // Vue client : le propriétaire voit Yombal exactement comme un client (sans l’aperçu administrateur).
   const subscription:Subscription=rawSubscription.isAdmin&&viewMode==='client'&&rawSubscription.development?{isAdmin:true,isPro:false,status:'free',planId:null,expiresAt:null}:rawSubscription;
   const adminView=!!rawSubscription.isAdmin&&viewMode==='admin';
-  const [tourOpen,setTourOpen]=useState(false);const goRef=useRef<(p:string)=>void>(()=>{});
+  const [tourOpen,setTourOpen]=useState(false);
+  // ?demo=1 : ouvre directement l’espace d’exemple (page de présentation, guide illustré).
+  useEffect(()=>{try{if(new URLSearchParams(window.location.search).get('demo')==='1')setDemo(true);}catch{}},[]);const goRef=useRef<(p:string)=>void>(()=>{});
   useEffect(()=>{const open=()=>{goRef.current('accueil');setTimeout(()=>setTourOpen(true),500);};window.addEventListener('yombal:tour',open);return()=>window.removeEventListener('yombal:tour',open);},[]);
   const closeTour=useCallback(()=>{setTourOpen(false);try{localStorage.setItem('yombal-tour-done','1');}catch{}},[]);
   const [notificationPrompt,setNotificationPrompt]=useState(false),[notificationsOpen,setNotificationsOpen]=useState(false);
