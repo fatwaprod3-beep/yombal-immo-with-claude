@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.33.2 — 6 novembre 2026
+
+- Paramètres → Préférences : « Changer mon mot de passe » (ancien mot de passe obligatoire, 8 caractères minimum, essais limités). Le mot de passe du compte propriétaire sert aussi pour l’administration.
+
 ## 0.33.1 — 6 novembre 2026
 
 - Page de présentation : titre sans répétition de la marque et adresse canonique /presentation.
