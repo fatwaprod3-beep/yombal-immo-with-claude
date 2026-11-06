@@ -155,3 +155,10 @@
  .portfolio-statistics .donut-legend small,.portfolio-statistics .donut-legend em{font-size:10.5px!important}
  .portfolio-statistics .text-button{font-size:12px!important;min-height:28px!important}
 }
+@media(max-width:850px){
+ .tenant-card header{padding:0 0 4px!important}
+ .tenant-rental>*{margin:0!important}
+ .tenant-rental .deadline-alert{margin:0!important}
+ .tenant-actions{margin:2px 0 0!important}
+ .tenant-actions .button{width:100%;justify-content:center}
+}

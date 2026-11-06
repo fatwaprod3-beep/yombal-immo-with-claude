@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.35.2 — 6 novembre 2026
+
+- Mobile : marges internes des cartes locataires supprimées (cartes plus courtes).
+
 ## 0.35.1 — 6 novembre 2026
 
 - Mobile : cartes locataires environ deux fois moins hautes (en-tête sur une ligne, loyer et statut côte à côte, échéance compacte) ; les deux ronds côte à côte ; fenêtres légèrement plus étroites.
