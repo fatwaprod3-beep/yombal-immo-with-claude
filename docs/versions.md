@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.39.3 — 7 novembre 2026
+
+- Connexion Google : identifiants corrigés dans Vercel (ID client et code secret remis à leur place), redéploiement.
+
 ## 0.39.2 — 7 novembre 2026
 
 - Connexion Google : espaces et guillemets retirés des identifiants, diagnostic plus précis en cas de refus de Google.
