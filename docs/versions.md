@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.40.1 — 7 novembre 2026
+
+- Contrats : rédaction de la durée corrigée (« d’un (1) an », « 1er octobre »), date de début non répétée.
+
 ## 0.40.0 — 7 novembre 2026
 
 - Factures et reçus : « Envoyer le PDF » partage le vrai fichier PDF (menu de partage du téléphone → WhatsApp) ; sur ordinateur, le PDF se télécharge et WhatsApp s’ouvre. Bouton « Télécharger le PDF ».

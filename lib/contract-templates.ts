@@ -14,7 +14,7 @@ const habitation=`## Objet du contrat
 Le bailleur donne en location au locataire, qui accepte, le logement désigné aux conditions particulières : {{logement}}, situé {{adresse}}. Le logement est loué à usage exclusif d’habitation principale du locataire et des personnes vivant habituellement avec lui. Aucune activité commerciale ou professionnelle ne peut y être exercée sans l’accord écrit du bailleur.
 
 ## Durée du bail
-Le présent bail est consenti pour une durée de {{duree}}, à compter du {{debut}}. À défaut de congé donné dans les conditions prévues au présent contrat, il se renouvelle par tacite reconduction pour des périodes successives d’un (1) an.
+Le présent bail est consenti pour {{duree}}. À défaut de congé donné dans les conditions prévues au présent contrat, il se renouvelle par tacite reconduction pour des périodes successives d’un (1) an.
 
 ## Loyer et charges
 Le loyer mensuel est fixé à {{loyer}}. S’y ajoutent des charges de {{charges}}, soit un total mensuel de {{total}}.
@@ -63,7 +63,7 @@ const meuble=`## Objet du contrat
 Le bailleur donne en location au locataire, qui accepte, le logement meublé désigné aux conditions particulières : {{logement}}, situé {{adresse}}. Le logement est loué à usage d’habitation, avec le mobilier et les équipements décrits dans l’inventaire annexé au présent contrat.
 
 ## Durée
-La location est consentie pour {{duree}}, à compter du {{debut}}. Elle ne se renouvelle pas automatiquement : toute prolongation fait l’objet d’un accord écrit entre les parties.
+La location est consentie pour {{duree}}. Elle ne se renouvelle pas automatiquement : toute prolongation fait l’objet d’un accord écrit entre les parties.
 
 ## Loyer et charges
 Le loyer mensuel est fixé à {{loyer}}. S’y ajoutent des charges de {{charges}}, soit un total mensuel de {{total}}, payable d’avance au plus tard le {{jour}} de chaque mois.
@@ -97,7 +97,7 @@ Le bailleur donne à bail au preneur, qui accepte, le local désigné aux condit
 Le présent bail est un bail à usage professionnel régi par les dispositions de l’Acte uniforme OHADA portant sur le droit commercial général et par les clauses du présent contrat.
 
 ## Durée et renouvellement
-Le bail est consenti pour {{duree}}, à compter du {{debut}}. Le preneur qui a exploité son activité dans les lieux conformément au bail bénéficie d’un droit au renouvellement dans les conditions, formes et délais prévus par l’Acte uniforme.
+Le bail est consenti pour {{duree}}. Le preneur qui a exploité son activité dans les lieux conformément au bail bénéficie d’un droit au renouvellement dans les conditions, formes et délais prévus par l’Acte uniforme.
 
 ## Loyer
 Le loyer mensuel est fixé à {{loyer}}, hors taxes s’il y a lieu. S’y ajoutent des charges de {{charges}}, soit un total mensuel de {{total}}, payable d’avance au plus tard le {{jour}} de chaque mois, par virement, chèque, espèces contre reçu ou paiement mobile.
@@ -162,12 +162,12 @@ export function numberToWords(value:number):string{
 }
 const fmt=(n:number)=>new Intl.NumberFormat('fr-FR').format(Math.round(n)).replace(/ | /g,' ');
 export const amountText=(n:number)=>`${fmt(n)} F CFA (${numberToWords(n)} francs CFA)`;
-const longDate=(v:string)=>{if(!v)return '____________';const d=new Date(v+'T12:00:00');return isNaN(+d)?v:d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});};
+const longDate=(v:string)=>{if(!v)return '____________';const d=new Date(v+'T12:00:00');if(isNaN(+d))return v;const s=d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});return d.getDate()===1?s.replace(/^1 /,'1er '):s;};
 function monthsBetween(a:string,b:string){const s=new Date(a+'T12:00:00'),e=new Date(b+'T12:00:00');if(isNaN(+s)||isNaN(+e)||e<=s)return 0;return Math.max(1,Math.round((+e-+s)/(1000*60*60*24*30.44)));}
 export function durationText(kind:ContractKind,start:string,end:string){
  const m=end?monthsBetween(start,end):0;
- if(m){const label=m%12===0?(m/12===1?'un (1) an':numberToWords(m/12)+' ('+m/12+') ans'):numberToWords(m)+' ('+m+') mois';return `${label}, du ${longDate(start)} au ${longDate(end)}`;}
- return kind==='commercial'?'une durée indéterminée':kind==='meuble'?'la durée convenue entre les parties':'un (1) an';
+ if(m){const label=m%12===0?(m/12===1?'un (1) an':numberToWords(m/12)+' ('+m/12+') ans'):numberToWords(m)+' ('+m+') mois';return `une durée ${/^[aeiouyhéè]/i.test(label)?'d’':'de '}${label}, du ${longDate(start)} au ${longDate(end)}`;}
+ return kind==='commercial'?`une durée indéterminée à compter du ${longDate(start)}`:kind==='meuble'?`la durée convenue entre les parties, à compter du ${longDate(start)}`:`une durée d’un (1) an à compter du ${longDate(start)}`;
 }
 export function fillContract(text:string,d:ContractData,kind:ContractKind,usage:string){
  const values:Record<string,string>={bailleur:d.owner,locataire:d.tenant,logement:d.property,adresse:d.address||'à l’adresse indiquée',usage,loyer:amountText(d.rent),charges:d.charges?amountText(d.charges):'0 F CFA (aucune charge)',total:amountText(d.rent+d.charges),depot:amountText(d.deposit),jour:String(d.dueDay||1),debut:longDate(d.start),fin:d.end?longDate(d.end):'durée indéterminée',duree:durationText(kind,d.start,d.end),ville:(d.issuerAddress.split(',').pop()||'').trim()||'Dakar'};
