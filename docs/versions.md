@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.37.0 — 7 novembre 2026
+
+- Page d’accueil : section « Découvrez Yombal en action » avec la vidéo guide (1 min 22), lecteur à affiche et bouton lecture animé, chargée seulement au clic ; lien « Vidéo » dans le menu ; vidéo déclarée pour le référencement.
+
 ## 0.36.4 — 6 novembre 2026
 
 - Loyers mobile : les montants du résumé ne sont plus coupés (« 670… »).

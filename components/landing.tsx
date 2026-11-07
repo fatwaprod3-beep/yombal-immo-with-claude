@@ -1,5 +1,6 @@
 import {ArrowRight,Bell,Bot,Building2,CalendarDays,Check,FileText,LineChart,ShieldCheck,Smartphone,Sparkles,Wallet} from 'lucide-react';
 import {plans} from '../lib/billing';
+import LandingVideo from './landing-video';
 
 const fmt=(n:number)=>new Intl.NumberFormat('fr-FR').format(n).replace(/ | /g,' ')+' F';
 const features=[
@@ -18,10 +19,10 @@ const steps=[
 
 export default function Landing({prices}:{prices:Record<string,number>}){
  const priceOf=(id:string,fallback:number)=>prices[id]??fallback;
- const ld={'@context':'https://schema.org','@type':'SoftwareApplication',name:'Yombal.immo',alternateName:['Yombal','Yombal immo'],applicationCategory:'BusinessApplication',operatingSystem:'Web, Android, iOS',url:'https://yombal-immo.pro',description:'Logiciel de gestion locative pour propriétaires et agences : loyers, paiements partiels, retards, quittances, factures, baux et bilans.',inLanguage:'fr',offers:[{'@type':'Offer',price:'0',priceCurrency:'XOF',name:'Gratuit'},...plans.map(p=>({'@type':'Offer',price:String(priceOf(p.id,p.price)),priceCurrency:'XOF',name:p.name}))],publisher:{'@type':'Organization',name:'Yombal.immo',url:'https://yombal-immo.pro',logo:'https://yombal-immo.pro/icons/yombal-512.png'}};
+ const ld={'@context':'https://schema.org','@type':'SoftwareApplication',name:'Yombal.immo',alternateName:['Yombal','Yombal immo'],applicationCategory:'BusinessApplication',operatingSystem:'Web, Android, iOS',url:'https://yombal-immo.pro',description:'Logiciel de gestion locative pour propriétaires et agences : loyers, paiements partiels, retards, quittances, factures, baux et bilans.',inLanguage:'fr',offers:[{'@type':'Offer',price:'0',priceCurrency:'XOF',name:'Gratuit'},...plans.map(p=>({'@type':'Offer',price:String(priceOf(p.id,p.price)),priceCurrency:'XOF',name:p.name}))],video:{'@type':'VideoObject',name:'Yombal.immo en 1 minute',description:'Guide de démarrage : biens, locataires, loyers, factures et analyses.',thumbnailUrl:'https://yombal-immo.pro/media/yombal-guide-poster.jpg',contentUrl:'https://yombal-immo.pro/media/yombal-guide.mp4',uploadDate:'2026-11-07',duration:'PT1M22S'},publisher:{'@type':'Organization',name:'Yombal.immo',url:'https://yombal-immo.pro',logo:'https://yombal-immo.pro/icons/yombal-512.png'}};
  return <div className="lp"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(ld).replace(/</g,'\\u003c')}}/>
   <header className="lp-nav"><a href="/" className="lp-brand"><img src="/yombal-logo.png" alt=""/><span>yombal<em>.immo</em></span></a>
-   <nav><a href="#fonctions">Fonctionnalités</a><a href="#comment">Comment ça marche</a><a href="#tarifs">Tarifs</a><a href="/guide">Guide</a></nav>
+   <nav><a href="#video">Vidéo</a><a href="#fonctions">Fonctionnalités</a><a href="#comment">Comment ça marche</a><a href="#tarifs">Tarifs</a><a href="/guide">Guide</a></nav>
    <div className="lp-nav-actions"><a className="lp-link" href="/connexion">Se connecter</a><a className="lp-btn" href="/connexion?mode=inscription">Commencer gratuitement</a></div></header>
 
   <section className="lp-hero">
@@ -53,6 +54,10 @@ export default function Landing({prices}:{prices:Record<string,number>}){
   </section>
 
   <section className="lp-band"><div><strong>100 %</strong><span>de vos échéances préparées</span></div><div><strong>3 s</strong><span>pour éditer un reçu</span></div><div><strong>24 h/24</strong><span>sur ordinateur et mobile</span></div><div><strong>0 F</strong><span>pour commencer</span></div></section>
+
+  <section className="lp-section lp-video-section" id="video"><span className="lp-eyebrow">VIDÉO · 1 MINUTE</span><h2>Découvrez Yombal en action.</h2><p className="lp-video-lead">Ajouter un bien, un locataire, encaisser un loyer, éditer une facture : tout le parcours, pas à pas.</p>
+   <LandingVideo/>
+   <ul className="lp-video-steps"><li><b>1</b>Ajoutez vos biens</li><li><b>2</b>Ajoutez vos locataires</li><li><b>3</b>Encaissez vos loyers</li><li><b>4</b>Factures & reçus PDF</li></ul></section>
 
   <section className="lp-section" id="fonctions"><span className="lp-eyebrow">FONCTIONNALITÉS</span><h2>Tout ce qu’il faut pour gérer, rien de compliqué.</h2>
    <div className="lp-grid">{features.map(({Icon,title,text,tone})=><article key={title} className={'lp-card t-'+tone}><span className="lp-icon"><Icon size={22}/></span><h3>{title}</h3><p>{text}</p></article>)}</div></section>
