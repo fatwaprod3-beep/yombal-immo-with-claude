@@ -1,4 +1,5 @@
 'use client';
+import {markSignup} from '../lib/meta-pixel';
 import {useState,type FormEvent} from 'react';
 import Link from 'next/link';
 import {ArrowLeft,LogIn,UserPlus} from 'lucide-react';
@@ -13,6 +14,7 @@ export default function AuthForm({returnTo,initialMode,google=false,initialError
    const r=await fetch(register?'/api/auth/register':'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(register?{name,email,password}:{email,password})});
    const d=await r.json().catch(()=>({})) as {error?:string};
    if(!r.ok)throw Error(d.error||'Réessayez.');
+   if(register)markSignup();
    window.location.assign(returnTo);
   }catch(e){setError(e instanceof Error?e.message:'Réessayez.');setBusy(false);}
  }

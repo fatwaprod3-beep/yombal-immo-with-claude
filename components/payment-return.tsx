@@ -1,4 +1,5 @@
 'use client';
+import {track} from '../lib/meta-pixel';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {Check,Clock3,LoaderCircle} from 'lucide-react';
 import {Dialog} from './ui';
@@ -22,7 +23,7 @@ export default function PaymentReturn({onUpdate}:{onUpdate:(subscription:Subscri
  },[]);
  const check=useCallback(async()=>{
   if(!order||checking.current)return false;checking.current=true;setBusy(true);setError('');const abort=new AbortController();controller.current=abort;
-  try{const r=await apiFetch('/api/subscription?commande='+encodeURIComponent(order),{cache:'no-store',signal:abort.signal},35000);const data=await r.json() as {error?:string;subscription:Subscription;payment?:{state:string}};if(!r.ok)throw Error(data.error||'Vérification indisponible.');if(abort.signal.aborted)return false;onUpdate(data.subscription);setExpiresAt(data.subscription.expiresAt);if(data.payment?.state==='test_paid'){setState('test_paid');return true;}if(data.payment?.state==='active'&&data.subscription.isPro){setState('active');return true;}return false;}
+  try{const r=await apiFetch('/api/subscription?commande='+encodeURIComponent(order),{cache:'no-store',signal:abort.signal},35000);const data=await r.json() as {error?:string;subscription:Subscription;payment?:{state:string}};if(!r.ok)throw Error(data.error||'Vérification indisponible.');if(abort.signal.aborted)return false;onUpdate(data.subscription);setExpiresAt(data.subscription.expiresAt);if(data.payment?.state==='test_paid'){setState('test_paid');return true;}if(data.payment?.state==='active'&&data.subscription.isPro){setState('active');track('Subscribe',{currency:'XOF',value:0});return true;}return false;}
   catch(e){if(!abort.signal.aborted)setError(e instanceof Error?e.message:'Réessayez.');return false;}finally{checking.current=false;if(!abort.signal.aborted)setBusy(false);}
  },[order,onUpdate]);
  useEffect(()=>{

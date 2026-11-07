@@ -1,4 +1,5 @@
 'use client';
+import {track} from '../lib/meta-pixel';
 import {useState,type FormEvent} from 'react';
 import {Mail,MessageCircle,Send,Clock3} from 'lucide-react';
 const subjects=['Question sur mon compte','Problème technique','Factures et paiements','Signalement','Suggestion','Autre'];
@@ -6,7 +7,7 @@ const subjects=['Question sur mon compte','Problème technique','Factures et pai
 export default function PublicContact(){
  const [subject,setSubject]=useState(subjects[0]),[email,setEmail]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[done,setDone]=useState(''),[error,setError]=useState('');
  async function submit(e:FormEvent){e.preventDefault();setError('');if(!email.includes('@')||message.trim().length<10){setError('Indiquez votre e-mail et un message d’au moins 10 caractères.');return;}setBusy(true);
-  try{const r=await fetch('/api/support',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,email,message})});const d=await r.json() as {id?:string;error?:string};if(!r.ok)throw Error(d.error||'Envoi impossible.');setDone(d.id||'');setMessage('');}catch(e){setError(e instanceof Error?e.message:'Réessayez.');}finally{setBusy(false);}}
+  try{const r=await fetch('/api/support',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({subject,email,message})});const d=await r.json() as {id?:string;error?:string};if(!r.ok)throw Error(d.error||'Envoi impossible.');setDone(d.id||'');setMessage('');track('Contact');}catch(e){setError(e instanceof Error?e.message:'Réessayez.');}finally{setBusy(false);}}
  return <div className="pc-grid">
   <form className="pc-card pc-form" onSubmit={submit} noValidate>
    <h2>Écrivez-nous</h2><p>Réponse sous 24 à 48 h ouvrées.</p>

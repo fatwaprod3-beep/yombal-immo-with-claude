@@ -32,6 +32,6 @@ export async function GET(request:Request){
   const refLinkId=ref?(await db.select({id:trackLinks.id}).from(trackLinks).where(eq(trackLinks.id,ref)).limit(1))[0]?.id||null:null;
   await db.insert(users).values({id,email:profile.email,name:profile.name.length>=2?profile.name:profile.email,passwordHash:hash,passwordSalt:salt,createdAt:now,lastLoginAt:now,refLinkId});
   await logSecurity('register',{email:profile.email,userId:id,request,detail:'Google'});
-  return go(request,'/',[sessionCookieHeader(await createSessionToken(id))]);
+  return go(request,'/?inscription=1',[sessionCookieHeader(await createSessionToken(id))]);
  }catch(error){console.error('Google sign-in failed',error instanceof Error?error.message:'unknown');return go(request,'/connexion?erreur=google-echec');}
 }

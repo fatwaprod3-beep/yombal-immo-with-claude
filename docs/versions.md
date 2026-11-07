@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.42.0 — 7 novembre 2026
+
+- Pixel Meta (Facebook / Instagram), activé par la variable NEXT_PUBLIC_META_PIXEL_ID : PageView, ViewContent (guides), CompleteRegistration (inscription e-mail et Google), InitiateCheckout (départ vers le paiement), Subscribe (Pro activé), Contact (formulaire). Aucune donnée personnelle transmise ; jamais chargé sur l’administration.
+- Confidentialité : mention du Pixel Meta.
+
 ## 0.41.2 — 7 novembre 2026
 
 - Fichier de validation Google Search Console.

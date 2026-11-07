@@ -1,4 +1,5 @@
 'use client';
+import {track} from '../lib/meta-pixel';
 import {useEffect,useRef,useState} from 'react';
 import {Crown,LoaderCircle,ShieldCheck,TriangleAlert} from 'lucide-react';
 import {isSasPayCheckoutUrl,isSasPayPaymentLink} from '../lib/billing';
@@ -17,6 +18,8 @@ export default function CheckoutRedirect({planId}:{planId:string}){
     const ok=d.mode==='link'?isSasPayPaymentLink(d.checkoutUrl):isSasPayCheckoutUrl(d.checkoutUrl);
     if(!ok||!d.checkoutUrl)throw Error('Le lien de paiement reçu n’est pas valide. Réessayez.');
     if(d.amount)setAmount(d.amount);
+    track('InitiateCheckout',{value:d.amount||0,currency:'XOF',content_name:planId});
+    await new Promise(r=>setTimeout(r,250));
     window.location.replace(d.checkoutUrl);
    }catch(e){setError(e instanceof Error?e.message:'Réessayez.');}
   })();
