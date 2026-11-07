@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.39.4 — 7 novembre 2026
+
+- Référencement : balises de vérification Google Search Console et Bing Webmaster (variables GOOGLE_SITE_VERIFICATION et BING_SITE_VERIFICATION).
+
 ## 0.39.3 — 7 novembre 2026
 
 - Connexion Google : identifiants corrigés dans Vercel (ID client et code secret remis à leur place), redéploiement.

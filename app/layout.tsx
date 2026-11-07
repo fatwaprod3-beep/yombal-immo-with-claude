@@ -26,6 +26,8 @@ export const viewport: Viewport = {
 };
 export const metadata: Metadata = {
   metadataBase: new URL("https://yombal-immo.pro"),
+  // Vérification Search Console (Google) et Bing Webmaster : codes publics, définis dans Vercel.
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined, other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined },
   title: { default: "Yombal.immo — Logiciel de gestion locative simple (Sénégal & Afrique)", template: "%s · Yombal.immo" },
   description: "Yombal.immo est le logiciel de gestion locative pour propriétaires et agences : loyers, paiements partiels, retards, quittances et factures PDF, baux, biens et locataires. Gratuit pour commencer, paiement Orange Money, Wave ou carte.",
   applicationName: "Yombal.immo",
