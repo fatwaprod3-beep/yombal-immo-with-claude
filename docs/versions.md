@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.40.0 — 7 novembre 2026
+
+- Factures et reçus : « Envoyer le PDF » partage le vrai fichier PDF (menu de partage du téléphone → WhatsApp) ; sur ordinateur, le PDF se télécharge et WhatsApp s’ouvre. Bouton « Télécharger le PDF ».
+- Contrats : trois modèles complets rédigés article par article — bail d’habitation, location meublée, bail commercial / professionnel (OHADA). Champs remplis automatiquement (parties, logement, loyer et dépôt en chiffres et en lettres, durée, dates), articles modifiables, réordonnables, ajout et suppression, enregistrement comme modèle personnel, aperçu avant création, alerte si le dépôt dépasse deux mois de loyer.
+- Nouveau document de contrat : en-tête, « Entre les soussignés », conditions particulières, articles numérotés, annexes, signatures « Lu et approuvé ». Bouton « Envoyer » (PDF) dans la liste des contrats.
+
 ## 0.39.4 — 7 novembre 2026
 
 - Référencement : balises de vérification Google Search Console et Bing Webmaster (variables GOOGLE_SITE_VERIFICATION et BING_SITE_VERIFICATION).

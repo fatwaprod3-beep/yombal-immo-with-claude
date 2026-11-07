@@ -42,7 +42,7 @@ export const freeSubscription:Subscription={isPro:false,status:'free',planId:nul
 export function activeSubscription(row:{status:string;expiresAt:string|null}|undefined,at=Date.now()){return !!row&&row.status==='active'&&!!row.expiresAt&&Date.parse(row.expiresAt)>at;}
 export function requiredProFeature(m:{action?:string;data?:unknown},current?:{signature?:string;invoiceTemplate?:string}):ProFeature|null{
  if(m.action==='profile'||m.action==='restore'){const data=m.data as {signature?:string;invoiceTemplate?:string;profile?:{signature?:string;invoiceTemplate?:string}}|undefined;const p=m.action==='restore'?data?.profile:data;if(p?.signature&&p.signature!==current?.signature)return 'signature';if(p?.invoiceTemplate&&!freeInvoiceTemplates.includes(p.invoiceTemplate)&&p.invoiceTemplate!==current?.invoiceTemplate)return 'invoiceTemplates';}
- if(m.action==='createContract'||m.action==='signContract')return 'contracts';
+ if(m.action==='createContract'||m.action==='signContract'||m.action==='saveContractTemplate')return 'contracts';
  if(m.action==='ownerTransfer'||m.action==='cancelOwnerTransfer')return 'owners';
  if(m.action==='import')return 'import';
  if(m.action==='prepareBills'){const d=m.data as {from?:string;to?:string}|undefined;if(d?.from&&d?.to&&d.from!==d.to)return 'bulk';}

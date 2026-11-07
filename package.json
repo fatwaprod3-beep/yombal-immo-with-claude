@@ -1,6 +1,6 @@
 {
   "name": "yombal-immo",
-  "version": "0.39.4",
+  "version": "0.40.0",
   "private": true,
   "engines": {
     "node": ">=22"
@@ -41,7 +41,9 @@
     "vaul": "^1.1.2",
     "zod": "^3.25.76",
     "@vercel/blob": "^1.1.0",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "html2canvas": "1.4.1",
+    "jspdf": "2.5.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.2.1",

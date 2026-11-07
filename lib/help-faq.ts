@@ -21,6 +21,8 @@ export const helpTopics:HelpTopic[]=[
  ]},
  {id:'factures',icon:'invoice',title:'Factures, reçus & contrats',intro:'Des documents professionnels en PDF.',items:[
   ['Créer une facture ou un appel de loyer','Factures & contrats → Ajouter une facture : choisissez le locataire, la situation (à payer, déjà payée, plusieurs mois impayés), vérifiez le récapitulatif puis enregistrez. « Envoyer / télécharger » génère le PDF.'],
+  ['Contrats de location','Factures & contrats → Contrats → Créer un contrat. Choisissez le type (bail d’habitation, location meublée ou bail commercial / professionnel) et le locataire : les noms, le logement, le loyer en chiffres et en lettres, le dépôt et les dates se remplissent seuls. Chaque article est modifiable, vous pouvez en ajouter, en supprimer ou les réordonner, puis enregistrer votre version comme modèle. « Envoyer » partage le PDF par WhatsApp.'],
+  ['Envoyer une facture en PDF sur WhatsApp','Sur téléphone, « Envoyer le PDF » ouvre le menu de partage avec le fichier joint : choisissez WhatsApp puis le contact. Sur ordinateur, le PDF se télécharge et WhatsApp s’ouvre avec le message : joignez le fichier avec le trombone.'],
   ['Reçu après paiement','Chaque paiement enregistré permet d’éditer un reçu : icône imprimante dans l’historique des paiements, ou « Suivi / reçu ».'],
   ['Modèles de facture','Paramètres → Factures : Classique et Essentiel (gratuits), plus 7 modèles Pro — Studio, Prestige, Émeraude, Horizon, Sahel, Atlantique, Ardoise. L’aperçu se met à jour immédiatement.'],
   ['Signature, NINEA et RCCM','Ajoutez votre signature (Pro) et vos identifiants légaux dans Paramètres → Profil et Factures ; ils apparaissent sur les documents.'],
