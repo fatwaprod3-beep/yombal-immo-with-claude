@@ -1,0 +1,7 @@
+wizard true
+choice controls 1
+choice tag BUTTON
+articles 12
+unfilled tokens 
+rows 1
+pdf Contrat de bail à usage d’habitation - Aminata Fall.pdf 968865
