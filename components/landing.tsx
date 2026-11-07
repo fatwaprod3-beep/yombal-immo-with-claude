@@ -23,7 +23,7 @@ export default function Landing({prices}:{prices:Record<string,number>}){
  return <div className="lp"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(ld).replace(/</g,'\\u003c')}}/>
   <header className="lp-nav"><a href="/" className="lp-brand"><img src="/yombal-logo.png" alt=""/><span>yombal<em>.immo</em></span></a>
    <nav><a href="#video">Vidéo</a><a href="#fonctions">Fonctionnalités</a><a href="#comment">Comment ça marche</a><a href="#tarifs">Tarifs</a><a href="/guide">Guide</a></nav>
-   <div className="lp-nav-actions"><a className="lp-link" href="/connexion">Se connecter</a><a className="lp-btn" href="/connexion?mode=inscription">Commencer gratuitement</a></div></header>
+   <div className="lp-nav-actions"><a className="lp-link" href="/connexion">Se connecter</a><a className="lp-btn" href="/connexion?mode=inscription">Commencer<span className="lp-sm-hide"> gratuitement</span></a></div></header>
 
   <section className="lp-hero">
    <div className="lp-hero-copy">

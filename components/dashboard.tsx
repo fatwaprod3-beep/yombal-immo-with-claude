@@ -38,6 +38,7 @@ import NotificationPrompt from './notification-prompt';
 import ImageField,{type ImageFieldHandle} from './image-field';
 import PasswordChange from './password-change';
 import GuidedTour from './guided-tour';
+import VideoModal,{videoDoneKey} from './video-modal';
 import HelpPage from './help-page';
 import DocumentPreferences from './document-preferences';
 import {type Space} from '../lib/spaces';
@@ -60,6 +61,8 @@ export default function Dashboard({ userName, userEmail, authenticated, signInHr
   const subscription:Subscription=rawSubscription.isAdmin&&viewMode==='client'&&rawSubscription.development?{isAdmin:true,isPro:false,status:'free',planId:null,expiresAt:null}:rawSubscription;
   const adminView=!!rawSubscription.isAdmin&&viewMode==='admin';
   const [tourOpen,setTourOpen]=useState(false);
+  const [videoOpen,setVideoOpen]=useState<false|'welcome'|'demo'>(false);
+  useEffect(()=>{const open=()=>setVideoOpen('demo');window.addEventListener('yombal:video',open);return()=>window.removeEventListener('yombal:video',open);},[]);
   // ?demo=1 : ouvre directement l’espace d’exemple (page de présentation, guide illustré).
   useEffect(()=>{try{if(new URLSearchParams(window.location.search).get('demo')==='1')setDemo(true);}catch{}},[]);const goRef=useRef<(p:string)=>void>(()=>{});
   useEffect(()=>{const open=()=>{goRef.current('accueil');setTimeout(()=>setTourOpen(true),500);};window.addEventListener('yombal:tour',open);return()=>window.removeEventListener('yombal:tour',open);},[]);
@@ -191,7 +194,7 @@ export default function Dashboard({ userName, userEmail, authenticated, signInHr
   const searchResults=findSearchResults(search),mobileResults=findSearchResults(mobileSearchQuery).map(r=>({...r,onClick:()=>{setSearch('');r.onClick();}}));
   goRef.current=go;
   // Visite guidée automatique pour les nouveaux comptes (une seule fois).
-  useEffect(()=>{if(!authenticated||demo||!ready||real.properties.length>0||page!=='accueil')return;let done=false;try{done=localStorage.getItem('yombal-tour-done')==='1';}catch{}if(done)return;const t=setTimeout(()=>setTourOpen(true),900);return()=>clearTimeout(t);},[authenticated,demo,ready,real.properties.length,page]);
+  useEffect(()=>{if(!authenticated||demo||!ready||real.properties.length>0||page!=='accueil')return;let tourDone=false,videoDone=false,shown=false;try{tourDone=localStorage.getItem('yombal-tour-done')==='1';videoDone=localStorage.getItem(videoDoneKey)==='1';shown=sessionStorage.getItem('yombal-video-shown')==='1';}catch{}if(!videoDone&&!shown){const t=setTimeout(()=>{try{sessionStorage.setItem('yombal-video-shown','1');}catch{}setVideoOpen('welcome');},900);return()=>clearTimeout(t);}if(tourDone)return;const t=setTimeout(()=>setTourOpen(true),900);return()=>clearTimeout(t);},[authenticated,demo,ready,real.properties.length,page]);
   return <div className={'app-shell'+(navCollapsed?' nav-collapsed':'')}>
     <PaymentReturn onUpdate={setSubscription}/>{authenticated&&!demo&&<ProWelcome subscription={subscription}/>}{proDialog&&<ProDialog key={proDialog.feature+String(proDialog.why)} feature={proDialog.feature} initialPlanId={proDialog.planId} why={proDialog.why} subscription={subscription} onUpdate={setSubscription} demo={demo} onClose={()=>setProDialog(null)}/>}
     {mobileMenu && <button className="sidebar-scrim" onClick={() => setMobileMenu(false)} aria-label="Fermer le menu" />}
@@ -212,7 +215,7 @@ export default function Dashboard({ userName, userEmail, authenticated, signInHr
       </>}
       <footer className="app-footer"><span>yombal.immo <i />{isRealEstate?'La gestion immobilière, simplifiée.':'Vos biens, simplement.'}</span><span>FCFA · Heure de Dakar</span></footer>
     </main></div>
-    <nav className="mobile-nav" aria-label="Navigation mobile">{(isRealEstate?[{ id: 'accueil', label: 'Accueil', icon: LayoutDashboard }, { id: 'locataires', label: 'Locataires', icon: Users }, { id: 'loyers', label: 'Loyers', icon: Wallet }, { id: 'biens', label: 'Biens', icon: Building2 }]:[{id:'accueil',label:'Accueil',icon:LayoutDashboard},{id:'inventaire',label:activity==='animals'?'Animaux':'Biens',icon:activity==='animals'?PawPrint:Package},{id:'mouvements',label:'Mouvements',icon:ArrowLeftRight},{id:'rappels',label:'Rappels',icon:CalendarDays}]).map(item => <button key={item.id} data-nav={item.id} className={page === item.id ? 'active' : ''} onClick={() => go(item.id)}><item.icon size={20} /><span>{item.label}</span></button>)}<button data-tour="more" onClick={() => setMobileMenu(true)} aria-expanded={mobileMenu}><MoreHorizontal size={21} /><span>Plus</span></button></nav><GuidedTour open={tourOpen} onClose={closeTour} onDemo={()=>{closeContext();setSearch('');setDemo(true);go('accueil');}}/>
+    <nav className="mobile-nav" aria-label="Navigation mobile">{(isRealEstate?[{ id: 'accueil', label: 'Accueil', icon: LayoutDashboard }, { id: 'locataires', label: 'Locataires', icon: Users }, { id: 'loyers', label: 'Loyers', icon: Wallet }, { id: 'biens', label: 'Biens', icon: Building2 }]:[{id:'accueil',label:'Accueil',icon:LayoutDashboard},{id:'inventaire',label:activity==='animals'?'Animaux':'Biens',icon:activity==='animals'?PawPrint:Package},{id:'mouvements',label:'Mouvements',icon:ArrowLeftRight},{id:'rappels',label:'Rappels',icon:CalendarDays}]).map(item => <button key={item.id} data-nav={item.id} className={page === item.id ? 'active' : ''} onClick={() => go(item.id)}><item.icon size={20} /><span>{item.label}</span></button>)}<button data-tour="more" onClick={() => setMobileMenu(true)} aria-expanded={mobileMenu}><MoreHorizontal size={21} /><span>Plus</span></button></nav><GuidedTour open={tourOpen} onClose={closeTour} onDemo={()=>{closeContext();setSearch('');setDemo(true);go('accueil');}}/><VideoModal open={!!videoOpen} welcome={videoOpen==='welcome'} onClose={()=>{const wasWelcome=videoOpen==='welcome';setVideoOpen(false);let tourDone=false;try{tourDone=localStorage.getItem('yombal-tour-done')==='1';}catch{}if(wasWelcome&&!tourDone)setTimeout(()=>setTourOpen(true),400);}}/>
     {notificationsOpen&&<Dialog className="notifications-dialog" title="Notifications" detail={unread+' non lue'+(unread>1?'s':'')} onClose={()=>setNotificationsOpen(false)}><div className="notifications-popup-body"><NotificationsPage {...viewProps}/></div><div className="dialog-footer"><button type="button" className="button secondary" onClick={()=>setNotificationsOpen(false)}>Fermer</button></div></Dialog>}
     {mobileSearch&&<MobileSearch query={mobileSearchQuery} onQuery={query=>{setMobileSearchQuery(query);if(!query)setSearch('');}} results={mobileResults} realEstate={isRealEstate} onClose={()=>setMobileSearch(false)}/> }
     {authenticated&&!demo&&!local&&<AssistantWidget name={state.profile.name||userName||''}/>}

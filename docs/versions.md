@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.38.0 — 7 novembre 2026
+
+- Nouveaux comptes : la vidéo « Yombal en 1 minute » s’ouvre en fenêtre à l’arrivée et revient à chaque visite tant qu’elle n’a pas été regardée jusqu’au bout (ou qu’un premier bien n’est pas ajouté) ; la visite guidée suit ensuite.
+- Accueil : bouton « Démonstration » qui ouvre la vidéo en fenêtre.
+- Page d’accueil publique sur mobile réorganisée : en-tête sur une ligne, boutons pleine largeur, cartes fonctionnalités et étapes compactes (icône à gauche), tarifs et pied de page resserrés, étapes vidéo en grille.
+
 ## 0.37.1 — 7 novembre 2026
 
 - Vidéo de la page d’accueil : version WebM ajoutée pour les navigateurs sans H.264.

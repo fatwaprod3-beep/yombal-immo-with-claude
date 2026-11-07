@@ -3,7 +3,7 @@ import PrivateImage from './private-image';
 import DateInput from './date-input';
 import ResponsiveTable from './responsive-table';
 import { useState, useMemo, useEffect, type ReactNode } from 'react';
-import { Plus, ArrowUpRight, ArrowDownLeft, Wallet, Building2, MapPin, BedDouble, Ruler, Users, CircleCheck, Clock3, Bell, ChevronDown, ChevronLeft, ChevronRight, Download, FileText, Printer, Phone, Mail, CalendarDays, Wrench, CircleAlert, ReceiptText, Upload, Search, TrendingUp, ArrowRight, BriefcaseBusiness } from 'lucide-react';
+import { PlayCircle, Plus, ArrowUpRight, ArrowDownLeft, Wallet, Building2, MapPin, BedDouble, Ruler, Users, CircleCheck, Clock3, Bell, ChevronDown, ChevronLeft, ChevronRight, Download, FileText, Printer, Phone, Mail, CalendarDays, Wrench, CircleAlert, ReceiptText, Upload, Search, TrendingUp, ArrowRight, BriefcaseBusiness } from 'lucide-react';
 import { type State, type Entity, type Property, type Payment, type Mutation, type Alert, money, today, currentMonth, monthLabel, dateLabel, addMonth, totals, bills, paidFor, balanceFor, propertyStatus, leaseFor, followPeriod, alerts, rentalProperties } from '../lib/model';
 import { csv, printReceipt, printReport, calendarFile } from '../lib/exports';
 import Choice from './choice';
@@ -41,6 +41,7 @@ export function Overview({ state, period, actions }: Props) {
     <header className="overview-heading hello-row">
       <div className="overview-intro hello-v28"><h1>{salute}{state.profile.name ? ', ' + state.profile.name.split(' ')[0] : ''}<span className="hello-dot">.</span></h1><p className="welcome-description">Gardez l’esprit libre. Votre immobilier est ici.</p></div>
       <div className="overview-tools">
+        <button type="button" className="overview-demo" onClick={()=>window.dispatchEvent(new Event('yombal:video'))} aria-label="Voir la vidéo de démonstration"><PlayCircle size={15}/><span>Démonstration</span></button>
         <div className="overview-period"><DateInput month value={period} onChange={v=>{if(v)actions.selectMonth(v);}} required label="Mois du tableau de bord"/></div>
         <button className="button primary overview-add" onClick={()=>actions.add('properties')}><Plus size={17}/><span>Ajouter un bien</span></button>
       </div>
