@@ -1,30 +1,10 @@
 const {chromium,devices}=require('playwright');const fs=require('fs');
-const B='https://yombal-immo.pro';fs.mkdirSync('captures',{recursive:true});const boxes={};
-const SEL=['.stats-grid','.home-bulletin-wrap','.home-bulletin','.overview-add','.sidebar','.sidebar [data-nav="loyers"]','.sidebar [data-nav="locataires"]','.sidebar [data-nav="biens"]','.sidebar [data-nav="factures"]','.sidebar [data-nav="agenda"]','.sidebar [data-nav="rapports"]','[data-tour="settings"]','dialog[open]','.rent-summary','.rents-page-table','.tenant-grid','.tenant-card','.topbar','.section-title','.panel','table','.month-control','.overview-period','.stat-card','.trend-chart','.portfolio-statistics','.an-panel','.calendar','.template-picker','.invoice-preview','iframe'];
+fs.mkdirSync('captures',{recursive:true});
 (async()=>{const b=await chromium.launch();
- const prep=async ctx=>{await ctx.addInitScript(()=>{try{localStorage.setItem('yombal-tour-done','1')}catch{}});};
- const dctx=await b.newContext({viewport:{width:1600,height:900},deviceScaleFactor:1.5});await prep(dctx);const d=await dctx.newPage();
- const shot=async(p,name,full=false)=>{await p.screenshot({path:'captures/'+name+'.jpg',type:'jpeg',quality:90,fullPage:full});
-  boxes[name]=await p.evaluate(sel=>{const o={};for(const s of sel){const e=[...document.querySelectorAll(s)].find(x=>{const r=x.getBoundingClientRect();return r.width>0&&r.height>0});if(e){const r=e.getBoundingClientRect();o[s]=[Math.round(r.left+scrollX),Math.round(r.top+scrollY),Math.round(r.width),Math.round(r.height)];}}return o;},SEL);console.log(name);};
- const go=async h=>{await d.goto(B+'/?demo=1#'+h,{waitUntil:'networkidle'});await d.waitForTimeout(2800);};
- const tryc=async(fn,name)=>{try{await fn();await d.waitForTimeout(1300);await shot(d,name);}catch(e){console.log('FAIL',name,e.message.slice(0,120));}await d.keyboard.press('Escape').catch(()=>{});await d.waitForTimeout(400);};
- await d.goto(B+'/',{waitUntil:'networkidle'});await d.waitForTimeout(2500);await shot(d,'landing');
- await go('accueil');await shot(d,'accueil');
- await tryc(()=>d.locator('.overview-add').first().click(),'dlg-bien');
- await go('biens');await shot(d,'biens');
- await go('locataires');await shot(d,'locataires');
- await tryc(()=>d.locator('button:has-text("Ajouter un locataire")').first().click(),'dlg-locataire');
- await go('loyers');await shot(d,'loyers');
- await tryc(()=>d.locator('button:has-text("Encaisser")').first().click(),'dlg-encaisser');
- await go('loyers');await tryc(()=>d.locator('button:has-text("Suivi / relancer")').first().click(),'dlg-relance');
- await go('factures');await shot(d,'factures');
- await tryc(()=>d.locator('button:has-text("Ajouter une facture")').first().click(),'dlg-facture');
- await go('factures');await tryc(()=>d.locator('button:has-text("Aperçu"), button:has-text("Envoyer / télécharger")').first().click(),'dlg-apercu');
- await go('agenda');await shot(d,'agenda');
- await go('rapports');await shot(d,'rapports');await d.mouse.wheel(0,700);await d.waitForTimeout(800);await shot(d,'rapports2');
- await go('accueil');await tryc(()=>d.locator('[data-tour="settings"]').first().click(),'dlg-parametres');
- await go('accueil');await tryc(async()=>{await d.locator('[data-tour="settings"]').first().click();await d.waitForTimeout(800);await d.locator('dialog [role=tab]:has-text("Factures")').first().click();},'dlg-param-factures');
- await go('aide');await shot(d,'aide');
- const mctx=await b.newContext({...devices['iPhone 13']});await prep(mctx);const m=await mctx.newPage();
- for(const pg of ['accueil','loyers','locataires','rapports','parametres']){await m.goto(B+'/?demo=1#'+pg,{waitUntil:'networkidle'});await m.waitForTimeout(3000);await m.screenshot({path:'captures/m-'+pg+'.jpg',type:'jpeg',quality:90});console.log('m-'+pg);}
- fs.writeFileSync('captures/boxes.json',JSON.stringify(boxes));await b.close();})();
+ for(const [n,dev] of [['iphone',devices['iPhone 13']],['android',devices['Pixel 5']]]){
+  const p=await (await b.newContext({...dev})).newPage();await p.goto('https://yombal-immo.pro/',{waitUntil:'networkidle'});await p.waitForTimeout(2500);
+  const H=await p.evaluate(()=>document.documentElement.scrollHeight);const vh=p.viewportSize().height;
+  for(let i=0,y=0;y<H;i++,y+=vh){await p.evaluate(y=>scrollTo(0,y),y);await p.waitForTimeout(500);await p.screenshot({path:`captures/${n}-${String(i).padStart(2,'0')}.jpg`,type:'jpeg',quality:80});}
+  const info=await p.evaluate(()=>{const o=[];for(const e of document.querySelectorAll('.lp *')){const r=e.getBoundingClientRect();if(r.right>innerWidth+1&&r.width>0)o.push(e.className+' '+Math.round(r.right));}return {sw:document.documentElement.scrollWidth,iw:innerWidth,over:o.slice(0,15)};});
+  fs.writeFileSync(`captures/${n}.json`,JSON.stringify(info));}
+ await b.close();})();
