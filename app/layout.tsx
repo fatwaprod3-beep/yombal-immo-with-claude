@@ -36,7 +36,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   openGraph: { type: "website", locale: "fr_SN", alternateLocale: ["fr_FR"], url: "https://yombal-immo.pro", siteName: "Yombal.immo", title: "Yombal.immo — La gestion locative, enfin simple", description: "Loyers, locataires, factures et bilans au même endroit. Gratuit pour commencer.", images: [{ url: "/og-yombal.jpg", width: 1200, height: 630, alt: "Yombal.immo — gérez vos loyers sans cahier" }] },
   twitter: { card: "summary_large_image", title: "Yombal.immo — La gestion locative, enfin simple", description: "Loyers, locataires, factures et bilans au même endroit. Gratuit pour commencer.", images: ["/og-yombal.jpg"] },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   icons: { icon: "/yombal-logo.png", shortcut: "/yombal-logo.png", apple: "/icons/yombal-192.png" },
   appleWebApp: { capable: true, title: "Yombal.immo", statusBarStyle: "default" },
   category: "business",

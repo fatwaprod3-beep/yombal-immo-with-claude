@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.41.1 — 7 novembre 2026
+
+- Correction de compilation : consigne robots en double dans les métadonnées.
+
 ## 0.41.0 — 7 novembre 2026
 
 - Référencement : nouvelle rubrique /ressources avec 5 guides (gestion locative au Sénégal, modèle de contrat de bail, caution et avance de loyer, quittance de loyer, logiciel de gestion locative), sommaire, FAQ, articles liés et données structurées (Article, FAQ, fil d’Ariane).
