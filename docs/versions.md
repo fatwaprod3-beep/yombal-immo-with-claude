@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.39.0 — 7 novembre 2026
+
+- Connexion et inscription « Continuer avec Google » (OpenID Connect, sans dépendance) : compte retrouvé par e-mail vérifié ou créé automatiquement, mêmes contrôles que l’inscription (inscriptions fermées, compte suspendu, lien de suivi). Le bouton n’apparaît que lorsque GOOGLE_CLIENT_ID et GOOGLE_CLIENT_SECRET sont définis dans Vercel.
+- Confidentialité : mention des données transmises par Google.
+
 ## 0.38.0 — 7 novembre 2026
 
 - Nouveaux comptes : la vidéo « Yombal en 1 minute » s’ouvre en fenêtre à l’arrivée et revient à chaque visite tant qu’elle n’a pas été regardée jusqu’au bout (ou qu’un premier bien n’est pas ajouté) ; la visite guidée suit ensuite.

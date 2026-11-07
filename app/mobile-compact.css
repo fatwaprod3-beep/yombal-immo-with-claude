@@ -358,3 +358,9 @@
  .overview-heading.hello-row{grid-template-areas:"period demo" "intro add"!important}
  .overview-heading.hello-row .overview-demo{grid-area:demo;height:36px;padding:0 10px;font-size:12px}
 }
+
+/* v0.39 — bouton « Continuer avec Google » */
+.google-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;min-height:48px;margin:6px 0 2px;border:1px solid #dadce0;border-radius:12px;background:#fff;color:#3c4043;font-size:15px;font-weight:600;text-decoration:none;transition:background .2s,box-shadow .2s}
+.google-button:hover{background:#f8f9fa;box-shadow:0 2px 8px #0000001a}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:14px 0 6px;color:#9a879f;font-size:12.5px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:#ece4f1}
