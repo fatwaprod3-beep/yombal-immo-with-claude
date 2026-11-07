@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.41.2 — 7 novembre 2026
+
+- Fichier de validation Google Search Console.
+
 ## 0.41.1 — 7 novembre 2026
 
 - Correction de compilation : consigne robots en double dans les métadonnées.
