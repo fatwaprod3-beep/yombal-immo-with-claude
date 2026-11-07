@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.39.1 — 7 novembre 2026
+
+- Connexion Google activée (identifiants ajoutés dans Vercel).
+
 ## 0.39.0 — 7 novembre 2026
 
 - Connexion et inscription « Continuer avec Google » (OpenID Connect, sans dépendance) : compte retrouvé par e-mail vérifié ou créé automatiquement, mêmes contrôles que l’inscription (inscriptions fermées, compte suspendu, lien de suivi). Le bouton n’apparaît que lorsque GOOGLE_CLIENT_ID et GOOGLE_CLIENT_SECRET sont définis dans Vercel.
