@@ -25,6 +25,7 @@ export const viewport: Viewport = {
   themeColor: [{media:'(max-width:850px)',color:'#ffffff'},{media:'(min-width:851px)',color:'#21152e'}],
 };
 import MetaPixel from "../components/meta-pixel";
+import { Analytics } from "@vercel/analytics/next";
 export const metadata: Metadata = {
   metadataBase: new URL("https://yombal-immo.pro"),
   // Vérification Search Console (Google) et Bing Webmaster : codes publics, définis dans Vercel.
@@ -42,5 +43,5 @@ export const metadata: Metadata = {
   category: "business",
 };
 export default function RootLayout({ children }: Readonly<{children: React.ReactNode}>) {
-  return <html lang="fr"><head><link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials"/><script src="/install-bootstrap.js"/></head><body>{children}<ConfirmHost/><MetaPixel/></body></html>;
+  return <html lang="fr"><head><link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials"/><script src="/install-bootstrap.js"/></head><body>{children}<ConfirmHost/><MetaPixel/><Analytics/></body></html>;
 }

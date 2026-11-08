@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.42.2 — 8 novembre 2026
+
+- Statistiques de visite Vercel Web Analytics (pages vues, sources comme Facebook, pays, mobile/ordinateur), sans cookie ni donnée personnelle.
+
 ## 0.42.1 — 8 novembre 2026
 
 - Loyers mobile : dans le résumé, le libellé passe au-dessus du montant ; « 670 000 F » n’est plus coupé.
