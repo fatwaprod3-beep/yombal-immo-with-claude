@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.42.1 — 8 novembre 2026
+
+- Loyers mobile : dans le résumé, le libellé passe au-dessus du montant ; « 670 000 F » n’est plus coupé.
+
 ## 0.42.0 — 7 novembre 2026
 
 - Pixel Meta (Facebook / Instagram), activé par la variable NEXT_PUBLIC_META_PIXEL_ID : PageView, ViewContent (guides), CompleteRegistration (inscription e-mail et Google), InitiateCheckout (départ vers le paiement), Subscribe (Pro activé), Contact (formulaire). Aucune donnée personnelle transmise ; jamais chargé sur l’administration.

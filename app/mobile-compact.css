@@ -401,3 +401,5 @@
 .contract-save-default span{display:grid;gap:2px;font-size:12.5px;color:#76687f}.contract-save-default b{font-size:13.5px;color:#281b34}
 .contract-wizard .dialog-footer{flex-wrap:wrap}
 @media(max-width:850px){.contract-kinds{grid-template-columns:1fr}.contract-kind{grid-template-columns:38px 1fr;grid-template-areas:"ic title" "ic text";column-gap:12px;padding:12px}.contract-kind .ck-ic{grid-area:ic}.contract-kind b{grid-area:title}.contract-kind small{grid-area:text}.ca-tools button{width:28px}}
+/* v0.42.1 — résumé Loyers mobile : libellé au-dessus du montant, jamais coupé */
+@media(max-width:850px){.rent-summary>div{display:grid!important;grid-template-columns:1fr!important;gap:3px!important;align-content:start;overflow:visible!important}.rent-summary span{white-space:normal!important}.rent-summary strong{font-size:13px!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important}}
