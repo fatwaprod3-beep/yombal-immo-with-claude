@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.42.6 — 9 novembre 2026
+
+- Liens de suivi : les préchargements de Facebook et Instagram (page chargée avant le vrai clic) ne sont plus comptés comme des clics.
+
 ## 0.42.5 — 9 novembre 2026
 
 - Liens & campagnes : les barres de « Comparaison des sources » correspondent enfin au pourcentage affiché (une barre à 20 % ne remplit plus toute la ligne ; un lien sans inscription n’a plus de barre).
