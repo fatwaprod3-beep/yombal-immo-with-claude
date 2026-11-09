@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.43.1 — 9 novembre 2026
+
+- Page /essai : titre d’onglet sans « Yombal.immo » en double.
+
 ## 0.43.0 — 9 novembre 2026
 
 - Nouvelle page d’arrivée pour les publicités : yombal-immo.pro/essai. Promesse de la pub en titre, inscription Google ou e-mail directement sur la page, 3 avantages, aperçu des loyers, 3 questions fréquentes, bouton d’inscription fixe en bas sur téléphone. Pas de menu pour ne pas distraire ; non indexée par Google.
