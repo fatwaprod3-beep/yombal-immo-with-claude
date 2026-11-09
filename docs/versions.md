@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.42.3 — 9 novembre 2026
+
+- Icône du site (favicon) au symbole Yombal, en .ico et PNG 48/96/192 px, pour Google et les onglets ; ancienne icône de modèle supprimée.
+- Fichier llms.txt : présentation claire de Yombal.immo pour les assistants IA (ChatGPT, Perplexity, Claude).
+- Clé IndexNow pour signaler les pages à Bing (utilisé par ChatGPT).
+
 ## 0.42.2 — 8 novembre 2026
 
 - Statistiques de visite Vercel Web Analytics (pages vues, sources comme Facebook, pays, mobile/ordinateur), sans cookie ni donnée personnelle.

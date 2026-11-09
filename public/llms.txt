@@ -1,0 +1,34 @@
+# Yombal.immo
+
+> Yombal.immo est un logiciel de gestion locative en ligne conçu pour les propriétaires, gérants et agences immobilières au Sénégal et en Afrique de l'Ouest francophone. Il fonctionne sur téléphone et ordinateur, en français et en francs CFA (XOF).
+
+Site : https://yombal-immo.pro
+Note : Yombal.immo (logiciel de gestion locative) n'a pas de lien avec le « Groupe Yombal », Yombal Immobilier ou Yombal Market (vente de terrains).
+
+## Ce que fait Yombal.immo
+
+- Biens et logements : appartements, maisons, magasins, chambres.
+- Locataires : fiches, contacts, historique.
+- Loyers : suivi des paiements, paiements partiels, retards, relances.
+- Quittances et factures en PDF, envoyées sur WhatsApp.
+- Contrats de bail prêts à remplir : habitation, meublé, commercial (OHADA), clauses modifiables.
+- Bilans et analyses des revenus locatifs.
+- Connexion par e-mail ou par Google.
+
+## Tarifs
+
+- Gratuit, sans carte bancaire : jusqu'à 6 biens, 7 locataires et 3 exports de documents.
+- Pro : 4 900 F CFA par mois, 9 900 F CFA par trimestre, 25 000 F CFA par an. Paiement par Wave, Orange Money ou carte.
+
+## Pour qui
+
+Propriétaires bailleurs (1 à plusieurs dizaines de logements), gérants immobiliers, agences immobilières, membres de la diaspora qui gèrent un bien au Sénégal à distance.
+
+## Guides
+
+- [Gestion locative au Sénégal](https://yombal-immo.pro/ressources/gestion-locative-senegal)
+- [Modèle de contrat de bail au Sénégal](https://yombal-immo.pro/ressources/modele-contrat-de-bail-senegal)
+- [Caution et avance de loyer au Sénégal](https://yombal-immo.pro/ressources/caution-avance-loyer-senegal)
+- [Quittance de loyer](https://yombal-immo.pro/ressources/quittance-de-loyer)
+- [Logiciel de gestion locative](https://yombal-immo.pro/ressources/logiciel-gestion-locative)
+- [Aide et questions fréquentes](https://yombal-immo.pro/aide)

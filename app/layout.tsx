@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   openGraph: { type: "website", locale: "fr_SN", alternateLocale: ["fr_FR"], url: "https://yombal-immo.pro", siteName: "Yombal.immo", title: "Yombal.immo — La gestion locative, enfin simple", description: "Loyers, locataires, factures et bilans au même endroit. Gratuit pour commencer.", images: [{ url: "/og-yombal.jpg", width: 1200, height: 630, alt: "Yombal.immo — gérez vos loyers sans cahier" }] },
   twitter: { card: "summary_large_image", title: "Yombal.immo — La gestion locative, enfin simple", description: "Loyers, locataires, factures et bilans au même endroit. Gratuit pour commencer.", images: ["/og-yombal.jpg"] },
-  icons: { icon: "/yombal-logo.png", shortcut: "/yombal-logo.png", apple: "/icons/yombal-192.png" },
+  icons: { icon: [{ url: "/favicon.ico", sizes: "48x48" }, { url: "/icons/favicon-48.png", sizes: "48x48", type: "image/png" }, { url: "/icons/favicon-96.png", sizes: "96x96", type: "image/png" }, { url: "/icons/favicon-192.png", sizes: "192x192", type: "image/png" }], shortcut: "/favicon.ico", apple: "/icons/yombal-192.png" },
   appleWebApp: { capable: true, title: "Yombal.immo", statusBarStyle: "default" },
   category: "business",
 };
