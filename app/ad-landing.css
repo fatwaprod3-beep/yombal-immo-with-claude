@@ -1,0 +1,64 @@
+/* Page d'arrivée publicité (/essai) — mobile d'abord, prune & corail */
+.al{--al-prune:#21152e;--al-coral:#f58b76;--al-peach:#ffe0ce;min-height:100vh;background:var(--paper,#f8f7f4);color:#302c36;font-family:'DM Sans',sans-serif;padding-bottom:90px}
+.al-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--al-prune)}
+.al-brand{display:flex;align-items:center;gap:8px;color:#fff;font-family:'Manrope',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.6px}
+.al-brand img{border-radius:9px}.al-brand em{font-style:normal;color:#f9c7b4;font-weight:600}
+.al-login{color:#e7dcef;font-size:14px;font-weight:600;padding:8px 4px}
+.al-hero{background:var(--al-prune);color:#fff;padding:22px 20px 92px;text-align:left}
+.al-pill{display:inline-block;background:#3a2849;color:#f9c7b4;border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:650;margin-bottom:14px}
+.al-hero h1{font-size:34px;line-height:1.08;letter-spacing:-1.4px;font-weight:800}
+.al-hero h1 span{color:var(--al-coral)}
+.al-hero p{margin-top:12px;color:#d7cde0;font-size:16px;line-height:1.55;max-width:460px}
+.al-card{position:relative;margin:-70px 14px 0;background:#fff;border-radius:22px;padding:22px 18px 18px;box-shadow:0 14px 40px #21152e1f;scroll-margin-top:12px}
+.al-card h2{font-size:21px;letter-spacing:-.6px}
+.al-sub{color:#88838c;font-size:13.5px;margin:3px 0 16px}
+.al-google{display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border:1.5px solid #e4e0e8;border-radius:14px;font-weight:700;font-size:16px;color:#302c36;background:#fff}
+.al-google:active{background:#f7f5f9}
+.al-or{display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:#9a94a0;font-size:12.5px}
+.al-or:before,.al-or:after{content:'';flex:1;height:1px;background:#efedf0}
+.al form{display:grid;gap:12px}
+.al label{display:grid;gap:6px}
+.al label span{font-size:13px;font-weight:650;color:#4b4552}
+.al input{height:50px;border:1.5px solid #e4e0e8;border-radius:13px;padding:0 14px;font-size:16px;background:#fbfafc;color:#302c36;width:100%}
+.al input:focus{border-color:var(--al-coral);background:#fff;outline:none;box-shadow:0 0 0 4px #f58b7622}
+.al-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:14px;background:var(--al-coral);color:#21152e;font-weight:800;font-size:16.5px;font-family:'Manrope',sans-serif;letter-spacing:-.2px;box-shadow:0 8px 20px #f58b7640}
+.al-btn:active{transform:translateY(1px)}
+.al-error{margin-top:10px;color:#b23b2a;background:#fdeeea;border-radius:10px;padding:10px 12px;font-size:14px}
+.al-trust{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;color:#5d7f6e;font-size:12.5px;font-weight:600}
+.al-trust li{display:flex;align-items:center;gap:5px}
+.al-mock{margin:22px 14px 0;background:#fff;border-radius:20px;padding:16px;border:1px solid #efedf0}
+.al-mock-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}.al-mock-h b{font-family:'Manrope',sans-serif;font-size:15px}.al-mock-h small{color:#88838c}
+.al-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid #f2f0f4}
+.al-row>i{width:9px;height:9px;border-radius:50%;flex:none}.al-row>div{flex:1;min-width:0;display:grid}
+.al-row b{font-size:14px}.al-row small{color:#88838c;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.al-row span{font-size:12px;font-weight:700;border-radius:99px;padding:4px 9px;white-space:nowrap}
+.al .ok{background:#e3f2ea;color:#2f7a5c}.al i.ok{background:#3c9b72}
+.al .late{background:#fde9e4;color:#c0452f}.al i.late{background:#e2604a}
+.al .part{background:#fdf1d9;color:#9a6a12}.al i.part{background:#e2a83a}
+.al-mock-f{display:flex;align-items:center;gap:7px;margin-top:6px;background:#e9f7ee;color:#23744f;border-radius:12px;padding:10px 12px;font-size:13px;font-weight:600}
+.al-benefits{display:grid;gap:10px;margin:22px 14px 0}
+.al-benefit{display:flex;gap:13px;background:#fff;border-radius:18px;padding:15px;border:1px solid #efedf0}
+.al-benefit>span{width:42px;height:42px;border-radius:13px;background:var(--al-peach);color:#c4553f;display:grid;place-items:center;flex:none}
+.al-benefit h3{font-size:15.5px}.al-benefit p{font-size:14px;color:#6c6672;line-height:1.5;margin-top:3px}
+.al-faq{margin:26px 14px 0}.al-faq h2,.al-end h2{font-size:21px;letter-spacing:-.6px;margin-bottom:10px}
+.al-faq details{background:#fff;border:1px solid #efedf0;border-radius:15px;margin-bottom:8px;padding:0 15px}
+.al-faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 0;font-weight:700;font-size:15px;cursor:pointer}
+.al-faq summary::-webkit-details-marker{display:none}.al-faq details[open] summary svg{transform:rotate(180deg)}
+.al-faq details p{padding:0 0 15px;color:#6c6672;font-size:14px;line-height:1.55}
+.al-end{margin:26px 14px 0;background:var(--al-prune);color:#fff;border-radius:22px;padding:24px 18px;text-align:center}
+.al-end p{color:#d7cde0;margin:-4px 0 16px}
+.al-more{display:inline-block;margin-top:14px;color:#f9c7b4;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.al-bar{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#ffffffee;backdrop-filter:blur(10px);border-top:1px solid #efedf0;transform:translateY(110%);transition:transform .25s;z-index:20}
+.al-bar.on{transform:none}
+@media(min-width:760px){
+ .al{padding-bottom:40px}
+ .al-top{padding:16px max(24px,calc(50vw - 520px))}
+ .al-hero{padding:48px max(24px,calc(50vw - 520px)) 110px}
+ .al-hero h1{font-size:52px;max-width:600px}.al-hero p{font-size:18px}
+ .al>.al-card{width:430px;margin:-80px max(24px,calc(50vw - 520px)) 0 auto;margin-top:-330px}
+ .al-mock,.al-benefits,.al-faq,.al-end{max-width:1040px;margin-left:auto;margin-right:auto}
+ .al-mock{max-width:540px;margin-left:max(24px,calc(50vw - 520px));margin-top:-200px}
+ .al-benefits{grid-template-columns:repeat(3,1fr);padding:0 24px;margin-top:30px}
+ .al-faq,.al-end{max-width:720px}
+ .al-bar{display:none}
+}
