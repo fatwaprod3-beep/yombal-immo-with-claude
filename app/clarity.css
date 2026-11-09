@@ -1,0 +1,26 @@
+/* v0.44.0 — chaque personne bien séparée, avatars en couleur */
+.avatar.av-color{background:var(--av)!important;color:#fff!important;font-weight:750!important;border:0!important;letter-spacing:0!important}
+.avatar.av-color svg{color:#fff}
+.profile-photo-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 12px;border-radius:99px;border:1px dashed #cdbfd8;background:#faf7fc;color:#5b3f72;font-size:12.5px;font-weight:700}
+.profile-photo-btn:hover{background:#f3edf8}
+
+/* Cartes locataires : une carte = une personne */
+.tenant-card{background:#fff!important;border:1px solid #e3dde8!important;box-shadow:0 3px 14px #21152e12!important}
+.tenant-card>header{border-bottom:1px solid #f0ecf3}
+.tenant-card .tenant-rental{background:#f8f5fa!important;border:1px solid #eee8f2!important;border-radius:12px!important;margin:10px 0 0!important}
+.tenant-card .tenant-rental.tenant-late{border-left:4px solid #e2604a!important}
+
+/* Loyers : un bandeau de couleur à gauche selon l'état */
+.rents-page-table>tbody>tr.rent-row>td:first-child{box-shadow:inset 4px 0 0 var(--rent-accent,transparent)}
+tr.rent-row.is-paid{--rent-accent:#3c9b72}
+tr.rent-row.is-late{--rent-accent:#e2604a}
+tr.rent-row.is-partial{--rent-accent:#e2a83a}
+tr.rent-row.is-upcoming{--rent-accent:#c9c2cf}
+@media(max-width:850px){
+ .tenant-grid{gap:14px!important}
+ .tenant-card{border-radius:16px!important}
+ .rents-page-table>tbody{gap:12px!important}
+ .rents-page-table>tbody>tr.rent-row{background:#fff!important;border:1px solid #e3dde8!important;border-left:5px solid var(--rent-accent)!important;box-shadow:0 3px 14px #21152e12!important}
+ .rents-page-table>tbody>tr.rent-row>td:first-child{box-shadow:none}
+ .rents-page-table .person-cell strong{font-size:15px!important}
+}

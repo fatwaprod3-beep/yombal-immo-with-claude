@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.44.0 — 9 novembre 2026
+
+- Avatars comme Google : sans photo, la première lettre du nom sur une couleur propre à chaque personne (locataires, propriétaires, loyers, factures, compte).
+- La photo du locataire s’affiche partout où elle existe, y compris dans Loyers & paiements ; bouton « Ajouter une photo » sur sa fiche.
+- Chaque personne est mieux séparée : cartes blanches bordées avec ombre, logement dans un encadré, et bandeau de couleur selon l’état du loyer (vert payé, rouge en retard, orange partiel, gris à venir).
+
 ## 0.43.1 — 9 novembre 2026
 
 - Page /essai : titre d’onglet sans « Yombal.immo » en double.

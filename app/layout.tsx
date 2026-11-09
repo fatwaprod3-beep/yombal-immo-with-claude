@@ -20,6 +20,7 @@ import "./home-v28.css";
 import "./landing.css";
 import "./mobile-compact.css";
 import "./ad-landing.css";
+import "./clarity.css";
 export const viewport: Viewport = {
   width: 'device-width', initialScale: 1, viewportFit: 'cover',
   interactiveWidget: 'resizes-content', colorScheme: 'light',
