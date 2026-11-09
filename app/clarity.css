@@ -7,7 +7,8 @@
 /* Cartes locataires : une carte = une personne */
 .tenant-card{background:#fff!important;border:1px solid #e3dde8!important;box-shadow:0 3px 14px #21152e12!important}
 .tenant-card>header{border-bottom:1px solid #f0ecf3}
-.tenant-card .tenant-rental{background:#f8f5fa!important;border:1px solid #eee8f2!important;border-radius:12px!important;margin:10px 0 0!important}
+.tenant-card .tenant-rental{background:#f8f5fa!important;border:1px solid #eee8f2!important;border-radius:12px!important;margin:10px 0 0!important;padding:12px 12px 12px 14px!important}
+.tenant-card .tenant-rental.tenant-late{padding-left:12px!important}
 .tenant-card .tenant-rental.tenant-late{border-left:4px solid #e2604a!important}
 
 /* Loyers : un bandeau de couleur à gauche selon l'état */

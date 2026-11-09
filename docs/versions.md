@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.44.1 — 9 novembre 2026
+
+- Encadré du logement dans la carte locataire : marges intérieures pour que le texte ne colle plus au bord.
+- Couleurs d’avatar plus distinctes (plus deux oranges proches).
+
 ## 0.44.0 — 9 novembre 2026
 
 - Avatars comme Google : sans photo, la première lettre du nom sur une couleur propre à chaque personne (locataires, propriétaires, loyers, factures, compte).
