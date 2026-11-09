@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.42.5 — 9 novembre 2026
+
+- Liens & campagnes : les barres de « Comparaison des sources » correspondent enfin au pourcentage affiché (une barre à 20 % ne remplit plus toute la ligne ; un lien sans inscription n’a plus de barre).
+
 ## 0.42.4 — 9 novembre 2026
 
 - Administration sur mobile : la page ne dépasse plus de l’écran (elle faisait 3 fois la largeur du téléphone). Barre du haut fixe avec onglets qui défilent, boutons Retour et Déconnexion en icônes, cartes de chiffres sur 2 colonnes, listes et tableaux adaptés.

@@ -24,7 +24,6 @@ export default function AdminLinks(){
  const sorted=useMemo(()=>[...active].sort((a,b)=>sort==='conv'?pct(b.signups,b.visitors)-pct(a.signups,a.visitors):(b[sort]-a[sort])),[active,sort]);
  const tot=useMemo(()=>(links||[]).reduce((t,l)=>({clicks:t.clicks+l.clicks,visitors:t.visitors+l.visitors,signups:t.signups+l.signups,pro:t.pro+l.pro,revenue:t.revenue+l.revenue,cost:t.cost+l.cost}),{clicks:0,visitors:0,signups:0,pro:0,revenue:0,cost:0}),[links]);
  const best=useMemo(()=>[...(links||[])].filter(l=>l.signups>0).sort((a,b)=>b.pro-a.pro||b.signups-a.signups)[0],[links]);
- const maxSignups=Math.max(1,...active.map(l=>l.signups));
  const allSignups=tot.signups+direct.signups;
  if(!links)return <div className="adm-card adm-loading">{error||<><LoaderCircle className="spin" size={22}/>Chargement des liens…</>}</div>;
  return <div className="adm-stack">
@@ -48,10 +47,10 @@ export default function AdminLinks(){
     <button className="adm-btn" disabled={busy||name.trim().length<2}><Plus size={16}/>Créer le lien</button>
    </form>
    <div className="adm-card lk-compare">
-    <div className="adm-card-h"><h3>Comparaison des sources</h3><span className="adm-muted">Part de chaque lien dans les inscriptions</span></div>
+    <div className="adm-card-h"><h3>Comparaison des sources</h3><span className="adm-muted">Sur 100 inscriptions, combien viennent de chaque lien</span></div>
     {best&&<div className="lk-best"><Trophy size={18}/><div><b>Meilleur lien : {best.name}</b><small>{best.signups} inscription{best.signups>1?'s':''} · {best.pro} Pro · {pct(best.signups,best.visitors)} % de conversion</small></div></div>}
-    <div className="lk-bars">{[...active].sort((a,b)=>b.signups-a.signups).slice(0,6).map(l=><div key={l.id} className="lk-bar"><span className="lk-bar-name"><i style={{background:channels[l.channel]?.color}}/>{l.name}</span><span className="lk-bar-track"><i style={{width:Math.max(3,l.signups/maxSignups*100)+'%',background:channels[l.channel]?.color}}/></span><b>{pct(l.signups,allSignups)} %</b></div>)}
-     <div className="lk-bar direct"><span className="lk-bar-name"><i/>Sans lien (direct)</span><span className="lk-bar-track"><i style={{width:Math.max(3,direct.signups/Math.max(maxSignups,direct.signups)*100)+'%'}}/></span><b>{pct(direct.signups,allSignups)} %</b></div></div>
+    <div className="lk-bars">{[...active].sort((a,b)=>b.signups-a.signups).slice(0,6).map(l=><div key={l.id} className="lk-bar"><span className="lk-bar-name"><i style={{background:channels[l.channel]?.color}}/>{l.name}</span><span className="lk-bar-track"><i style={{width:(allSignups?l.signups/allSignups*100:0)+'%',background:channels[l.channel]?.color}}/></span><b>{pct(l.signups,allSignups)} %</b></div>)}
+     <div className="lk-bar direct"><span className="lk-bar-name"><i/>Sans lien (direct)</span><span className="lk-bar-track"><i style={{width:(allSignups?direct.signups/allSignups*100:0)+'%'}}/></span><b>{pct(direct.signups,allSignups)} %</b></div></div>
     {!active.length&&<p className="adm-empty">Créez votre premier lien pour commencer à mesurer vos campagnes.</p>}
    </div>
   </div>
