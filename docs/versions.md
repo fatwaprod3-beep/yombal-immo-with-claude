@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.42.4 — 9 novembre 2026
+
+- Administration sur mobile : la page ne dépasse plus de l’écran (elle faisait 3 fois la largeur du téléphone). Barre du haut fixe avec onglets qui défilent, boutons Retour et Déconnexion en icônes, cartes de chiffres sur 2 colonnes, listes et tableaux adaptés.
+
 ## 0.42.3 — 9 novembre 2026
 
 - Icône du site (favicon) au symbole Yombal, en .ico et PNG 48/96/192 px, pour Google et les onglets ; ancienne icône de modèle supprimée.

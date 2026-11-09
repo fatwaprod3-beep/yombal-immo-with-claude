@@ -134,3 +134,40 @@
 .adm-choice{min-width:150px}.lk-sort{min-width:220px}
 @media(max-width:900px){.adm-prices,.adm-add-form{grid-template-columns:1fr}}
 .adm-msg header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.adm-msg header small{margin-left:auto;color:#9a879f}.adm-msg p{white-space:pre-wrap;font-size:14px;line-height:1.6;margin:0 0 12px;color:#4f4757}
+/* v0.42.4 — administration sur mobile : plus de débordement horizontal */
+@media(max-width:800px){
+ .adm{grid-template-columns:minmax(0,1fr);overflow-x:clip}
+ .adm-side,.adm-main{min-width:0;max-width:100vw}
+ .adm-side{position:sticky;top:0;z-index:30;gap:10px;padding:10px 12px 8px}
+ .adm-brand{padding:0 4px}.adm-logo{width:30px;height:30px;border-radius:9px}.adm-brand strong{font-size:15px}
+ .adm-side nav{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;gap:6px;margin:0 -12px;padding:0 12px 2px}
+ .adm-side nav::-webkit-scrollbar{display:none}
+ .adm-side nav button{flex:0 0 auto;padding:8px 11px;font-size:13px;background:#2e1f3c}
+ .adm-side nav button span{flex:none}
+ .adm-side-foot{position:absolute;top:10px;right:12px;margin:0;gap:2px;flex-wrap:nowrap}
+ .adm-side-foot small{display:none}
+ .adm-side-foot .adm-link{padding:7px;font-size:0;gap:0}.adm-side-foot .adm-link svg{width:18px;height:18px}
+ .adm-main{padding:16px 12px 40px}
+ .adm-top{align-items:flex-start;margin-bottom:14px;gap:10px}.adm-top h1{font-size:22px}
+ .adm-top-tools{flex-wrap:wrap}
+ .adm-card{padding:15px;border-radius:15px}
+ .adm-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .adm-kpi{padding:13px 13px 12px;border-radius:15px}.adm-kpi strong{font-size:20px}.adm-kpi-h{font-size:11.5px;gap:6px}.adm-kpi-h i{width:28px;height:28px}
+ .adm-kpi small{display:block;overflow-wrap:anywhere}
+ .adm-grid-2,.adm-grid-3,.adm-split,.lk-split,.adm-facts{grid-template-columns:minmax(0,1fr)}
+ .adm-bars{height:100px;gap:2px}
+ .adm-row{flex-wrap:wrap;gap:8px 10px}.adm-row>div{flex:1 1 150px}
+ .adm-search{min-width:0;flex:1 1 100%}
+ .adm-toolbar>*{max-width:100%}
+ .adm-chips{flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none}.adm-chips button{flex:0 0 auto}
+ .adm-table-wrap{-webkit-overflow-scrolling:touch}
+ .adm-table th,.adm-table td{padding:10px 10px}
+ .adm-control{flex-wrap:wrap}
+ .adm-msg header small{margin-left:0;flex-basis:100%}
+ .adm-inline>*{max-width:100%}
+ .adm-pass{flex-wrap:wrap}.adm-pass code{min-width:0;overflow-wrap:anywhere;font-size:16px}
+ .adm-drawer{padding:16px}
+ .lk-bar{grid-template-columns:96px minmax(0,1fr) 40px}
+ .lk-tools{width:100%}.lk-sort,.adm-choice{min-width:0;flex:1 1 140px}
+ .adm-main pre,.adm-main code{overflow-wrap:anywhere;white-space:pre-wrap}
+}
