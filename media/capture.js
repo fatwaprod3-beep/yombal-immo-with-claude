@@ -8,3 +8,4 @@ fs.rmSync('captures',{recursive:true,force:true});fs.mkdirSync('captures',{recur
  for(const pg of ['loyers','locataires']){await p.goto('https://yombal-immo.pro/?demo=1#'+pg,{waitUntil:'networkidle'});await p.waitForTimeout(3500);await p.screenshot({path:'captures/d-'+pg+'.jpg',type:'jpeg',quality:85,fullPage:true});}
  await p.goto('https://yombal-immo.pro/essai',{waitUntil:'networkidle'});await p.waitForTimeout(1500);await p.screenshot({path:'captures/d-essai.jpg',type:'jpeg',quality:80});
  await b.close();})();
+// 1794255452
