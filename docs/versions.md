@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.44.2 — 10 novembre 2026
+
+- Image publique email-loyers.jpg (aperçu des loyers, données d’exemple) pour les e-mails envoyés aux agences.
+
 ## 0.44.1 — 9 novembre 2026
 
 - Encadré du logement dans la carte locataire : marges intérieures pour que le texte ne colle plus au bord.
