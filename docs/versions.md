@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.45.0 — 11 novembre 2026
+
+- Trois nouveaux guides dans Ressources : choisir une agence de location à Dakar (8 critères), les 10 questions à poser à son agence avant de signer, et 7 erreurs des agences qui peuvent coûter cher (loi n° 82-07, décret n° 2023-382).
+
 ## 0.44.2 — 10 novembre 2026
 
 - Image publique email-loyers.jpg (aperçu des loyers, données d’exemple) pour les e-mails envoyés aux agences.
