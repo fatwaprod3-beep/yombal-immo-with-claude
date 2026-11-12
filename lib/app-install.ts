@@ -16,6 +16,11 @@ export function isStandalone() {
   );
 }
 
+// Navigateurs intégrés (Facebook, Instagram, Messenger, TikTok…) : l'installation y est impossible, il faut ouvrir Chrome ou Safari.
+export function inAppBrowser(userAgent: string) {
+  return /FBAN|FBAV|FB_IAB|Instagram|Messenger|musical_ly|BytedanceWebview|Snapchat|Line\//i.test(userAgent);
+}
+
 export function installationDevice(userAgent: string, touchPoints = 0): 'android' | 'ios' | 'desktop' {
   if (/Android/i.test(userAgent)) return 'android';
   if (/iPhone|iPad|iPod/i.test(userAgent) || (/Macintosh/i.test(userAgent) && touchPoints > 1)) return 'ios';

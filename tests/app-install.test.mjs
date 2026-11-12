@@ -7,7 +7,7 @@ import ts from 'typescript';
 const bootstrap=readFileSync(new URL('../public/install-bootstrap.js',import.meta.url),'utf8');
 const worker=readFileSync(new URL('../public/sw.js',import.meta.url),'utf8');
 const source=ts.transpileModule(readFileSync(new URL('../lib/app-install.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
-const {installationDevice,chromeInstallUrl}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const {installationDevice,chromeInstallUrl,inAppBrowser}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 
 function browser({secure=true,topLevel=true}={}){
  const window=new EventTarget(),registrations=[];window.isSecureContext=secure;window.top=topLevel?window:{};
@@ -67,4 +67,11 @@ test('Chrome handoff keeps only this site origin, without private query or fragm
  assert.ok(intent.startsWith('intent://yombal.example/?installer=1#Intent;scheme=https;package=com.android.chrome;'));
  assert.ok(intent.includes(encodeURIComponent('https://yombal.example/?installer=1')));assert.ok(!intent.includes('secret'));assert.ok(!intent.includes('private'));assert.ok(!intent.includes('password'));
  assert.throws(()=>chromeInstallUrl('javascript:alert(1)'));
+});
+
+test('in-app browsers (Facebook, Instagram) are detected, Chrome and Safari are not',()=>{
+ assert.equal(inAppBrowser('Mozilla/5.0 (Linux; Android 13) [FB_IAB/FB4A;FBAV/450.0.0.0;]'),true);
+ assert.equal(inAppBrowser('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Instagram 300.0.0.0'),true);
+ assert.equal(inAppBrowser('Mozilla/5.0 (Linux; Android 13) Chrome/120.0 Mobile Safari/537.36'),false);
+ assert.equal(inAppBrowser('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0) Version/17.0 Mobile/15E148 Safari/604.1'),false);
 });

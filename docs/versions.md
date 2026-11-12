@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.46.0 — 12 novembre 2026
+
+- Installation de l’application : rappel à chaque ouverture de Yombal sur téléphone (après 6 s) tant que l’application n’est pas installée, plus une bannière permanente au-dessus du menu bas. « Plus tard » ne repousse plus que jusqu’à la prochaine ouverture. Dans les navigateurs intégrés (Facebook, Instagram, Messenger, TikTok), le bouton propose directement d’ouvrir Yombal dans Chrome.
+- Correction : dans l’administration sur téléphone, les colonnes « Inscrits » et « Conversion » des liens de suivi étaient masquées ; on masque désormais « Visiteurs », « Revenus » et la courbe à la place.
+
 ## 0.45.0 — 11 novembre 2026
 
 - Trois nouveaux guides dans Ressources : choisir une agence de location à Dakar (8 critères), les 10 questions à poser à son agence avant de signer, et 7 erreurs des agences qui peuvent coûter cher (loi n° 82-07, décret n° 2023-382).

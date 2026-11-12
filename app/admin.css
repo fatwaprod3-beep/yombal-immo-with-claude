@@ -87,7 +87,9 @@
 .danger-zone{border-color:#f2d6cc}
 .adm-main .admin-payments h2{font-size:22px}
 @media(max-width:1100px){.adm-kpis{grid-template-columns:repeat(2,1fr)}.adm-grid-2,.adm-grid-3{grid-template-columns:1fr}}
-@media(max-width:800px){.adm{grid-template-columns:1fr}.adm-side{position:static;height:auto;padding:14px}.adm-side nav{flex-direction:row;overflow:auto}.adm-side nav button{white-space:nowrap}.adm-side-foot{flex-direction:row;flex-wrap:wrap;border:0;padding:0}.adm-main{padding:18px 16px 40px}.adm-split{grid-template-columns:1fr}.adm-table th:nth-child(4),.adm-table td:nth-child(4),.adm-table th:nth-child(5),.adm-table td:nth-child(5){display:none}}
+@media(max-width:800px){.adm{grid-template-columns:1fr}.adm-side{position:static;height:auto;padding:14px}.adm-side nav{flex-direction:row;overflow:auto}.adm-side nav button{white-space:nowrap}.adm-side-foot{flex-direction:row;flex-wrap:wrap;border:0;padding:0}.adm-main{padding:18px 16px 40px}.adm-split{grid-template-columns:1fr}.adm-table:not(.lk-table) th:nth-child(4),.adm-table:not(.lk-table) td:nth-child(4),.adm-table:not(.lk-table) th:nth-child(5),.adm-table:not(.lk-table) td:nth-child(5){display:none}
+/* Liens de suivi sur mobile : on garde Clics, Inscrits, Conversion et Pro ; on masque Visiteurs, Revenus et la courbe. */
+.lk-table th:nth-child(3),.lk-table td:nth-child(3),.lk-table th:nth-child(7),.lk-table td:nth-child(7),.lk-table th:nth-child(8),.lk-table td:nth-child(8){display:none}.lk-table th,.lk-table td{padding-left:10px;padding-right:10px}}
 /* Fenêtre de confirmation Yombal (remplace la fenêtre du navigateur) */
 .yc-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:16px;background:#21152e73;backdrop-filter:blur(3px);animation:yc-fade .18s ease both}
 .yc-dialog{width:min(420px,100%);background:#fff;border-radius:20px;padding:26px 24px 20px;box-shadow:0 30px 80px #21152e40;text-align:center;font-family:'DM Sans',sans-serif;animation:yc-pop .22s cubic-bezier(.2,.8,.2,1) both}
