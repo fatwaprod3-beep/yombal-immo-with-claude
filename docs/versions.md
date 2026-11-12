@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.51.1 — 12 novembre 2026
+
+- Correction d’affichage : les champs des nouvelles fenêtres (premier logement, invitations, document verrouillé) ne débordent plus sur petit écran.
+
 ## 0.51.0 — 12 novembre 2026
 
 - Notifications du téléphone (Web Push, sans dépendance) : invitation « Ne ratez plus jamais un loyer » (une seule fenêtre par ouverture ; en priorité dans l’application installée), notification de bienvenue immédiate, puis envoi quotidien à 9 h (Dakar) au plus tous les 2 jours et jamais deux fois le même sujet dans la semaine : loyers en retard, début du mois, premier logement, premier locataire, premier reçu, limite gratuite proche, retour après 7 jours.
