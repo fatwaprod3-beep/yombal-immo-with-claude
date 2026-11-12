@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.50.0 — 12 novembre 2026
+
+- Documents après le quota gratuit (3 factures ou reçus) : au lieu d’un simple message, le document s’affiche avec le haut lisible et le reste flouté, un cadenas et le bouton « Débloquer avec Pro ». Le brouillon reste enregistré. Valable depuis Factures et depuis le suivi des loyers.
+
 ## 0.49.0 — 12 novembre 2026
 
 - Premier logement guidé : après le choix propriétaire/agence, une fenêtre propose un logement et un locataire pré-remplis avec un exemple (et, pour une agence, le propriétaire et la commission). La personne garde l’exemple ou le remplace ; tout reste modifiable. Proposé une seule fois, tant que l’espace est vide.
