@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.52.0 — 12 novembre 2026
+
+- Modèles de facture Pro et signature : enregistrables gratuitement dans les paramètres pour essayer. Au moment d’envoyer ou télécharger un document sans abonnement, le vrai document s’affiche avec le haut lisible et le reste flouté, avec « Débloquer avec Pro » ou « Envoyer avec le modèle gratuit » (Classique, sans signature).
+- Contrats : un compte gratuit peut préparer son contrat jusqu’au bout ; le vrai contrat rempli s’affiche flouté avec l’offre Pro.
+- Sécurité : sans abonnement, tout document émis (téléchargement, lien partagé) utilise toujours la version gratuite, même si un modèle Pro est enregistré.
+
 ## 0.51.2 — 12 novembre 2026
 
 - Correction : l’administration affichait « Lecture impossible ». Les nouvelles tables (événements du parcours, abonnements aux notifications) n’étaient pas autorisées pour le rôle de l’application ; droits et règle d’accès ajoutés (migration 0004, déjà appliquée sur la base).

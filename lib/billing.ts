@@ -41,10 +41,16 @@ export type Subscription={isAdmin?:boolean;development?:boolean;isPro:boolean;st
 export const freeSubscription:Subscription={isPro:false,status:'free',planId:null,expiresAt:null};
 export function activeSubscription(row:{status:string;expiresAt:string|null}|undefined,at=Date.now()){return !!row&&row.status==='active'&&!!row.expiresAt&&Date.parse(row.expiresAt)>at;}
 export function requiredProFeature(m:{action?:string;data?:unknown},current?:{signature?:string;invoiceTemplate?:string}):ProFeature|null{
- if(m.action==='profile'||m.action==='restore'){const data=m.data as {signature?:string;invoiceTemplate?:string;profile?:{signature?:string;invoiceTemplate?:string}}|undefined;const p=m.action==='restore'?data?.profile:data;if(p?.signature&&p.signature!==current?.signature)return 'signature';if(p?.invoiceTemplate&&!freeInvoiceTemplates.includes(p.invoiceTemplate)&&p.invoiceTemplate!==current?.invoiceTemplate)return 'invoiceTemplates';}
+ void current; // Modèle Pro et signature : enregistrables gratuitement, réservés au Pro sur les documents émis.
  if(m.action==='createContract'||m.action==='signContract'||m.action==='saveContractTemplate')return 'contracts';
  if(m.action==='ownerTransfer'||m.action==='cancelOwnerTransfer')return 'owners';
  if(m.action==='import')return 'import';
  if(m.action==='prepareBills'){const d=m.data as {from?:string;to?:string}|undefined;if(d?.from&&d?.to&&d.from!==d.to)return 'bulk';}
  return null;
 }
+
+// Le modèle Pro et la signature peuvent être choisis et enregistrés gratuitement pour essayer ;
+// ils ne figurent sur un document envoyé ou téléchargé qu'avec Yombal Pro.
+export function usesProStyle(profile:{invoiceTemplate?:string;signature?:string}){return (!!profile.invoiceTemplate&&!freeInvoiceTemplates.includes(profile.invoiceTemplate))||!!profile.signature;}
+/** Version gratuite d'un document : modèle Classique et sans signature. */
+export function freeStyled<T extends {template?:string;issuer:{signature:string}}>(d:T):T{return {...d,template:d.template&&freeInvoiceTemplates.includes(d.template)?d.template:'classic',issuer:{...d.issuer,signature:''}} as T;}
