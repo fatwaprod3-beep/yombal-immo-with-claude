@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.53.1 — 12 novembre 2026
+
+- Aperçu protégé : le flou commence dès l’encadré de relance (qui affiche le solde), et plus seulement au tableau des montants.
+
 ## 0.53.0 — 12 novembre 2026
 
 - Aperçus protégés : sans abonnement, quand un document ne peut pas être émis tel quel (modèle ou signature Pro, ou 3 documents gratuits utilisés), l’aperçu dans l’application floute tout à partir du tableau des montants et affiche « APERÇU · YOMBAL PRO », pour qu’une capture d’écran ne remplace pas le document. L’aperçu d’un contrat sans Pro passe par la fenêtre floutée.
