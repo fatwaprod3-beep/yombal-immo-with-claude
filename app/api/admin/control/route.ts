@@ -7,13 +7,13 @@ import {setSetting,getSetting} from '../../../../lib/app-settings';
 import {logSecurity} from '../../../../lib/security';
 import {encryptPaymentSecret,paymentCredentials} from '../../../../lib/payment-config';
 import {sasPayPrices} from '../../../../lib/saspay-prices';
-import {createSessionToken,sessionCookieHeader,hashPassword} from '../../../auth';
+import {createSessionToken,sessionCookieHeader,hashPassword,createPurposeToken} from '../../../auth';
 import {aiProviders,type AiProvider} from '../../../../lib/assistant';
 export const dynamic='force-dynamic';
 const input=z.discriminatedUnion('action',[
  z.object({action:z.literal('flag'),flag:z.enum(['registrations','maintenance','assistant']),value:z.boolean()}),
  z.object({action:z.literal('logout_all')}),
- z.object({action:z.enum(['suspend','activate','restrict','logout_user','revoke_pro']),userId:z.string().uuid()}),
+ z.object({action:z.enum(['suspend','activate','restrict','logout_user','revoke_pro','reset_link']),userId:z.string().uuid()}),
  z.object({action:z.literal('set_prices'),prices:z.record(z.enum(['monthly','quarterly','annual']),z.number().int().min(100).max(10_000_000).nullable())}),
  z.object({action:z.literal('create_user'),email:z.string().trim().toLowerCase().email().max(200),name:z.string().trim().min(2).max(120),months:z.number().int().min(0).max(36)}),
  z.object({action:z.literal('set_tester'),userId:z.string().uuid(),value:z.boolean()}),
@@ -65,6 +65,7 @@ export async function POST(request:Request){
   if(a.action==='suspend'){await db.update(users).set({status:'suspended',sessionsAfter:Date.now()}).where(eq(users.id,target.id));await audit(`Compte suspendu : ${target.email}`);return adminJson({ok:true,message:'Compte suspendu et déconnecté.'});}
   if(a.action==='restrict'){await db.update(users).set({status:'restricted'}).where(eq(users.id,target.id));await audit(`Accès limité : ${target.email}`);return adminJson({ok:true,message:'Accès limité : le compte reste connecté mais les menus sensibles sont bloqués.'});}
   if(a.action==='activate'){await db.update(users).set({status:'active'}).where(eq(users.id,target.id));await audit(`Compte réactivé : ${target.email}`);return adminJson({ok:true,message:'Compte réactivé.'});}
+  if(a.action==='reset_link'){const token=await createPurposeToken('reset',target.id,48*36e5,target.passwordHash.slice(0,32));await audit(`Lien de nouveau mot de passe créé : ${target.email}`);return adminJson({ok:true,message:'Lien créé : valable 48 h, une seule utilisation.',link:new URL('/reinitialiser?t='+token,new URL(request.url).origin).toString()});}
   if(a.action==='logout_user'){await db.update(users).set({sessionsAfter:Date.now()}).where(eq(users.id,target.id));await audit(`Sessions fermées : ${target.email}`);return adminJson({ok:true,message:'Toutes les sessions de ce compte sont fermées.'});}
   if(a.action==='set_tester'){await db.update(users).set({tester:a.value?1:0}).where(eq(users.id,target.id));await audit(`${a.value?'Marqué':'Retiré'} comme compte de test : ${target.email}`);return adminJson({message:a.value?'Compte marqué comme test : il n’est plus compté dans les chiffres.':'Compte de nouveau compté dans les chiffres.'});}
   if(a.action==='revoke_pro'){await db.update(subscriptions).set({status:'expired',expiresAt:now.toISOString(),updatedAt:now.toISOString()}).where(eq(subscriptions.userId,target.id));await audit(`Pro retiré : ${target.email}`);return adminJson({ok:true,message:'Accès Pro retiré.'});}

@@ -12,7 +12,7 @@ import RoleChoice from './role-choice';
 import FirstRental from './first-rental';
 import LockedDocument from './locked-document';
 import NotifyInvitation from './notify-invitation';
-import {isStandalone,type InstallPromptEvent} from '../lib/app-install';
+import {isStandalone,inAppBrowser,installationDevice,openInChrome,type InstallPromptEvent} from '../lib/app-install';
 import {liveOverlay,useOverlayHistory} from './use-overlay-history';
 import {freeSubscription,requiredProFeature,type Subscription,type ProFeature,type PlanId} from '../lib/billing';
 import PrivateImage from './private-image';
@@ -188,7 +188,8 @@ export default function Dashboard({ userName, userEmail, authenticated, signInHr
     if(installing.current)return;
     if(isStandalone()||window.yombalInstall?.installed){setInstallHelp(false);notice('Yombal est déjà installé sur cet appareil.');return;}
     const prompt=installEvent||window.yombalInstall?.event;
-    if(!prompt){setInstallHelp(true);return;}
+    // Navigateur de Facebook/Instagram sur Android : on ouvre directement Chrome, déjà connecté.
+    if(!prompt){if(inAppBrowser(navigator.userAgent)&&installationDevice(navigator.userAgent,navigator.maxTouchPoints)==='android'){void openInChrome();return;}setInstallHelp(true);return;}
     installing.current=true;setInstallEvent(null);if(window.yombalInstall)window.yombalInstall.event=null;
     try{await prompt.prompt();const choice=await prompt.userChoice;if(choice.outcome==='accepted'){setInstallHelp(false);if(!window.yombalInstall?.installed)notice('Installation acceptée. Votre téléphone termine l’ajout de Yombal.');}}
     catch{setInstallHelp(true);}

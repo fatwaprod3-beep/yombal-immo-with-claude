@@ -108,3 +108,19 @@ export function safeRelativeReturnPath(value: string): string {
   if (url.pathname === SIGN_IN_PATH || url.pathname.startsWith("/api/auth")) return "/";
   return `${url.pathname}${url.search}${url.hash}`;
 }
+
+// Jetons à usage précis (ouverture dans Chrome, réinitialisation du mot de passe) : signés avec AUTH_SECRET,
+// liés à un objet (« bind ») et à une durée courte. Un jeton de réinitialisation est lié à l'empreinte
+// du mot de passe actuel : il ne marche plus dès que le mot de passe a changé.
+export async function createPurposeToken(purpose: string, userId: string, ttlMs: number, bind = "") {
+  const expires = Date.now() + ttlMs;
+  return userId + "." + expires + "." + (await sign(purpose + "|" + userId + "|" + expires + "|" + bind));
+}
+export async function verifyPurposeToken(purpose: string, token: string, bind: (userId: string) => Promise<string | null> = async () => "") {
+  const match = /^([a-f0-9-]{36})\.(\d{13})\.([a-f0-9]{64})$/.exec(token);
+  if (!match || Number(match[2]) <= Date.now()) return null;
+  const bound = await bind(match[1]);
+  if (bound === null) return null;
+  const expected = await sign(purpose + "|" + match[1] + "|" + match[2] + "|" + bound);
+  return sameValue(expected, match[3]) ? { userId: match[1], signature: match[3] } : null;
+}

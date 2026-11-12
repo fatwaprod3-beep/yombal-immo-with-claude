@@ -4,14 +4,14 @@ import {securityEvents} from '../../../../db/schema';
 import {requireAdmin,adminJson} from '../../../../lib/admin-guard';
 import {flags,getSetting} from '../../../../lib/app-settings';
 export const dynamic='force-dynamic';
-type UserRow={id:string;email:string;name:string;status:string;created_at:string;last_seen_at:string|null;last_login_at:string|null;plan_id:string|null;sub_status:string|null;expires_at:string|null;properties:number|null;tenants:number|null;spaces:number|null;paid:number|null;ai_messages:number|null;flagged:number|null;tester:number|null;configured:boolean|null;mode:string|null;leases:number|null;rent_payments:number|null;receipts:number|null;contracts:number|null;app_opens:number|null;app_installed:number|null;app_last:string|null;prompts:number|null;prompt_dismissed:number|null;push:number|null;ref_code:string|null};
+type UserRow={id:string;email:string;name:string;status:string;created_at:string;last_seen_at:string|null;last_login_at:string|null;plan_id:string|null;sub_status:string|null;expires_at:string|null;properties:number|null;tenants:number|null;spaces:number|null;paid:number|null;ai_messages:number|null;flagged:number|null;tester:number|null;configured:boolean|null;mode:string|null;leases:number|null;rent_payments:number|null;receipts:number|null;contracts:number|null;app_opens:number|null;app_installed:number|null;app_last:string|null;prompts:number|null;prompt_dismissed:number|null;push:number|null;ref_code:string|null;phone:string|null;company:string|null};
 export async function GET(request:Request){
  const {denied}=await requireAdmin(request);if(denied)return denied;
  try{
   const db=getDb();const now=Date.now();const iso=(ms:number)=>new Date(now-ms).toISOString();
   const users=await db.execute(sql`
    select u.id,u.email,u.name,u.status,u.created_at,u.last_seen_at,u.last_login_at,u.tester,s.plan_id,s.status as sub_status,s.expires_at,
-    w.properties,w.tenants,w.spaces,w.leases,w.rent_payments,w.contracts,w.configured,w.mode,p.paid,a.ai_messages,a.flagged,
+    w.properties,w.tenants,w.spaces,w.leases,w.rent_payments,w.contracts,w.configured,w.mode,w.phone,w.company,p.paid,a.ai_messages,a.flagged,
     (select count(*)::int from yombal_invoice_links i where i.user_id=u.id) as receipts,
     e.app_opens,e.app_installed,e.app_last,e.prompts,e.prompt_dismissed,
     (select count(*)::int from yombal_push_subscriptions ps where ps.user_id=u.id and ps.failures<5) as push,
@@ -34,14 +34,16 @@ export async function GET(request:Request){
       sum(case when json_typeof((data::json)->'payments')='array' then json_array_length((data::json)->'payments') else 0 end)::int as rent_payments,
       sum(case when json_typeof((data::json)->'rentalContracts')='array' then json_array_length((data::json)->'rentalContracts') else 0 end)::int as contracts,
       bool_or(((data::json)->'profile'->>'configured')='true') as configured,
-      max((data::json)->'profile'->>'mode') as mode
+      max((data::json)->'profile'->>'mode') as mode,
+      max((data::json)->'profile'->>'phone') as phone,
+      max((data::json)->'profile'->>'company') as company
      from yombal_workspaces group by 1) w on w.uid=u.id
    left join (select user_id,sum(amount)::int as paid from yombal_billing_payments where applied=1 group by 1) p on p.user_id=u.id
    left join (select user_id,count(*)::int as ai_messages,sum(flagged)::int as flagged from yombal_ai_messages where role='user' group by 1) a on a.user_id=u.id
    order by u.created_at desc limit 1000`) as unknown as UserRow[];
   const nowIso=new Date(now).toISOString();
   const list=users.map(u=>{const pro=u.sub_status==='active'&&!!u.expires_at&&u.expires_at>nowIso;return {id:u.id,email:u.email,name:u.name,status:u.status,createdAt:u.created_at,lastSeenAt:u.last_seen_at||u.last_login_at,plan:pro?u.plan_id:'free',expiresAt:pro?u.expires_at:null,properties:u.properties||0,tenants:u.tenants||0,spaces:u.spaces||0,paid:u.paid||0,aiMessages:u.ai_messages||0,flagged:u.flagged||0,
-   tester:!!u.tester,mode:u.mode||null,ref:u.ref_code||null,
+   tester:!!u.tester,mode:u.mode||null,ref:u.ref_code||null,phone:(u.phone||'').trim()||null,company:u.company&&u.company!=='Mon patrimoine'?u.company:null,
    // Parcours : 0 inscrit → 1 profil choisi → 2 logement → 3 locataire → 4 loyer encaissé → 5 document → 6 Pro.
    journey:{profile:!!u.configured,property:(u.properties||0)>0,tenant:(u.tenants||0)>0,payment:(u.rent_payments||0)>0,document:(u.receipts||0)+(u.contracts||0)>0,pro},
    documents:(u.receipts||0)+(u.contracts||0),

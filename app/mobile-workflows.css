@@ -237,3 +237,12 @@
 .pro-lock-free{width:100%;margin-top:8px;min-height:42px;border-radius:12px;border:1.5px solid #e6dcef;background:#fff;color:#4b3c56;font-weight:700;font-size:13px}
 .pro-lock-card>small{display:block;margin-top:8px;font-size:11px;color:#9a8fa3}
 @media(max-width:600px){.pro-lock-card>p{font-size:12px}.pro-lock-card ul{display:none}}
+/* Page « Nouveau mot de passe ». */
+.reset-page{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(120% 80% at 50% 0%,#f5eef9,#f8f7f4)}
+.reset-card{width:min(420px,100%);padding:28px 22px;border-radius:24px;background:#fff;box-shadow:0 20px 50px #2a173a1f;text-align:center;box-sizing:border-box}
+.reset-card img{margin:0 auto 12px;border-radius:15px}.reset-card h1{font-size:21px;letter-spacing:-.5px;color:#21152e;margin:0}.reset-card>p{margin:8px 0 0;font-size:13.5px;color:#6a6071;line-height:1.5}
+.reset-card form{display:grid;gap:12px;margin-top:18px;text-align:left}.reset-card label{display:grid;gap:5px;font-size:12.5px;font-weight:600;color:#5a4c64}
+.reset-card input{width:100%;min-height:46px;border:1.5px solid #e6dcef;border-radius:12px;padding:0 12px;font:inherit;font-size:15px;box-sizing:border-box}.reset-input{position:relative}.reset-input input{padding-right:44px}.reset-input button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:none;color:#8a7c93;display:grid;place-items:center}
+.reset-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;margin-top:4px;border:0;border-radius:14px;background:linear-gradient(135deg,#f58b76,#e9705a);color:#fff;font:inherit;font-weight:800;font-size:15px;text-decoration:none}
+.reset-error{margin:0;padding:10px 12px;border-radius:10px;background:#fdf1ee;color:#9a4b3a;font-size:13px}
+.reset-ok{width:58px;height:58px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:#e6f3ee;color:#2f7a60}
