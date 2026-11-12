@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.51.2 — 12 novembre 2026
+
+- Correction : l’administration affichait « Lecture impossible ». Les nouvelles tables (événements du parcours, abonnements aux notifications) n’étaient pas autorisées pour le rôle de l’application ; droits et règle d’accès ajoutés (migration 0004, déjà appliquée sur la base).
+
 ## 0.51.1 — 12 novembre 2026
 
 - Correction d’affichage : les champs des nouvelles fenêtres (premier logement, invitations, document verrouillé) ne débordent plus sur petit écran.
