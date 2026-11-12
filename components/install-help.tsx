@@ -9,7 +9,7 @@ export default function InstallHelp({available,onInstall,onClose}:{available:boo
  const [url,setUrl]=useState(''),[chrome,setChrome]=useState(''),[copy,setCopy]=useState(''),[busy,setBusy]=useState(false);
  useEffect(()=>{setDevice(installationDevice(navigator.userAgent,navigator.maxTouchPoints));setUrl(window.location.origin+'/');setChrome(chromeInstallUrl(window.location.origin));},[]);
  async function copyLink(){try{await navigator.clipboard.writeText(url);setCopy('Lien copié. Ouvrez-le dans votre navigateur.');}catch{setCopy('Appuyez longtemps sur le lien pour le copier.');}}
- return <Dialog className="install-help-dialog" title="Installer Yombal" detail="Une icône sur votre téléphone, votre espace habituel." onClose={onClose}>
+ return <Dialog className="install-help-dialog" title="Yombal sur votre écran d’accueil" detail="Un raccourci sur votre téléphone, votre espace en un geste." onClose={onClose}>
   <div className="form-body">
    <div className="install-app-card"><img src="/icons/yombal-192.png" alt=""/><div><strong>Yombal.immo</strong><small>Votre gestion, à portée de main.</small></div><Smartphone size={25}/></div>
    {available?<p className="install-ready" role="status">L’installation est prête. Appuyez sur « Installer maintenant », puis confirmez sur votre appareil.</p>:<>

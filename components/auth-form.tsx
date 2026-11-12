@@ -1,4 +1,5 @@
 'use client';
+import {supportLink} from '../lib/support';
 import {markSignup} from '../lib/meta-pixel';
 import {useState,type FormEvent} from 'react';
 import Link from 'next/link';
@@ -28,7 +29,7 @@ export default function AuthForm({returnTo,initialMode,google=false,initialError
   <form onSubmit={submit}>
    {register&&<label className="field"><span>Nom complet ou nom de l’agence</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" minLength={2} maxLength={120} required/></label>}
    <label className="field"><span>E-mail</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" maxLength={200} required/></label>
-   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/></label>
+   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/></label>{!register&&<details className="auth-forgot"><summary>Mot de passe oublié ?</summary><div><p><strong>Votre adresse est un Gmail ?</strong> Utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p><p>Sinon, écrivez-nous : nous vous envoyons un lien pour choisir un nouveau mot de passe.</p><a className="auth-forgot-wa" href={supportLink('Bonjour Yombal, j’ai oublié mon mot de passe. Mon e-mail : '+(email||''))} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp</a></div></details>}
    <button className="button primary" disabled={busy} aria-busy={busy}>{busy?'Patientez…':register?'Créer mon compte':'Se connecter'}</button>
   </form>
   {error&&<p className="form-error" role="alert">{error}</p>}

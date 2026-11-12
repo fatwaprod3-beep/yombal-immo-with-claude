@@ -183,3 +183,4 @@
 .adm-contact{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}.adm-contact span{color:#674580;font-weight:600}
 .adm-reach{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px;border-radius:14px;background:#f3faf6;margin:12px 0}.adm-reach>div{flex:1;min-width:140px}.adm-reach span{display:block;font-size:11.5px;color:#6d5a79}.adm-reach b{font-size:15px;color:#21152e}
 .adm-btn.wa{background:#25d366;color:#fff;border-color:#25d366}
+.adm-reset{display:grid;gap:8px;margin-bottom:10px}.adm-reset-box{display:grid;gap:8px;padding:12px;border-radius:12px;background:#faf7fc}.adm-reset-box input{width:100%;padding:9px 10px;border:1px solid #e6dcef;border-radius:9px;font:inherit;font-size:12px;box-sizing:border-box}.adm-reset-box small{color:#8a7c93;font-size:11.5px}

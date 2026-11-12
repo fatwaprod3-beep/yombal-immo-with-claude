@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useRef,useState,type FormEvent} from 'react';
-import {Bot,LoaderCircle,MessageCircle,Plus,Send,X} from 'lucide-react';
+import {Bot,LoaderCircle,Plus,Send,X} from 'lucide-react';
+import HelpBubble from './help-bubble';
 import {apiFetch} from '../lib/api-fetch';
 
 type Msg={role:'user'|'assistant';content:string};
@@ -19,11 +20,11 @@ export default function AssistantWidget({name}:{name:string}){
  function fresh(){setConversationId(undefined);setMessages([]);setError('');}
  const first=(name||'').split(' ')[0];
  return <>
-  {!open&&<button type="button" className="ya-fab" onClick={()=>setOpen(true)} aria-label="Ouvrir l’assistant Yombal"><MessageCircle size={22}/><span>Assistant</span></button>}
+  {!open&&<HelpBubble onAssistant={()=>setOpen(true)}/>}
   {open&&<section className="ya-panel" role="dialog" aria-label="Assistant Yombal">
    <header><span className="ya-avatar"><Bot size={19}/></span><div><strong>Yombal Assistant</strong><small><i/>Répond en quelques secondes</small></div><button type="button" onClick={fresh} aria-label="Nouvelle discussion" title="Nouvelle discussion"><Plus size={18}/></button><button type="button" onClick={()=>setOpen(false)} aria-label="Fermer l’assistant"><X size={18}/></button></header>
    <div className="ya-body">
-    {ready===false?<div className="ya-empty"><Bot size={30}/><strong>Assistant bientôt disponible</strong><p>En attendant, l’équipe Yombal vous répond depuis Aide → Contacter le support.</p></div>:<>
+    {ready===false?<div className="ya-empty"><Bot size={30}/><strong>Assistant bientôt disponible</strong><p>En attendant, un conseiller Yombal vous répond sur WhatsApp.</p></div>:<>
      <div className="ya-msg bot"><p>Bonjour{first?' '+first:''} 👋 Je suis l’assistant Yombal. Posez-moi vos questions sur vos loyers, locataires, factures ou votre abonnement.</p></div>
      {messages.map((m,i)=><div key={i} className={'ya-msg '+(m.role==='user'?'me':'bot')}><p>{m.content}</p></div>)}
      {!messages.length&&ready&&<div className="ya-suggest">{suggestions.map(s=><button type="button" key={s} onClick={()=>void send(s)}>{s}</button>)}</div>}

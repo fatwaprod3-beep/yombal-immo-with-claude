@@ -1,5 +1,13 @@
 # Versions de Yombal.immo
 
+## 0.55.0 — 12 novembre 2026
+
+- Navigateur Facebook/Instagram : « Ouvrir dans Chrome » transmet la connexion (lien personnel de 3 minutes, à usage unique) ; sur Android, le bouton d’installation ouvre Chrome directement, déjà connecté.
+- Administration : nom de l’agence et téléphone sous chaque inscrit ; dans la fiche, boutons WhatsApp et Appeler ; bouton « Lien pour un nouveau mot de passe » (48 h, une seule utilisation, inutilisable dès que le mot de passe change) avec copie et envoi WhatsApp.
+- Page /reinitialiser pour choisir un nouveau mot de passe (déconnecte les autres appareils). Connexion : « Mot de passe oublié ? » propose Google ou WhatsApp.
+- Installation présentée comme un raccourci : « 📌 Mettre sur mon écran d’accueil » ; proposée juste après l’enregistrement du premier logement (« Bravo ! Gardez vos loyers à portée de main »).
+- Bouton d’aide unique qui alterne toutes les 10 s entre « Un conseiller » (WhatsApp +44 7445 510315) et « Assistant IA » ; libellé 3 s puis petite bulle ; déplaçable du doigt (se colle au bord, garde sa place) et rangeable en languette.
+
 ## 0.54.0 — 12 novembre 2026
 
 - Aperçu flouté expliqué : une carte posée sur la partie floutée dit pourquoi (3 documents gratuits utilisés, ou modèle/signature Pro), ce que Pro débloque, le prix de départ (formule la plus avantageuse) et propose « Devenir Pro » ou, pour un style Pro, « Envoyer gratuitement au modèle Classique ». Dans Factures et dans le suivi des loyers.
