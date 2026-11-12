@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.47.1 — 12 novembre 2026
+
+- Invitation d’installation : trois versions qui se relaient à chaque ouverture (écran d’accueil, « Qui a payé ? », « 10 secondes » avec les 3 gestes adaptés à Android ou iPhone). Jamais pendant une saisie ; 6 s la première fois, puis 15 s pour laisser travailler.
+
 ## 0.47.0 — 12 novembre 2026
 
 - Nouveau compte immobilier : première question « Comment gérez-vous vos biens ? » (je gère mes propres biens / je suis une agence) avant la vidéo de bienvenue ; le choix règle le profil et les menus, modifiable ensuite dans les paramètres.

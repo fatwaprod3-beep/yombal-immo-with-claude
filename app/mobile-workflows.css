@@ -145,3 +145,26 @@
 .role-choice-options i{width:24px;height:24px;border-radius:50%;border:2px solid #e2d6ea;display:grid;place-items:center;color:transparent;flex:0 0 auto;transition:all .15s}.role-choice-options .chosen i{background:#f58b76;border-color:#f58b76;color:#fff}
 .role-choice-cta{width:100%;margin-top:18px;min-height:52px;border-radius:16px;background:linear-gradient(135deg,#f58b76,#e9705a);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 12px 28px #f58b7655;transition:opacity .15s}
 .role-choice-cta:disabled{opacity:.45;box-shadow:none}
+/* Version « loyers » : cartes de loyers qui glissent. */
+.install-invite-rents{position:absolute;left:18px;right:18px;top:50px;display:grid;gap:8px}
+.iir-card{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:13px;background:#fff;box-shadow:0 8px 20px #0003;animation:iir-in .55s cubic-bezier(.2,.9,.3,1.2) both}
+.iir-card:nth-child(2){animation-delay:.15s}.iir-card:nth-child(3){animation-delay:.3s}
+@keyframes iir-in{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.iir-card>i{width:8px;height:30px;border-radius:9px;flex:0 0 auto}.iir-card>div{flex:1;min-width:0;text-align:left}
+.iir-card b{display:block;font-size:12px;color:#2b1d36}.iir-card small{display:block;font-size:10.5px;color:#8a7c93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iir-card>span{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:99px;white-space:nowrap}
+.iir-card .ok{background:#458e75}.iir-card span.ok{background:#e6f3ee;color:#2f7a60}
+.iir-card .late{background:#e9705a}.iir-card span.late{background:#fdebe6;color:#c4523c}
+.iir-card .part{background:#e6a83b}.iir-card span.part{background:#fdf3df;color:#a8741a}
+.install-invite.v-rents .install-invite-hero{height:226px}.install-invite.v-rents .install-invite-hero::after,.install-invite.v-steps .install-invite-hero::after{display:none}
+/* Version « 10 secondes » : chronomètre et 3 gestes. */
+.install-invite-timer{position:absolute;left:50%;top:50%;transform:translate(-50%,-42%);display:flex;align-items:center;gap:14px}
+.install-invite-timer img{width:64px;height:64px;border-radius:18px;box-shadow:0 12px 30px #0006;animation:install-invite-pop .8s .2s cubic-bezier(.2,.9,.3,1.4) both}
+.install-invite-timer>span{width:86px;height:86px;border-radius:50%;display:grid;place-content:center;text-align:center;color:#fff;border:3px solid #f58b76;box-shadow:0 0 0 8px #f58b7622;animation:iit-pulse 2s ease-in-out infinite}
+.install-invite-timer b{font-family:Manrope,sans-serif;font-size:32px;line-height:1}.install-invite-timer small{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#f3c8bd}
+@keyframes iit-pulse{0%,100%{box-shadow:0 0 0 8px #f58b7622}50%{box-shadow:0 0 0 14px #f58b7611}}
+.install-invite.v-steps .install-invite-hero{height:160px}
+.install-invite-steps{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:8px;text-align:left;counter-reset:none}
+.install-invite-steps li{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:14px;background:#faf6fc}
+.install-invite-steps li>span{width:26px;height:26px;border-radius:50%;background:#352341;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 auto}
+.install-invite-steps li>svg{color:#8a5aa6}.install-invite-steps b{font-size:13px;color:#2b1d36;font-weight:650}
