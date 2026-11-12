@@ -217,3 +217,10 @@
 .role-agency input:focus{outline:none;border-color:#f58b76;box-shadow:0 0 0 3px #f58b7622}
 .role-agency-logo{padding:12px;border-radius:16px;background:#faf7fc}
 .role-choice-back{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:#8f7aa0;font-weight:600;padding:6px}
+/* Explication au-dessus d'un aperçu flouté. */
+.pro-lock-notice{display:flex;gap:12px;align-items:flex-start;margin:0 0 12px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#352341,#4a2f5c);color:#f6eafc}
+.pro-lock-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#ffffff1f;color:#f3c8bd;flex:0 0 auto}
+.pro-lock-text{flex:1;min-width:0}.pro-lock-text strong{display:block;font-size:14.5px;color:#fff}.pro-lock-text p{margin:5px 0 0;font-size:12.5px;line-height:1.55;color:#e2d3ec}.pro-lock-text b{color:#f3c8bd}
+.pro-lock-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+.pro-lock-cta{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 16px;border-radius:12px;background:linear-gradient(135deg,#d9a441,#c48a24);color:#fff;font-weight:800;font-size:13.5px}
+.pro-lock-free{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border-radius:12px;background:#ffffff14;border:1px solid #ffffff33;color:#fff;font-weight:700;font-size:13px}
