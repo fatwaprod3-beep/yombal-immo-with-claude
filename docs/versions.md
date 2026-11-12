@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.51.0 — 12 novembre 2026
+
+- Notifications du téléphone (Web Push, sans dépendance) : invitation « Ne ratez plus jamais un loyer » (une seule fenêtre par ouverture ; en priorité dans l’application installée), notification de bienvenue immédiate, puis envoi quotidien à 9 h (Dakar) au plus tous les 2 jours et jamais deux fois le même sujet dans la semaine : loyers en retard, début du mois, premier logement, premier locataire, premier reçu, limite gratuite proche, retour après 7 jours.
+- Aucune donnée dans le réseau de notification : le téléphone demande le texte à Yombal au moment de l’afficher. Clés VAPID générées une fois et chiffrées dans la base ; tâche planifiée protégée par CRON_SECRET (variable Vercel).
+- Mesure : notifications acceptées / refusées / ouvertes dans l’administration.
+
 ## 0.50.0 — 12 novembre 2026
 
 - Documents après le quota gratuit (3 factures ou reçus) : au lieu d’un simple message, le document s’affiche avec le haut lisible et le reste flouté, un cadenas et le bouton « Débloquer avec Pro ». Le brouillon reste enregistré. Valable depuis Factures et depuis le suivi des loyers.

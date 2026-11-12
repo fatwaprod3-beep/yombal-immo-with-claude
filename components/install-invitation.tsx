@@ -37,7 +37,7 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
   const delay=shown===0?6000:15000;
   let due=false;
   const busyTyping=()=>{const a=document.activeElement;return !!a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||(a as HTMLElement).isContentEditable);};
-  const check=()=>{if(!due||offered.current||!mq.matches||document.hidden||standalone()||busyTyping()||document.querySelector('dialog[open], [role=dialog][data-state=open], [role=listbox]'))return;try{if(sessionStorage.getItem(sessionKey)==='1')return;localStorage.setItem(countKey,String(shown+1));}catch{}offered.current=true;const v=order[shown%order.length];setVariant(v);setOpen(true);trackEvent('install_prompt_shown',v);};
+  const check=()=>{if(!due||offered.current||!mq.matches||document.hidden||standalone()||busyTyping()||document.querySelector('dialog[open], [role=dialog][data-state=open], [role=listbox]'))return;try{if(sessionStorage.getItem(sessionKey)==='1')return;localStorage.setItem(countKey,String(shown+1));}catch{}offered.current=true;try{sessionStorage.setItem('yombal-popup-shown','1');}catch{}const v=order[shown%order.length];setVariant(v);setOpen(true);trackEvent('install_prompt_shown',v);};
   const resized=()=>{if(!mq.matches)setOpen(false);else check();};
   const timer=setTimeout(()=>{due=true;check();},Math.max(0,delay-(Date.now()-started.current)));
   const observer=new MutationObserver(check);observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['open']});

@@ -10,6 +10,7 @@ self.addEventListener('fetch', event => {
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
+  if (event.notification.data?.push) event.waitUntil(fetch('/api/events', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'push_opened', detail: String(event.notification.tag || '').slice(0, 60) }) }).catch(() => {}));
   const path = event.notification.data?.url || '/';
   const destination = new URL(path, self.location.origin);
   if (destination.origin !== self.location.origin) return;
@@ -17,4 +18,16 @@ self.addEventListener('notificationclick', event => {
     for (const client of clients) { if ('focus' in client) { await client.navigate(destination.href); return client.focus(); } }
     return self.clients.openWindow(destination.href);
   }));
+});
+// Notifications Yombal : le message n'est jamais transporté par le réseau de notification ;
+// le téléphone le demande à Yombal (session connectée) au moment de l'afficher.
+self.addEventListener('push', event => {
+  event.waitUntil((async () => {
+    let message = { title: 'Yombal', body: 'Vos loyers et vos locataires vous attendent.', url: '/', tag: 'yombal' };
+    try {
+      const response = await fetch('/api/push/next', { credentials: 'include', cache: 'no-store' });
+      if (response.ok) { const data = await response.json(); if (data && data.title) message = data; }
+    } catch {}
+    await self.registration.showNotification(message.title, { body: message.body, icon: '/icons/yombal-192.png', badge: '/icons/favicon-96.png', tag: message.tag, renotify: false, data: { url: message.url, push: true } });
+  })());
 });
