@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.47.0 — 12 novembre 2026
+
+- Nouveau compte immobilier : première question « Comment gérez-vous vos biens ? » (je gère mes propres biens / je suis une agence) avant la vidéo de bienvenue ; le choix règle le profil et les menus, modifiable ensuite dans les paramètres.
+- Invitation à installer l’application entièrement redessinée (téléphone animé, bénéfices, bouton corail) ; la bannière permanente du bas est retirée. La fenêtre revient à chaque ouverture tant que l’application n’est pas installée.
+
 ## 0.46.0 — 12 novembre 2026
 
 - Installation de l’application : rappel à chaque ouverture de Yombal sur téléphone (après 6 s) tant que l’application n’est pas installée, plus une bannière permanente au-dessus du menu bas. « Plus tard » ne repousse plus que jusqu’à la prochaine ouverture. Dans les navigateurs intégrés (Facebook, Instagram, Messenger, TikTok), le bouton propose directement d’ouvrir Yombal dans Chrome.

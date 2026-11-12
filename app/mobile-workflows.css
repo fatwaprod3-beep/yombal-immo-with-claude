@@ -30,10 +30,34 @@
 .invoice-situation-choices>button:hover{background:#faf6fd;border-color:#ba9bcc}
 @keyframes hello-brief{0%{opacity:0;transform:translateY(5px)}8%,90%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
 .install-app-card{display:flex;gap:13px;align-items:center;background:#f5eef9;border-radius:14px;padding:14px}
-/* Bannière permanente tant que l'application n'est pas installée (mobile uniquement, au-dessus du menu bas). */
-.install-banner{display:none}
-@media(max-width:850px){.install-banner{display:flex;align-items:center;gap:10px;position:fixed;z-index:40;left:10px;right:10px;bottom:calc(74px + env(safe-area-inset-bottom));padding:10px 12px;border-radius:14px;background:#352341;color:#f6eafc;box-shadow:0 8px 28px #24123340}.install-banner>svg{flex:0 0 auto;color:#f3b7a7}.install-banner>div{flex:1;min-width:0}.install-banner strong{display:block;font-size:12.5px;font-weight:700}.install-banner small{display:block;font-size:11px;line-height:1.4;color:#d9c8e4}.install-banner .button{flex:0 0 auto;min-height:36px;padding:0 12px;font-size:12px;white-space:nowrap}body.has-install-banner .main-content{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
-.install-warning{display:flex;gap:8px;align-items:flex-start;color:#9a4b3a;background:#fdf1ee;border-radius:10px;padding:10px 12px}.install-warning svg{flex:0 0 auto;margin-top:2px}
+/* Invitation à installer l'application : fenêtre plein charme, prune et corail. */
+.install-invite{border:0;padding:0;border-radius:26px;width:min(400px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow:auto;background:#fff;box-shadow:0 30px 80px #2a173a66;animation:install-invite-in .5s cubic-bezier(.2,.9,.3,1.15)}
+.install-invite::backdrop{background:#21152ecc;backdrop-filter:blur(4px)}
+@keyframes install-invite-in{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+.install-invite-hero{position:relative;height:196px;overflow:hidden;background:radial-gradient(120% 90% at 50% 110%,#5a3d70 0%,#352341 55%,#21152e 100%)}
+.install-invite-glow{position:absolute;left:50%;bottom:-70px;width:260px;height:260px;margin-left:-130px;border-radius:50%;background:radial-gradient(circle,#f58b7666 0%,#f58b7600 68%)}
+.install-invite-close{position:absolute;top:12px;right:12px;z-index:2;width:36px;height:36px;border-radius:50%;background:#ffffff1f;color:#fff;display:grid;place-items:center}
+.install-invite-phone{position:absolute;left:50%;bottom:-34px;width:124px;height:196px;margin-left:-62px;border-radius:26px;background:#120a1b;padding:7px;box-shadow:0 18px 40px #0008,inset 0 0 0 2px #3a2a48;animation:install-invite-float 3.2s ease-in-out infinite}
+@keyframes install-invite-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.install-invite-screen{height:100%;border-radius:20px;background:linear-gradient(170deg,#fdf6f2,#f3eaf7);padding:18px 10px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;align-content:start}
+.install-invite-app{grid-column:1/-1;justify-self:center;display:grid;justify-items:center;gap:4px;margin-bottom:4px}
+.install-invite-app img{width:40px;height:40px;border-radius:11px;box-shadow:0 6px 16px #28123340;animation:install-invite-pop .8s .35s cubic-bezier(.2,.9,.3,1.4) both}
+@keyframes install-invite-pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.install-invite-app small{font-size:8px;font-weight:700;color:#352341}
+.install-invite-dot{display:block;aspect-ratio:1;border-radius:6px;background:#28123314}.install-invite-hero::after{content:'';position:absolute;inset:auto 0 0;height:60px;background:linear-gradient(#21152e00,#21152e66)}
+.install-invite-body{padding:26px 22px 18px;text-align:center}
+.install-invite-eyebrow{display:inline-block;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:#c96a55;margin-bottom:8px}
+.install-invite h2{font-size:22px;letter-spacing:-.6px;line-height:1.2;color:#21152e}
+.install-invite-body>p{margin:10px 0 0;font-size:13px;color:#6a6071;line-height:1.6}
+.install-invite ul{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:9px;text-align:left}
+.install-invite li{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:14px;background:#faf6fc}
+.install-invite li>span{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#fff;color:#8a5aa6;box-shadow:0 2px 8px #28123314;flex:0 0 auto}
+.install-invite li strong{display:block;font-size:13px;color:#2b1d36}.install-invite li small{display:block;font-size:11.5px;color:#7d6a88;line-height:1.4}
+.install-invite-note{display:flex;gap:8px;align-items:flex-start;text-align:left;margin:14px 0 0;padding:10px 12px;border-radius:12px;background:#fdf1ee;color:#9a4b3a;font-size:12px;line-height:1.5}.install-invite-note svg{flex:0 0 auto;margin-top:2px}
+.install-invite-cta{width:100%;margin-top:18px;min-height:52px;border-radius:16px;background:linear-gradient(135deg,#f58b76,#e9705a);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 12px 28px #f58b7655;transition:transform .15s}
+.install-invite-cta:active{transform:scale(.98)}
+.install-invite-later{margin-top:10px;font-size:13px;color:#8f7aa0;font-weight:600;padding:8px}
+.install-invite-free{display:flex;justify-content:center;align-items:center;gap:5px;margin-top:6px;font-size:11px;color:#9a8fa3}
 .install-app-card img{width:54px;height:54px;border-radius:12px}.install-app-card>div{flex:1;min-width:0}.install-app-card strong{display:block;font-size:16px}.install-app-card small{display:block;font-size:12px;color:#9a85a8;margin-top:5px}.install-app-card>svg{color:#9272a4}
 .install-invitation ul{padding:0;list-style:none;margin:20px 0 0}.install-invitation li{display:flex;align-items:center;gap:9px;font-size:12px;line-height:1.7;margin:9px 0}.install-invitation li svg{color:#67947a}
 .install-help-dialog{max-width:480px;max-height:calc(100dvh - 24px);display:flex;flex-direction:column;overflow:hidden}
@@ -106,3 +130,18 @@
  .install-invitation{max-width:420px;width:calc(100% - 24px);border-radius:18px}.install-invitation .dialog-footer{display:flex;gap:10px}.install-invitation .dialog-footer .button{flex:1;min-height:44px;font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.hello-brief{animation:none}}
+/* Choix du profil à la création du compte : propriétaire ou agence. */
+.role-choice{border:0;padding:24px 22px 20px;border-radius:26px;width:min(440px,calc(100vw - 28px));max-height:calc(100vh - 28px);overflow:auto;background:#fff;box-shadow:0 30px 80px #2a173a66;animation:install-invite-in .45s cubic-bezier(.2,.9,.3,1.15)}
+.role-choice::backdrop{background:#21152ecc;backdrop-filter:blur(4px)}
+.role-choice-head{text-align:center}.role-choice-head img{width:52px;height:52px;border-radius:15px;margin:0 auto 12px;box-shadow:0 8px 20px #28123330}
+.role-choice-eyebrow{display:block;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:#c96a55;margin-bottom:6px}
+.role-choice h2{font-size:22px;letter-spacing:-.6px;line-height:1.2;color:#21152e}.role-choice-head p{margin-top:8px;font-size:13px;color:#6a6071;line-height:1.55}
+.role-choice-options{display:grid;gap:10px;margin-top:20px}
+.role-choice-options button{display:flex;align-items:center;gap:13px;text-align:left;padding:14px;border-radius:18px;border:2px solid #eee6f4;background:#fcfafd;transition:border-color .15s,background .15s,transform .15s}
+.role-choice-options button:active{transform:scale(.99)}
+.role-choice-options button.chosen{border-color:#f58b76;background:#fff6f3}
+.role-choice-options button>div{flex:1;min-width:0}.role-choice-options strong{display:block;font-size:14.5px;color:#2b1d36;letter-spacing:-.2px}.role-choice-options small{display:block;font-size:12px;color:#7d6a88;line-height:1.45;margin-top:2px}
+.role-choice-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#f5eef9;color:#674580;flex:0 0 auto}.role-choice-icon.agency{background:#ffe9e2;color:#d2664f}
+.role-choice-options i{width:24px;height:24px;border-radius:50%;border:2px solid #e2d6ea;display:grid;place-items:center;color:transparent;flex:0 0 auto;transition:all .15s}.role-choice-options .chosen i{background:#f58b76;border-color:#f58b76;color:#fff}
+.role-choice-cta{width:100%;margin-top:18px;min-height:52px;border-radius:16px;background:linear-gradient(135deg,#f58b76,#e9705a);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 12px 28px #f58b7655;transition:opacity .15s}
+.role-choice-cta:disabled{opacity:.45;box-shadow:none}
