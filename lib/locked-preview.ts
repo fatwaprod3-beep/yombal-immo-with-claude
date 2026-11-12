@@ -9,3 +9,5 @@ const card='<div class="yb-lock-card" style="position:fixed;left:50%;bottom:18px
 export function lockedPreview(html:string){if(html.includes('yb-locked'))return html;const withCss=html.includes('</head>')?html.replace('</head>',css+'</head>'):css+html;return withCss.includes('</body>')?withCss.replace('</body>',card+'</body>'):withCss+card;}
 /** Vrai si, sans Pro, ce document ne peut pas être émis tel quel (modèle/signature Pro, ou quota gratuit épuisé). */
 export function previewLocked({canPro,demo,profile,used}:{canPro:boolean;demo:boolean;profile:Profile;used?:number}){return !canPro&&!demo&&(usesProStyle(profile)||(used??0)>=freeLimits.invoices);}
+/** Pourquoi l'aperçu est verrouillé : quota gratuit épuisé (prioritaire) ou style Pro choisi. */
+export function lockReason({profile,used}:{profile:Profile;used?:number}):'quota'|'style'{return (used??0)>=freeLimits.invoices?'quota':usesProStyle(profile)?'style':'quota';}

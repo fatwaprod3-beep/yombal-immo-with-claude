@@ -224,3 +224,16 @@
 .pro-lock-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
 .pro-lock-cta{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 16px;border-radius:12px;background:linear-gradient(135deg,#d9a441,#c48a24);color:#fff;font-weight:800;font-size:13.5px}
 .pro-lock-free{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 14px;border-radius:12px;background:#ffffff14;border:1px solid #ffffff33;color:#fff;font-weight:700;font-size:13px}
+/* Carte explicative posée sur la partie floutée d'un document. */
+.locked-frame{position:relative}
+.pro-lock-card{position:absolute;left:12px;right:12px;bottom:12px;z-index:2;padding:16px 16px 12px;border-radius:20px;background:#fffffff2;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 18px 44px #2a173a40,0 0 0 1px #eadff1;text-align:center;animation:install-invite-in .5s cubic-bezier(.2,.9,.3,1.15)}
+.pro-lock-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:99px;background:#fdf3df;color:#a8741a;font-size:11px;font-weight:800}
+.pro-lock-card h3{margin:8px 0 0;font-size:17px;letter-spacing:-.3px;color:#21152e}
+.pro-lock-card>p{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:#6a6071}
+.pro-lock-card ul{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.pro-lock-card li{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:99px;background:#f5eef9;color:#4b3c56;font-size:11.5px;font-weight:600}.pro-lock-card li svg{color:#458e75}
+.pro-lock-cta{width:100%;margin-top:12px;min-height:48px;border-radius:14px;background:linear-gradient(135deg,#d9a441,#c48a24);color:#fff;font-weight:800;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 10px 24px #c48a2450;animation:pro-lock-glow 2.4s ease-in-out infinite}
+@keyframes pro-lock-glow{0%,100%{box-shadow:0 10px 24px #c48a2450}50%{box-shadow:0 10px 30px #c48a2488}}
+.pro-lock-free{width:100%;margin-top:8px;min-height:42px;border-radius:12px;border:1.5px solid #e6dcef;background:#fff;color:#4b3c56;font-weight:700;font-size:13px}
+.pro-lock-card>small{display:block;margin-top:8px;font-size:11px;color:#9a8fa3}
+@media(max-width:600px){.pro-lock-card>p{font-size:12px}.pro-lock-card ul{display:none}}

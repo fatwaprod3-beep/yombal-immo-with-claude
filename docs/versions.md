@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.54.0 — 12 novembre 2026
+
+- Aperçu flouté expliqué : une carte posée sur la partie floutée dit pourquoi (3 documents gratuits utilisés, ou modèle/signature Pro), ce que Pro débloque, le prix de départ (formule la plus avantageuse) et propose « Devenir Pro » ou, pour un style Pro, « Envoyer gratuitement au modèle Classique ». Dans Factures et dans le suivi des loyers.
+
 ## 0.53.2 — 12 novembre 2026
 
 - Aperçu flouté expliqué : un encadré au-dessus du document dit pourquoi il est flouté (modèle Pro, signature ou 3 documents gratuits utilisés), que le brouillon est enregistré, et propose « Devenir Pro » (dès 4 900 F/mois) ou « Envoyer avec le modèle gratuit ». Dans le document lui-même, une étiquette « la suite est réservée à Yombal Pro » reste visible.
