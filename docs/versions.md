@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.53.0 — 12 novembre 2026
+
+- Aperçus protégés : sans abonnement, quand un document ne peut pas être émis tel quel (modèle ou signature Pro, ou 3 documents gratuits utilisés), l’aperçu dans l’application floute tout à partir du tableau des montants et affiche « APERÇU · YOMBAL PRO », pour qu’une capture d’écran ne remplace pas le document. L’aperçu d’un contrat sans Pro passe par la fenêtre floutée.
+- Inscription agence : après « Je suis une agence », nouvelle étape « Présentez votre agence » (nom, téléphone affiché aux locataires, ville, logo facultatif).
+- Premier logement : après l’enregistrement, écran de réussite avec « Ajouter un autre logement » (formulaire vide) ou « Découvrir mon espace ».
+
 ## 0.52.1 — 12 novembre 2026
 
 - Correction : sans abonnement, l’aperçu d’une facture ou d’un reçu dans l’application affichait le modèle Classique au lieu du modèle choisi dans les paramètres. L’aperçu montre désormais le modèle choisi ; seul le document envoyé ou téléchargé passe en version gratuite.

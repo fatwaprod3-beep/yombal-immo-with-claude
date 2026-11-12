@@ -3,6 +3,7 @@ import {useEffect,useRef} from 'react';
 import {Lock,Crown,Check} from 'lucide-react';
 import type {ProFeature} from '../lib/billing';
 import {trackEvent} from '../lib/track-event';
+import {lockedPreview} from '../lib/locked-preview';
 
 // Le vrai document est préparé : on montre le haut, le reste est flouté, et on propose Pro.
 // Rien n'est perdu (brouillon enregistré) et, pour un modèle Pro, la version gratuite reste possible.
@@ -18,7 +19,7 @@ export default function LockedDocument({html,feature='invoices',onUnlock,onClose
  const t=texts[feature]||texts.invoices!;
  return <dialog ref={ref} className="locked-doc" aria-labelledby="locked-doc-title" onCancel={e=>{e.preventDefault();close();}}>
   <div className="locked-doc-preview" aria-hidden="true">
-   <iframe title="Aperçu du document" srcDoc={html} sandbox="" tabIndex={-1}/>
+   <iframe title="Aperçu du document" srcDoc={lockedPreview(html)} sandbox="" tabIndex={-1}/>
    <div className="locked-doc-veil"><span><Lock size={20}/></span></div>
   </div>
   <div className="locked-doc-body">

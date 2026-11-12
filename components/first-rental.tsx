@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {Home,UserRound,BriefcaseBusiness,ArrowRight,Sparkles} from 'lucide-react';
+import {Home,UserRound,BriefcaseBusiness,ArrowRight,Sparkles,Check,Plus} from 'lucide-react';
 import {propertyTypes,type Mode} from '../lib/model';
 import {trackEvent} from '../lib/track-event';
 
@@ -8,10 +8,10 @@ import {trackEvent} from '../lib/track-event';
 // La personne voit tout de suite à quoi ressemble Yombal rempli ; elle peut tout modifier ou supprimer ensuite.
 export type FirstRentalData={property:Record<string,unknown>;tenant:Record<string,unknown>;tenantId:string;owner?:Record<string,unknown>;lease:Record<string,unknown>};
 const pad=(n:number)=>String(n).padStart(2,'0');
-export default function FirstRental({mode,city,onSave,onSkip}:{mode:Mode;city?:string;onSave:(data:FirstRentalData)=>Promise<boolean>;onSkip:()=>void}){
+export default function FirstRental({mode,city,onSave,onSkip,onDone}:{mode:Mode;city?:string;onSave:(data:FirstRentalData)=>Promise<boolean>;onSkip:()=>void;onDone:()=>void}){
  const ref=useRef<HTMLDialogElement>(null);
  const example={name:'Appartement Mermoz',type:'Appartement',city:city||'Dakar',rent:'150000',tenant:'Awa Diop',phone:'',owner:'Moussa Ndiaye',commission:'10'};
- const [f,setF]=useState(example),[busy,setBusy]=useState(false),[error,setError]=useState('');
+ const [f,setF]=useState(example),[busy,setBusy]=useState(false),[error,setError]=useState(''),[saved,setSaved]=useState<string[]>([]),[adding,setAdding]=useState(false);
  useEffect(()=>{const d=ref.current;if(d&&!d.open)d.showModal();},[]);
  const set=(k:keyof typeof example)=>(e:{target:{value:string}})=>setF(v=>({...v,[k]:k==='rent'||k==='commission'?e.target.value.replace(/\D/g,''):e.target.value}));
  const agency=mode==='agency';
@@ -29,12 +29,19 @@ export default function FirstRental({mode,city,onSave,onSkip}:{mode:Mode;city?:s
   };
   if(agency)data.owner={id:ownerId,name:f.owner.trim()||'Propriétaire',phone:'',email:'',status:'active'};
   setBusy(true);
-  try{const edited=(Object.keys(example) as (keyof typeof example)[]).some(k=>f[k]!==example[k]);if(await onSave(data)){trackEvent('onboarding_example_saved',edited?'edited':'example');ref.current?.close();}else setError('L’enregistrement n’a pas abouti. Vérifiez les champs puis réessayez.');}
+  try{const edited=(Object.keys(example) as (keyof typeof example)[]).some(k=>f[k]!==example[k]);if(await onSave(data)){trackEvent('onboarding_example_saved',(saved.length?'more':edited?'edited':'example'));setSaved(v=>[...v,f.name.trim()+' · '+f.tenant.trim()]);setAdding(false);}else setError('L’enregistrement n’a pas abouti. Vérifiez les champs puis réessayez.');}
   finally{setBusy(false);}
  }
+ function another(){setError('');setF(v=>({...v,name:'',rent:'',tenant:'',phone:''}));setAdding(true);}
+ function finish(){ref.current?.close();onDone();}
  function skip(){trackEvent('onboarding_example_skipped');ref.current?.close();onSkip();}
+ if(saved.length&&!adding)return <dialog ref={ref} className="first-rental" aria-labelledby="first-rental-title" onCancel={e=>{e.preventDefault();finish();}}>
+  <div className="first-rental-head"><span className="first-rental-done"><Check size={30}/></span><h2 id="first-rental-title">{saved.length>1?`${saved.length} logements enregistrés`:'Votre premier logement est prêt'}</h2><p>Chaque mois, Yombal vous montrera qui a payé et préparera les reçus.</p></div>
+  <ul className="first-rental-list">{saved.map(x=><li key={x}><Home size={15}/>{x}</li>)}</ul>
+  <div className="first-rental-form"><button type="button" className="first-rental-cta" onClick={finish}>Découvrir mon espace<ArrowRight size={18}/></button><button type="button" className="first-rental-more" onClick={another}><Plus size={17}/>Ajouter un autre logement</button><small className="first-rental-hint">Vous pourrez aussi en ajouter plus tard, quand vous voulez.</small></div>
+ </dialog>;
  return <dialog ref={ref} className="first-rental" aria-labelledby="first-rental-title" onCancel={e=>{e.preventDefault();if(!busy)skip();}}>
-  <div className="first-rental-head"><span className="first-rental-badge"><Sparkles size={14}/>Pour bien démarrer</span><h2 id="first-rental-title">Ajoutez votre premier logement</h2><p>On a pré-rempli <strong>un exemple</strong> pour vous montrer. Remplacez-le par vos vraies informations, ou gardez-le pour découvrir : vous pourrez tout modifier ou supprimer après.</p></div>
+  <div className="first-rental-head"><span className="first-rental-badge"><Sparkles size={14}/>{adding?'Logement n° '+(saved.length+1):'Pour bien démarrer'}</span><h2 id="first-rental-title">{adding?'Ajoutez un autre logement':'Ajoutez votre premier logement'}</h2>{adding?<p>Même chose : le logement, son loyer et le locataire. Le reste se complète plus tard.</p>:<p>On a pré-rempli <strong>un exemple</strong> pour vous montrer. Remplacez-le par vos vraies informations, ou gardez-le pour découvrir : vous pourrez tout modifier ou supprimer après.</p>}</div>
   <form className="first-rental-form" onSubmit={e=>{e.preventDefault();void save();}}>
    <fieldset><legend><Home size={16}/>Le logement</legend>
     <label className="field"><span>Nom du logement</span><input value={f.name} onChange={set('name')} maxLength={150} required/></label>
@@ -49,7 +56,7 @@ export default function FirstRental({mode,city,onSave,onSkip}:{mode:Mode;city?:s
    </fieldset>}
    {error&&<p className="form-error" role="alert">{error}</p>}
    <button type="submit" className="first-rental-cta" disabled={busy} aria-busy={busy}>{busy?'Enregistrement…':'Enregistrer et découvrir Yombal'}<ArrowRight size={18}/></button>
-   <button type="button" className="first-rental-skip" disabled={busy} onClick={skip}>Commencer avec un espace vide</button>
+   {adding?<button type="button" className="first-rental-skip" disabled={busy} onClick={()=>setAdding(false)}>Annuler</button>:<button type="button" className="first-rental-skip" disabled={busy} onClick={skip}>Commencer avec un espace vide</button>}
   </form>
  </dialog>;
 }

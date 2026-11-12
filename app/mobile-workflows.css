@@ -206,3 +206,14 @@
 .notify-card img{width:34px;height:34px;border-radius:9px;flex:0 0 auto}.notify-card b{display:block;font-size:12.5px;color:#21152e}.notify-card span{display:block;font-size:11px;color:#6d5a79;line-height:1.35}
 .notify-done{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:14px;padding:12px;border-radius:14px;background:#e9f6ee;color:#2f7a60;font-size:13px;font-weight:700}
 .locked-doc-free{width:100%;margin-top:10px;min-height:46px;border-radius:14px;border:1.5px solid #e6dcef;background:#fff;color:#4b3c56;font-weight:700;font-size:14px}
+.first-rental-done{width:64px;height:64px;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:#e6f3ee;color:#2f7a60;animation:install-invite-pop .6s cubic-bezier(.2,.9,.3,1.4) both}
+.first-rental-list{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:7px}.first-rental-list li{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:13px;background:#faf7fc;font-size:13.5px;font-weight:600;color:#2b1d36}.first-rental-list svg{color:#8a5aa6}
+.first-rental-more{min-height:48px;border-radius:14px;border:1.5px dashed #d4c3e0;background:#fff;color:#674580;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px}
+.first-rental-hint{text-align:center;font-size:12px;color:#9a8aa5}
+/* Étape « Présentez votre agence ». */
+.role-agency{display:grid;gap:12px;margin-top:16px}
+.role-agency .field{display:grid;gap:5px;font-size:12.5px;color:#5a4c64;font-weight:600}.role-agency .field>span{display:flex;align-items:center;gap:6px}.role-agency .field small{font-weight:400;color:#9a8aa5;font-size:11.5px}
+.role-agency input{width:100%;min-height:46px;border:1.5px solid #e6dcef;border-radius:12px;padding:0 12px;font:inherit;font-size:15px;background:#fff;color:#21152e;box-sizing:border-box}
+.role-agency input:focus{outline:none;border-color:#f58b76;box-shadow:0 0 0 3px #f58b7622}
+.role-agency-logo{padding:12px;border-radius:16px;background:#faf7fc}
+.role-choice-back{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;color:#8f7aa0;font-weight:600;padding:6px}
