@@ -33,7 +33,7 @@ export const billingPayments=pgTable('yombal_billing_payments',{
 export const users=pgTable('yombal_users',{
  id:text('id').primaryKey(),email:text('email').notNull().unique(),name:text('name').notNull(),
  passwordHash:text('password_hash').notNull(),passwordSalt:text('password_salt').notNull(),createdAt:text('created_at').notNull(),
- status:text('status').notNull().default('active'),lastSeenAt:text('last_seen_at'),lastLoginAt:text('last_login_at'),sessionsAfter:bigint('sessions_after',{mode:'number'}).notNull().default(0),refLinkId:text('ref_link_id'),
+ status:text('status').notNull().default('active'),lastSeenAt:text('last_seen_at'),lastLoginAt:text('last_login_at'),sessionsAfter:bigint('sessions_after',{mode:'number'}).notNull().default(0),refLinkId:text('ref_link_id'),tester:integer('tester').notNull().default(0),
 });
 
 // Journal de sécurité : connexions échouées, blocages, actions administrateur, messages signalés.
@@ -47,3 +47,8 @@ export const aiMessages=pgTable('yombal_ai_messages',{id:text('id').primaryKey()
 // Liens de suivi (influenceurs, publicités) : clics, inscriptions et abonnements attribués.
 export const trackLinks=pgTable('yombal_track_links',{id:text('id').primaryKey(),code:text('code').notNull().unique(),name:text('name').notNull(),channel:text('channel').notNull().default('autre'),destination:text('destination').notNull().default('/presentation'),cost:integer('cost').notNull().default(0),archived:integer('archived').notNull().default(0),createdAt:text('created_at').notNull()});
 export const trackClicks=pgTable('yombal_track_clicks',{id:text('id').primaryKey(),linkId:text('link_id').notNull(),visitor:text('visitor').notNull(),device:text('device'),createdAt:text('created_at').notNull()},table=>[index('yombal_track_clicks_link').on(table.linkId,table.createdAt)]);
+
+// Parcours des utilisateurs : installation de l'application, notifications, étapes clés (pour l'administration).
+export const userEvents=pgTable('yombal_user_events',{id:text('id').primaryKey(),userId:text('user_id').notNull(),kind:text('kind').notNull(),detail:text('detail'),createdAt:text('created_at').notNull()},table=>[index('yombal_user_events_user').on(table.userId,table.kind,table.createdAt)]);
+// Abonnements aux notifications du téléphone (Web Push). Aucune donnée personnelle dans le contenu envoyé.
+export const pushSubscriptions=pgTable('yombal_push_subscriptions',{id:text('id').primaryKey(),userId:text('user_id').notNull(),endpoint:text('endpoint').notNull().unique(),p256dh:text('p256dh').notNull(),auth:text('auth').notNull(),userAgent:text('user_agent'),createdAt:text('created_at').notNull(),lastSentAt:text('last_sent_at'),failures:integer('failures').notNull().default(0)},table=>[index('yombal_push_user').on(table.userId)]);

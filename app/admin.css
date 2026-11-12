@@ -173,3 +173,10 @@
  .lk-tools{width:100%}.lk-sort,.adm-choice{min-width:0;flex:1 1 140px}
  .adm-main pre,.adm-main code{overflow-wrap:anywhere;white-space:pre-wrap}
 }
+/* Parcours des inscrits : entonnoir, points de progression, application et notifications. */
+.adm-funnel{display:grid;gap:9px;margin-top:6px}.adm-funnel>div{display:grid;grid-template-columns:150px 1fr 40px 90px;align-items:center;gap:12px;font-size:13px}.adm-funnel span{color:#4b3c56}.adm-funnel b{text-align:right;font-size:15px;color:#21152e}.adm-funnel small{color:#9a8aa5;font-size:11.5px}
+.adm-funnel-extra{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid #f1eaf5}.adm-funnel-extra>div{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:#faf7fc;font-size:13px;color:#4b3c56}.adm-funnel-extra svg{color:#8a5aa6}.adm-funnel-extra b{font-size:16px;color:#21152e}.adm-funnel-extra small{color:#9a8aa5;margin-left:4px}
+.adm-journey{display:inline-flex;align-items:center;gap:3px}.adm-journey i{width:9px;height:9px;border-radius:50%;background:#ece4f2}.adm-journey i.on{background:#674580}.adm-journey i.part{background:#c9b3d8}.adm-journey small{margin-left:6px;font-size:11.5px;color:#6d5a79;font-weight:600}
+.adm-push{color:#d2664f;margin-left:6px;vertical-align:middle}
+.adm-steps{list-style:none;padding:0;margin:0 0 6px;display:grid;gap:6px}.adm-steps li{display:flex;align-items:center;gap:9px;font-size:13px;color:#9a8aa5}.adm-steps li i{width:14px;height:14px;border-radius:50%;border:2px solid #ddd0e6}.adm-steps li.on{color:#21152e;font-weight:600}.adm-steps li.on i{background:#674580;border-color:#674580}
+@media(max-width:800px){.adm-funnel>div{grid-template-columns:110px 1fr 30px;gap:8px}.adm-funnel small{display:none}.users-table th:nth-child(6),.users-table td:nth-child(6),.users-table th:nth-child(7),.users-table td:nth-child(7){display:none}}

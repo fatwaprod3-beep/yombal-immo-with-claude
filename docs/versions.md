@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.48.0 — 12 novembre 2026
+
+- Mesure du parcours des inscrits : nouvelle table d’événements (invitation d’installation vue / acceptée / refusée, application installée, ouvertures en mode application, notifications).
+- Administration : carte « Parcours des inscrits » (inscrit → profil → 1er logement → 1er locataire → 1er loyer → 1er document → Pro), colonnes Parcours et App dans Utilisateurs, détail par compte (profil, source, application, notifications, documents).
+- Comptes de test : marquables depuis la fiche d’un utilisateur ; ils sont exclus des inscrits, du parcours et des revenus.
+
 ## 0.47.1 — 12 novembre 2026
 
 - Invitation d’installation : trois versions qui se relaient à chaque ouverture (écran d’accueil, « Qui a payé ? », « 10 secondes » avec les 3 gestes adaptés à Android ou iPhone). Jamais pendant une saisie ; 6 s la première fois, puis 15 s pour laisser travailler.

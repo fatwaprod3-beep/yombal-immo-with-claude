@@ -1,7 +1,7 @@
 'use client';
 import {useCallback,useEffect,useMemo,useState,type CSSProperties,type FormEvent} from 'react';
 import Link from 'next/link';
-import {Mail,Link2,UserPlus,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
+import {Smartphone,BellRing,Mail,Link2,UserPlus,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
 import {apiFetch} from '../lib/api-fetch';
 import {askConfirm} from './confirm-dialog';
 import {money} from '../lib/model';
@@ -10,9 +10,11 @@ import AdminRequests from './admin-requests';
 import AdminLinks from './admin-links';
 import Choice from './choice';
 
-type AdminUser={id:string;email:string;name:string;status:string;createdAt:string;lastSeenAt:string|null;plan:string;expiresAt:string|null;properties:number;tenants:number;spaces:number;paid:number;aiMessages:number;flagged:number};
+type AdminUser={id:string;email:string;name:string;status:string;createdAt:string;lastSeenAt:string|null;plan:string;expiresAt:string|null;properties:number;tenants:number;spaces:number;paid:number;aiMessages:number;flagged:number;tester:boolean;mode:string|null;ref:string|null;documents:number;journey:Journey;app:{installed:boolean;opens:number;last:string|null;prompts:number;dismissed:number};push:boolean};
+type Journey={profile:boolean;property:boolean;tenant:boolean;payment:boolean;document:boolean;pro:boolean};
+type Funnel={signups:number;profile:number;property:number;tenant:number;payment:number;document:number;pro:number;app:number;prompted:number;push:number};
 type Event={id:string;kind:string;email:string|null;userId:string|null;ip:string|null;userAgent:string|null;detail:string|null;createdAt:string};
-type Overview={stats:Record<string,number>;signups:{d:string;n:number}[];users:AdminUser[];events:Event[];suspiciousIps:{ip:string;n:number;last:string;emails:string}[];flags:{registrationsOpen:boolean;maintenance:boolean;assistant:boolean;sessionsAfter:number};aiConfig:{provider:string;model:string;configured:boolean}};
+type Overview={stats:Record<string,number>;signups:{d:string;n:number}[];funnel:Funnel;users:AdminUser[];events:Event[];suspiciousIps:{ip:string;n:number;last:string;emails:string}[];flags:{registrationsOpen:boolean;maintenance:boolean;assistant:boolean;sessionsAfter:number};aiConfig:{provider:string;model:string;configured:boolean}};
 type Conversation={id:string;title:string;flagged:number;flagReason:string|null;messageCount:number;updatedAt:string;userId:string;email:string|null;name:string|null};
 type Tab='overview'|'users'|'links'|'messages'|'security'|'assistant'|'payments'|'controls';
 
@@ -22,6 +24,11 @@ const planLabel:Record<string,string>={free:'Gratuit',monthly:'Pro mensuel',quar
 const when=(iso:string|null)=>{if(!iso)return 'Jamais';const d=Date.now()-Date.parse(iso);if(d<60e3)return 'À l’instant';if(d<3600e3)return 'Il y a '+Math.round(d/60e3)+' min';if(d<864e5)return 'Il y a '+Math.round(d/3600e3)+' h';if(d<30*864e5)return 'Il y a '+Math.round(d/864e5)+' j';return new Date(iso).toLocaleDateString('fr-FR');};
 const fullDate=(iso:string)=>new Date(iso).toLocaleString('fr-FR',{timeZone:'Africa/Dakar',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 const activeUser=(u:AdminUser)=>!!u.lastSeenAt&&Date.now()-Date.parse(u.lastSeenAt)<30*864e5;
+// Étapes du parcours, dans l'ordre où un inscrit devient client.
+const steps:{key:keyof Journey;label:string;short:string}[]=[{key:'profile',label:'Profil choisi',short:'Profil'},{key:'property',label:'1er logement',short:'Logement'},{key:'tenant',label:'1er locataire',short:'Locataire'},{key:'payment',label:'1er loyer encaissé',short:'Loyer'},{key:'document',label:'1er document',short:'Document'},{key:'pro',label:'Pro',short:'Pro'}];
+const reached=(j:Journey)=>{let n=0;for(const st of steps){if(j[st.key])n++;else break;}return n;};
+function JourneyDots({j}:{j:Journey}){const n=reached(j);return <span className="adm-journey" title={n?('Arrivé à : '+steps[n-1].label):'Inscrit, rien fait'}>{steps.map((st,i)=><i key={st.key} className={i<n?'on':j[st.key]?'part':''}/>)}<small>{n?steps[n-1].short:'Inscrit'}</small></span>;}
+function AppTag({u}:{u:AdminUser}){return u.app.installed?<span className="adm-tag g" title={u.app.opens+' ouverture(s) en application'}><Smartphone size={12}/>Installée</span>:u.app.prompts?<span className="adm-tag" title={u.app.prompts+' invitation(s) vue(s), '+u.app.dismissed+' refusée(s)'}>Pas encore · vue {u.app.prompts}×</span>:<span className="adm-tag">—</span>;}
 
 export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:()=>void;busy:boolean}){
  const [tab,setTab]=useState<Tab>('overview'),[data,setData]=useState<Overview|null>(null),[loading,setLoading]=useState(true),[error,setError]=useState(''),[notice,setNotice]=useState('');
@@ -57,7 +64,7 @@ function Kpi({label,value,sub,tone,icon:Icon}:{label:string;value:string|number;
 function OverviewTab({data,go}:{data:Overview;go:(t:Tab)=>void}){
  const s=data.stats;const days=useMemo(()=>{const out:{d:string;n:number}[]=[];for(let i=29;i>=0;i--){const d=new Date(Date.now()-i*864e5).toISOString().slice(0,10);out.push({d,n:data.signups.find(x=>x.d===d)?.n||0});}return out;},[data.signups]);
  const max=Math.max(1,...days.map(d=>d.n));const proShare=s.total?Math.round(s.pro/s.total*100):0;const activeShare=s.total?Math.round(s.active30/s.total*100):0;
- const recent=data.users.slice(0,6);
+ const recent=data.users.filter(u=>!u.tester).slice(0,6);
  return <div className="adm-stack">
   <div className="adm-kpis">
    <Kpi label="Inscrits" value={s.total} sub={`+${s.new7} cette semaine`} tone="p" icon={Users}/>
@@ -65,6 +72,7 @@ function OverviewTab({data,go}:{data:Overview;go:(t:Tab)=>void}){
    <Kpi label="Actifs (30 jours)" value={s.active30} sub={`${s.inactive} inactifs · ${s.online} en ligne`} tone="g" icon={Activity}/>
    <Kpi label="Revenus encaissés" value={money(s.revenueTotal)} sub={`${money(s.revenueMonth)} sur 30 jours`} tone="c" icon={CreditCard}/>
   </div>
+  <FunnelCard f={data.funnel} testers={s.testers||0}/>
   <div className="adm-grid-2">
    <section className="adm-card"><div className="adm-card-h"><div><h3>Inscriptions</h3><p>30 derniers jours</p></div><strong className="adm-big">{days.reduce((a,b)=>a+b.n,0)}</strong></div>
     <div className="adm-bars">{days.map(d=><span key={d.d} title={`${new Date(d.d).toLocaleDateString('fr-FR')} : ${d.n}`}><i style={{height:Math.max(4,d.n/max*100)+'%'}} className={d.n?'':'zero'}/></span>)}</div>
@@ -84,25 +92,35 @@ function OverviewTab({data,go}:{data:Overview;go:(t:Tab)=>void}){
  </div>;
 }
 
+function FunnelCard({f,testers}:{f:Funnel;testers:number}){
+ const rows:[string,number][]=[['Inscrits',f.signups],['Profil choisi',f.profile],['1er logement',f.property],['1er locataire',f.tenant],['1er loyer encaissé',f.payment],['1er document',f.document],['Pro',f.pro]];
+ const pct=(n:number)=>f.signups?Math.round(n/f.signups*100):0;
+ return <section className="adm-card"><div className="adm-card-h"><div><h3>Parcours des inscrits</h3><p>Où chacun s’arrête · {testers} compte(s) de test exclus</p></div></div>
+  <div className="adm-funnel">{rows.map(([label,n],i)=>{const prev=i?rows[i-1][1]:n;const lost=prev-n;return <div key={label}><span>{label}</span><div className="adm-meter"><i className={label==='Pro'?'gold':''} style={{width:Math.max(n?3:0,pct(n))+'%'}}/></div><b>{n}</b><small>{pct(n)} %{i>0&&lost>0?' · −'+lost:''}</small></div>;})}</div>
+  <div className="adm-funnel-extra"><div><Smartphone size={16}/><b>{f.app}</b><span>ont installé l’app</span><small>{f.prompted} ont vu l’invitation</small></div><div><BellRing size={16}/><b>{f.push}</b><span>acceptent les notifications</span></div></div>
+ </section>;
+}
 function PlanTag({u}:{u:AdminUser}){return u.status!=='active'?<span className="adm-tag r">Suspendu</span>:u.plan==='free'?<span className="adm-tag">Gratuit</span>:<span className="adm-tag gold"><Crown size={12}/>{planLabel[u.plan]||'Pro'}</span>;}
 
 function UsersTab({data,act}:{data:Overview;act:(b:Record<string,unknown>,c?:string)=>Promise<boolean|{password?:string}>}){
- const [q,setQ]=useState(''),[filter,setFilter]=useState<'all'|'pro'|'free'|'active'|'inactive'|'suspended'>('all'),[open,setOpen]=useState<AdminUser|null>(null),[months,setMonths]=useState(1);
- const list=data.users.filter(u=>(u.email+u.name).toLowerCase().includes(q.toLowerCase())&&(filter==='all'||(filter==='pro'&&u.plan!=='free')||(filter==='free'&&u.plan==='free')||(filter==='active'&&activeUser(u))||(filter==='inactive'&&!activeUser(u))||(filter==='suspended'&&u.status!=='active')));
- const counts={all:data.users.length,pro:data.stats.pro,free:data.stats.free,active:data.stats.active30,inactive:data.stats.inactive,suspended:data.stats.suspended};
- const labels={all:'Tous',pro:'Pro',free:'Gratuits',active:'Actifs',inactive:'Inactifs',suspended:'Limités / bloqués'};
+ const [q,setQ]=useState(''),[filter,setFilter]=useState<'all'|'pro'|'free'|'active'|'inactive'|'suspended'|'tests'>('all'),[open,setOpen]=useState<AdminUser|null>(null),[months,setMonths]=useState(1);
+ const list=data.users.filter(u=>(u.email+u.name).toLowerCase().includes(q.toLowerCase())&&(filter==='tests'?u.tester:!u.tester)&&(filter==='all'||filter==='tests'||(filter==='pro'&&u.plan!=='free')||(filter==='free'&&u.plan==='free')||(filter==='active'&&activeUser(u))||(filter==='inactive'&&!activeUser(u))||(filter==='suspended'&&u.status!=='active')));
+ const counts={all:data.users.length,pro:data.stats.pro,free:data.stats.free,active:data.stats.active30,inactive:data.stats.inactive,suspended:data.stats.suspended,tests:data.stats.testers||0};
+ const labels={all:'Tous',pro:'Pro',free:'Gratuits',active:'Actifs',inactive:'Inactifs',suspended:'Limités / bloqués',tests:'Comptes de test'};
  useEffect(()=>{if(open){const fresh=data.users.find(u=>u.id===open.id);if(fresh&&fresh!==open)setOpen(fresh);}},[data.users,open]);
  return <div className="adm-stack">
   <AddMember act={act}/>
   <div className="adm-toolbar"><label className="adm-search"><Search size={16}/><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Rechercher un nom ou un e-mail"/></label><div className="adm-chips">{(Object.keys(labels) as (keyof typeof labels)[]).map(k=><button key={k} type="button" className={filter===k?'on':''} onClick={()=>setFilter(k)}>{labels[k]} <em>{counts[k]}</em></button>)}</div></div>
-  <section className="adm-card adm-table-card"><div className="adm-table-wrap"><table className="adm-table"><thead><tr><th>Utilisateur</th><th>Formule</th><th>Activité</th><th>Patrimoine</th><th>Inscrit</th><th/></tr></thead><tbody>
-   {list.map(u=><tr key={u.id} onClick={()=>setOpen(u)}><td><div className="adm-user"><span className="adm-av">{(u.name||u.email)[0]?.toUpperCase()}</span><div><b>{u.name||'—'}</b><small>{u.email}</small></div></div></td><td><PlanTag u={u}/>{u.status!=='active'&&<StatusTag status={u.status}/>}{u.expiresAt&&<small className="adm-sub">jusqu’au {new Date(u.expiresAt).toLocaleDateString('fr-FR')}</small>}</td><td><span className={'adm-dot '+(activeUser(u)?'g':'')}/>{when(u.lastSeenAt)}</td><td><small>{u.properties} bien(s) · {u.tenants} locataire(s)</small></td><td><small>{new Date(u.createdAt).toLocaleDateString('fr-FR')}</small></td><td><Eye size={16} className="adm-muted"/></td></tr>)}
-   {!list.length&&<tr><td colSpan={6} className="adm-empty">Aucun compte ne correspond.</td></tr>}
+  <section className="adm-card adm-table-card"><div className="adm-table-wrap"><table className="adm-table users-table"><thead><tr><th>Utilisateur</th><th>Formule</th><th>Parcours</th><th>App</th><th>Activité</th><th>Patrimoine</th><th>Inscrit</th><th/></tr></thead><tbody>
+   {list.map(u=><tr key={u.id} onClick={()=>setOpen(u)}><td><div className="adm-user"><span className="adm-av">{(u.name||u.email)[0]?.toUpperCase()}</span><div><b>{u.name||'—'}</b><small>{u.email}</small></div></div></td><td><PlanTag u={u}/>{u.status!=='active'&&<StatusTag status={u.status}/>}{u.expiresAt&&<small className="adm-sub">jusqu’au {new Date(u.expiresAt).toLocaleDateString('fr-FR')}</small>}</td><td><JourneyDots j={u.journey}/></td><td><AppTag u={u}/>{u.push&&<BellRing size={13} className="adm-push" aria-label="Notifications acceptées"/>}</td><td><span className={'adm-dot '+(activeUser(u)?'g':'')}/>{when(u.lastSeenAt)}</td><td><small>{u.properties} bien(s) · {u.tenants} locataire(s)</small></td><td><small>{new Date(u.createdAt).toLocaleDateString('fr-FR')}</small></td><td><Eye size={16} className="adm-muted"/></td></tr>)}
+   {!list.length&&<tr><td colSpan={8} className="adm-empty">Aucun compte ne correspond.</td></tr>}
   </tbody></table></div></section>
   {open&&<div className="adm-drawer-scrim" onClick={()=>setOpen(null)}><aside className="adm-drawer" onClick={e=>e.stopPropagation()} role="dialog" aria-label={'Compte '+open.email}>
    <header><span className="adm-av lg">{(open.name||open.email)[0]?.toUpperCase()}</span><div><h3>{open.name||'—'}</h3><small>{open.email}</small></div><button type="button" className="adm-icon" onClick={()=>setOpen(null)} aria-label="Fermer"><X size={18}/></button></header>
-   <div className="adm-facts"><div><span>Statut</span><StatusTag status={open.status}/></div><div><span>Formule</span><PlanTag u={open}/></div><div><span>Fin Pro</span><b>{open.expiresAt?new Date(open.expiresAt).toLocaleDateString('fr-FR'):'—'}</b></div><div><span>Inscrit le</span><b>{new Date(open.createdAt).toLocaleDateString('fr-FR')}</b></div><div><span>Dernière activité</span><b>{when(open.lastSeenAt)}</b></div><div><span>Biens / locataires</span><b>{open.properties} / {open.tenants}</b></div><div><span>Espaces</span><b>{open.spaces||1}</b></div><div><span>Total payé</span><b>{money(open.paid)}</b></div><div><span>Messages IA</span><b>{open.aiMessages}{open.flagged?` · ${open.flagged} signalé(s)`:''}</b></div></div>
+   <div className="adm-facts"><div><span>Statut</span><StatusTag status={open.status}/></div><div><span>Formule</span><PlanTag u={open}/></div><div><span>Fin Pro</span><b>{open.expiresAt?new Date(open.expiresAt).toLocaleDateString('fr-FR'):'—'}</b></div><div><span>Inscrit le</span><b>{new Date(open.createdAt).toLocaleDateString('fr-FR')}</b></div><div><span>Dernière activité</span><b>{when(open.lastSeenAt)}</b></div><div><span>Biens / locataires</span><b>{open.properties} / {open.tenants}</b></div><div><span>Espaces</span><b>{open.spaces||1}</b></div><div><span>Total payé</span><b>{money(open.paid)}</b></div><div><span>Messages IA</span><b>{open.aiMessages}{open.flagged?` · ${open.flagged} signalé(s)`:''}</b></div><div><span>Profil</span><b>{open.mode==='agency'?'Agence':open.mode==='owner'?'Propriétaire':'—'}</b></div><div><span>Venu par</span><b>{open.ref?'/r/'+open.ref:'Direct'}</b></div><div><span>Application</span><b>{open.app.installed?`Installée · ${open.app.opens} ouverture(s)`:open.app.prompts?`Pas installée · invitation vue ${open.app.prompts}×`:'Pas encore proposée'}</b></div><div><span>Notifications</span><b>{open.push?'Acceptées':'Non'}</b></div><div><span>Documents créés</span><b>{open.documents}</b></div></div>
+   <h4>Parcours</h4><ol className="adm-steps">{steps.map(st=><li key={st.key} className={open.journey[st.key]?'on':''}><i/>{st.label}</li>)}</ol>
    <h4>Abonnement</h4><div className="adm-inline"><div className="adm-choice"><Choice label="Durée offerte" value={String(months)} onChange={v=>setMonths(Number(v))} options={[{value:'1',label:'1 mois'},{value:'3',label:'3 mois'},{value:'6',label:'6 mois'},{value:'12',label:'12 mois'}]}/></div><button type="button" className="adm-btn gold" onClick={()=>void act({action:'grant_pro',userId:open.id,months},`Offrir ${months} mois de Pro à ${open.email} ?`)}><Crown size={15}/>Offrir Pro</button>{open.plan!=='free'&&<button type="button" className="adm-btn ghost" onClick={()=>void act({action:'revoke_pro',userId:open.id},`Retirer l’accès Pro de ${open.email} ?`)}>Retirer Pro</button>}</div>
+   <h4>Statistiques</h4><div className="adm-inline"><button type="button" className="adm-btn ghost" onClick={()=>void act({action:'set_tester',userId:open.id,value:!open.tester},open.tester?`Compter de nouveau ${open.email} dans les chiffres ?`:`Marquer ${open.email} comme compte de test ? Il ne sera plus compté dans les inscrits, le parcours et les revenus.`)}><Wrench size={15}/>{open.tester?'Ce n’est pas un test':'C’est un compte de test'}</button></div>
    <h4>Sécurité du compte</h4><div className="adm-inline"><button type="button" className="adm-btn ghost" onClick={()=>void act({action:'logout_user',userId:open.id},`Fermer toutes les sessions de ${open.email} ?`)}><LogOut size={15}/>Déconnecter partout</button>{open.status==='active'&&<button type="button" className="adm-btn ghost" onClick={()=>void act({action:'restrict',userId:open.id},`Limiter l’accès de ${open.email} ? Il reste connecté mais Factures, Documents, Analyses, Paramètres et les exports sont bloqués avec un message d’avertissement, le temps de votre vérification.`)}><Lock size={15}/>Limiter l’accès</button>}{open.status!=='suspended'&&<button type="button" className="adm-btn danger" onClick={()=>void act({action:'suspend',userId:open.id},`Bloquer ${open.email} ? Il est déconnecté et voit un message de vérification de sécurité à la connexion. Ses données restent protégées.`)}><UserX size={15}/>Bloquer le compte</button>}{open.status!=='active'&&<button type="button" className="adm-btn green" onClick={()=>void act({action:'activate',userId:open.id})}><UserCheck size={15}/>Rétablir l’accès complet</button>}</div><p className="adm-hint">{open.status==='restricted'?'Accès limité en cours : menus sensibles bloqués.':open.status==='suspended'?'Compte bloqué : connexion refusée avec un message de vérification.':'Accès complet.'}</p><div className="adm-inline"></div>
   </aside></div>}
  </div>;

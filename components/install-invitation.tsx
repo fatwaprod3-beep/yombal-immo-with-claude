@@ -2,6 +2,7 @@
 import {useEffect,useState,useRef} from 'react';
 import {Download,Check,X,Zap,BellRing,MessageCircle,TriangleAlert,Search,Clock,Smartphone,Share,SquarePlus,MousePointerClick} from 'lucide-react';
 import {isStandalone as standalone,inAppBrowser,installationDevice} from '../lib/app-install';
+import {trackEvent} from '../lib/track-event';
 
 // Invitation à installer l'application : une fois par ouverture de Yombal sur téléphone, tant que l'application
 // n'est pas installée. Trois versions différentes se relaient pour ne pas lasser. Jamais pendant une saisie,
@@ -17,13 +18,15 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
  const [open,setOpen]=useState(false),[installed,setInstalled]=useState(true),[busy,setBusy]=useState(false),[inApp,setInApp]=useState(false),[variant,setVariant]=useState<Variant>('phone'),[device,setDevice]=useState<'android'|'ios'|'desktop'>('android');
  useEffect(()=>{
   const done=()=>{setInstalled(true);setOpen(false);};
+  const installedNow=()=>{trackEvent('app_installed');done();};
+  if(standalone())trackEvent('app_open_standalone');
   const display=window.matchMedia('(display-mode: standalone)');
   const changed=()=>{if(standalone())done();};
   setInstalled(standalone()||!!window.yombalInstall?.installed);
   setInApp(inAppBrowser(navigator.userAgent));
   setDevice(installationDevice(navigator.userAgent,navigator.maxTouchPoints));
-  window.addEventListener('appinstalled',done);display.addEventListener('change',changed);
-  return ()=>{window.removeEventListener('appinstalled',done);display.removeEventListener('change',changed);};
+  window.addEventListener('appinstalled',installedNow);display.addEventListener('change',changed);
+  return ()=>{window.removeEventListener('appinstalled',installedNow);display.removeEventListener('change',changed);};
  },[]);
  useEffect(()=>{if(available&&!standalone())setInstalled(false);},[available]);
  useEffect(()=>{
@@ -34,7 +37,7 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
   const delay=shown===0?6000:15000;
   let due=false;
   const busyTyping=()=>{const a=document.activeElement;return !!a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||(a as HTMLElement).isContentEditable);};
-  const check=()=>{if(!due||offered.current||!mq.matches||document.hidden||standalone()||busyTyping()||document.querySelector('dialog[open], [role=dialog][data-state=open], [role=listbox]'))return;try{if(sessionStorage.getItem(sessionKey)==='1')return;localStorage.setItem(countKey,String(shown+1));}catch{}offered.current=true;setVariant(order[shown%order.length]);setOpen(true);};
+  const check=()=>{if(!due||offered.current||!mq.matches||document.hidden||standalone()||busyTyping()||document.querySelector('dialog[open], [role=dialog][data-state=open], [role=listbox]'))return;try{if(sessionStorage.getItem(sessionKey)==='1')return;localStorage.setItem(countKey,String(shown+1));}catch{}offered.current=true;const v=order[shown%order.length];setVariant(v);setOpen(true);trackEvent('install_prompt_shown',v);};
   const resized=()=>{if(!mq.matches)setOpen(false);else check();};
   const timer=setTimeout(()=>{due=true;check();},Math.max(0,delay-(Date.now()-started.current)));
   const observer=new MutationObserver(check);observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['open']});
@@ -44,8 +47,8 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
  },[installed,suspended,available]);
  useEffect(()=>{const d=ref.current;if(open&&d&&!d.open)d.showModal();},[open]);
  function remember(){try{sessionStorage.setItem(sessionKey,'1');}catch{}}
- function dismiss(){remember();ref.current?.close();setOpen(false);}
- async function go(){setBusy(true);remember();ref.current?.close();setOpen(false);try{await onInstall();}finally{setBusy(false);}}
+ function dismiss(){trackEvent('install_prompt_dismissed',variant);remember();ref.current?.close();setOpen(false);}
+ async function go(){trackEvent('install_prompt_accepted',variant);setBusy(true);remember();ref.current?.close();setOpen(false);try{await onInstall();}finally{setBusy(false);}}
  if(installed||!open)return null;
  const label=available?'Installer Yombal':inApp?'Ouvrir dans Chrome':device==='ios'?'Me montrer comment':'Voir comment installer';
  const ios=device==='ios'&&!available;

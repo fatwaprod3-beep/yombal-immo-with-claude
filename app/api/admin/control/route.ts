@@ -16,6 +16,7 @@ const input=z.discriminatedUnion('action',[
  z.object({action:z.enum(['suspend','activate','restrict','logout_user','revoke_pro']),userId:z.string().uuid()}),
  z.object({action:z.literal('set_prices'),prices:z.record(z.enum(['monthly','quarterly','annual']),z.number().int().min(100).max(10_000_000).nullable())}),
  z.object({action:z.literal('create_user'),email:z.string().trim().toLowerCase().email().max(200),name:z.string().trim().min(2).max(120),months:z.number().int().min(0).max(36)}),
+ z.object({action:z.literal('set_tester'),userId:z.string().uuid(),value:z.boolean()}),
  z.object({action:z.literal('grant_pro'),userId:z.string().uuid(),months:z.number().int().min(1).max(36)}),
  z.object({action:z.literal('ai_config'),provider:z.enum(['groq','xai','openai','gemini']),model:z.string().trim().max(80),apiKey:z.string().trim().max(300).optional()}),
 ]);
@@ -65,6 +66,7 @@ export async function POST(request:Request){
   if(a.action==='restrict'){await db.update(users).set({status:'restricted'}).where(eq(users.id,target.id));await audit(`Accès limité : ${target.email}`);return adminJson({ok:true,message:'Accès limité : le compte reste connecté mais les menus sensibles sont bloqués.'});}
   if(a.action==='activate'){await db.update(users).set({status:'active'}).where(eq(users.id,target.id));await audit(`Compte réactivé : ${target.email}`);return adminJson({ok:true,message:'Compte réactivé.'});}
   if(a.action==='logout_user'){await db.update(users).set({sessionsAfter:Date.now()}).where(eq(users.id,target.id));await audit(`Sessions fermées : ${target.email}`);return adminJson({ok:true,message:'Toutes les sessions de ce compte sont fermées.'});}
+  if(a.action==='set_tester'){await db.update(users).set({tester:a.value?1:0}).where(eq(users.id,target.id));await audit(`${a.value?'Marqué':'Retiré'} comme compte de test : ${target.email}`);return adminJson({message:a.value?'Compte marqué comme test : il n’est plus compté dans les chiffres.':'Compte de nouveau compté dans les chiffres.'});}
   if(a.action==='revoke_pro'){await db.update(subscriptions).set({status:'expired',expiresAt:now.toISOString(),updatedAt:now.toISOString()}).where(eq(subscriptions.userId,target.id));await audit(`Pro retiré : ${target.email}`);return adminJson({ok:true,message:'Accès Pro retiré.'});}
   if(a.action!=='grant_pro')return adminJson({error:'Action invalide.'},400);
   // grant_pro : s'ajoute à la date de fin actuelle si l'abonnement est encore actif.
