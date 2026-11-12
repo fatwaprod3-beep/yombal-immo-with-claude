@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.52.1 — 12 novembre 2026
+
+- Correction : sans abonnement, l’aperçu d’une facture ou d’un reçu dans l’application affichait le modèle Classique au lieu du modèle choisi dans les paramètres. L’aperçu montre désormais le modèle choisi ; seul le document envoyé ou téléchargé passe en version gratuite.
+
 ## 0.52.0 — 12 novembre 2026
 
 - Modèles de facture Pro et signature : enregistrables gratuitement dans les paramètres pour essayer. Au moment d’envoyer ou télécharger un document sans abonnement, le vrai document s’affiche avec le haut lisible et le reste flouté, avec « Débloquer avec Pro » ou « Envoyer avec le modèle gratuit » (Classique, sans signature).

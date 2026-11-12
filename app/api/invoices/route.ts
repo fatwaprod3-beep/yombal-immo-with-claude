@@ -34,6 +34,6 @@ export async function POST(request:Request){
    if(canonical.publication==='draft')return json({error:'Vos 3 factures gratuites sont utilisées. Le brouillon est enregistré ; passez à Pro pour l’envoyer ou le télécharger.',code:'PRO_REQUIRED',feature:'invoices'},402);
   }
   const full=withInvoiceMessage(invoiceSnapshot(state,body.leaseId,body.period,canonical.id,canonical.createdAt),{reminderMessage:message}),data=subscription.isPro?full:freeStyled(full),released=canonical.publication!=='draft';
-  return json({invoice:{id:canonical.id,leaseId:body.leaseId,period:body.period,token:released?canonical.token:'',released,data:summaryData(data)},...(body.intent==='export'&&released?{html:await serverDocument(invoiceHtml(data),user.userId)}:{}),usage:{exportsUsed:await usedExports(user.userId),limit:freeLimits.invoices}});
+  return json({invoice:{id:canonical.id,leaseId:body.leaseId,period:body.period,token:released?canonical.token:'',released,data:summaryData(full)},...(body.intent==='export'&&released?{html:await serverDocument(invoiceHtml(data),user.userId)}:{}),usage:{exportsUsed:await usedExports(user.userId),limit:freeLimits.invoices}});
  }catch(e){return json({error:e instanceof Error&&!/D1|SQL|database/i.test(e.message)?e.message:'Création impossible.'},400);}
 }
