@@ -5,6 +5,7 @@ import {userEvents,users,workspaces} from '../../../../db/schema';
 import {pushMessageFor,proWelcomeMessage} from '../../../../lib/web-push';
 import {subscriptionFor} from '../../../../lib/subscription-server';
 import type {State} from '../../../../lib/model';
+import {nextOwnerAlert} from '../../../../lib/admin-alerts';
 export const dynamic='force-dynamic';
 const generic={title:'Yombal',body:'Vos loyers et vos locataires vous attendent.',url:'/',tag:'yombal'};
 // Appelé par le téléphone à la réception d'une notification : renvoie le texte à afficher (jamais transmis par le réseau de notification).
@@ -12,6 +13,7 @@ export async function GET(){
  const user=await getCurrentUser();if(!user)return Response.json(generic,{headers:{'Cache-Control':'no-store'}});
  try{
   const db=getDb();
+  const alert=await nextOwnerAlert(user.userId);if(alert)return Response.json(alert,{headers:{'Cache-Control':'no-store'}});
   const welcome=(await db.select({id:userEvents.id}).from(userEvents).where(and(eq(userEvents.userId,user.userId),eq(userEvents.kind,'push_welcome_pending'))).orderBy(desc(userEvents.createdAt)).limit(1))[0];
   if(welcome){await db.delete(userEvents).where(and(eq(userEvents.userId,user.userId),eq(userEvents.kind,'push_welcome_pending')));return Response.json({title:'🔔 C’est activé !',body:'Yombal vous préviendra pour les loyers en retard, le début du mois et vos reçus. Rien d’autre, promis.',url:'/',tag:'welcome'},{headers:{'Cache-Control':'no-store'}});}
   const isPro=(await subscriptionFor(user.userId)).isPro;

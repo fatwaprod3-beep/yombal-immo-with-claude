@@ -310,3 +310,15 @@
 .ios-coach-card h2.ios-coach-mini{font-size:14px;color:#6a6071;padding:0 30px}
 .ios-coach-card{max-height:calc(100dvh - 120px);overflow:auto}
 @media (max-height:700px){.ios-coach-card{top:42%;padding-top:16px}.ios-coach-card>img{width:40px;height:40px;margin-bottom:6px}.ios-coach-card h2{font-size:18px}.ios-coach-sheet span{padding:8px 11px}.ios-coach-card small{font-size:11.5px}}
+
+/* Navigateur Facebook/Instagram : invitation à passer dans Chrome/Safari */
+.browser-switch{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:11px 12px;border-radius:16px;background:#fff4e8;border:1px solid #f7d2b2;color:#7a3c12}
+.browser-switch>svg{flex:0 0 auto;color:#e9705a}.browser-switch>div{flex:1;min-width:0;display:grid;gap:2px}.browser-switch b{font-size:13.5px;color:#4a2208}.browser-switch small{font-size:12px;line-height:1.35;color:#8a5230}
+.browser-switch-go{flex:0 0 auto;border:0;border-radius:11px;padding:9px 11px;background:#281b34;color:#fff;font:inherit;font-size:12.5px;font-weight:800;white-space:nowrap}
+.browser-switch-x{flex:0 0 auto;width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:#a0704f;display:grid;place-items:center}
+@media (max-width:560px){.browser-switch{flex-wrap:wrap}.browser-switch>div{flex-basis:calc(100% - 70px)}.browser-switch-go{order:3;flex:1 1 100%;padding:11px}}
+/* Connexion : voir le mot de passe, aide après plusieurs erreurs */
+.password-field{position:relative;display:block}.password-field input{width:100%;box-sizing:border-box;padding-right:46px}
+.password-field button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:#7a6f84;display:grid;place-items:center}
+.auth-help{margin:12px 0 0;padding:14px;border-radius:14px;background:#fff7f2;border:1px solid #f5d5c8;text-align:left;display:grid;gap:6px}
+.auth-help strong{color:#21152e;font-size:14px}.auth-help p{margin:0;font-size:13px;line-height:1.45;color:#5b5063}.auth-help .auth-forgot-wa{gap:7px;margin-top:4px}

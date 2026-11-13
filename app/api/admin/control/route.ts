@@ -9,10 +9,12 @@ import {encryptPaymentSecret,paymentCredentials} from '../../../../lib/payment-c
 import {sasPayPrices} from '../../../../lib/saspay-prices';
 import {createSessionToken,sessionCookieHeader,hashPassword,createPurposeToken} from '../../../auth';
 import {aiProviders,type AiProvider} from '../../../../lib/assistant';
+import {alertOwner} from '../../../../lib/admin-alerts';
 export const dynamic='force-dynamic';
 const input=z.discriminatedUnion('action',[
  z.object({action:z.literal('flag'),flag:z.enum(['registrations','maintenance','assistant']),value:z.boolean()}),
  z.object({action:z.literal('logout_all')}),
+ z.object({action:z.literal('test_alert')}),
  z.object({action:z.enum(['suspend','activate','restrict','logout_user','revoke_pro','reset_link']),userId:z.string().uuid()}),
  z.object({action:z.literal('set_prices'),prices:z.record(z.enum(['monthly','quarterly','annual']),z.number().int().min(100).max(10_000_000).nullable())}),
  z.object({action:z.literal('create_user'),email:z.string().trim().toLowerCase().email().max(200),name:z.string().trim().min(2).max(120),months:z.number().int().min(0).max(36)}),
@@ -31,6 +33,10 @@ export async function POST(request:Request){
   if(a.action==='flag'){
    const value=a.flag==='registrations'?(a.value?'open':'closed'):a.flag==='maintenance'?(a.value?'on':'off'):(a.value?'on':'off');
    await setSetting(a.flag,value);await audit(`Réglage ${a.flag} → ${value}`);return adminJson({ok:true,message:'Réglage enregistré.'});
+  }
+  if(a.action==='test_alert'){
+   await alertOwner('test:'+now.getTime(),'✅ Alertes Yombal activées','C’est ici que vous serez prévenu : client bloqué à la connexion, nouveau paiement, paiement à vérifier.');
+   return adminJson({ok:true,message:'Alerte d’essai envoyée : elle doit arriver sur ce téléphone dans quelques secondes.'});
   }
   if(a.action==='logout_all'){
    await setSetting('sessions_after',String(Date.now()));await audit('Déconnexion de tous les comptes');

@@ -85,7 +85,7 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
    <span className="install-invite-bonus"><Gift size={15}/>Bonus : +1 reçu gratuit quand Yombal est sur votre écran</span>
    {variant==='steps'?<ol className="install-invite-steps">{steps.map((s,i)=><li key={i}><span>{i+1}</span><s.icon size={16}/><b>{s.text}</b></li>)}</ol>
    :<ul>{content.items.map(it=><li key={it.title}><span><it.icon size={16}/></span><div><strong>{it.title}</strong><small>{it.text}</small></div></li>)}</ul>}
-   {inApp&&<p className="install-invite-note"><TriangleAlert size={15}/>Vous êtes dans l’application Facebook : elle ne peut pas installer Yombal. On va l’ouvrir dans Chrome, c’est l’affaire de 10 secondes.</p>}
+   {inApp&&<p className="install-invite-note"><TriangleAlert size={15}/>Vous êtes dans l’application Facebook : elle ne peut pas installer Yombal. On l’ouvre dans Chrome, déjà connecté : vous n’aurez pas à retaper votre mot de passe.</p>}
    <button type="button" className="install-invite-cta" disabled={busy} onClick={()=>void go()}><Download size={18}/>{label}</button>
    <button type="button" className="install-invite-later" onClick={dismiss} disabled={busy}>Pas maintenant</button>
    <small className="install-invite-free"><Check size={13}/>Gratuit · rien à télécharger sur le Play Store · se retire en 1 geste</small>

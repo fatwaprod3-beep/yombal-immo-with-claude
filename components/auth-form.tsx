@@ -1,20 +1,21 @@
 'use client';
 import {supportLink} from '../lib/support';
+import {inAppBrowser} from '../lib/app-install';
 import {markSignup} from '../lib/meta-pixel';
 import {useState,type FormEvent} from 'react';
 import Link from 'next/link';
-import {ArrowLeft,LogIn,UserPlus} from 'lucide-react';
+import {ArrowLeft,LogIn,UserPlus,Eye,EyeOff,MessageCircle} from 'lucide-react';
 
 export default function AuthForm({returnTo,initialMode,google=false,initialError=''}:{returnTo:string;initialMode:'login'|'register';google?:boolean;initialError?:string}){
  const [mode,setMode]=useState(initialMode),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState('');
- const [busy,setBusy]=useState(false),[error,setError]=useState(initialError);
+ const [busy,setBusy]=useState(false),[error,setError]=useState(initialError),[show,setShow]=useState(false),[misses,setMisses]=useState(0);
  const register=mode==='register';
  async function submit(e:FormEvent){
   e.preventDefault();setBusy(true);setError('');
   try{
    const r=await fetch(register?'/api/auth/register':'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(register?{name,email,password}:{email,password})});
    const d=await r.json().catch(()=>({})) as {error?:string};
-   if(!r.ok)throw Error(d.error||'Réessayez.');
+   if(!r.ok){if(!register&&(r.status===401||r.status===429))setMisses(m=>m+1);throw Error(d.error||'Réessayez.');}
    if(register)markSignup();
    window.location.assign(returnTo);
   }catch(e){setError(e instanceof Error?e.message:'Réessayez.');setBusy(false);}
@@ -29,10 +30,11 @@ export default function AuthForm({returnTo,initialMode,google=false,initialError
   <form onSubmit={submit}>
    {register&&<label className="field"><span>Nom complet ou nom de l’agence</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" minLength={2} maxLength={120} required/></label>}
    <label className="field"><span>E-mail</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" maxLength={200} required/></label>
-   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><input type="password" value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/></label>{!register&&<details className="auth-forgot"><summary>Mot de passe oublié ?</summary><div><p><strong>Votre adresse est un Gmail ?</strong> Utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p><p>Sinon, écrivez-nous : nous vous envoyons un lien pour choisir un nouveau mot de passe.</p><a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp</a></div></details>}
+   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><span className="password-field"><input type={show?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/><button type="button" onClick={()=>setShow(v=>!v)} aria-label={show?'Cacher le mot de passe':'Voir le mot de passe'}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button></span></label>{!register&&<details className="auth-forgot"><summary>Mot de passe oublié ?</summary><div><p><strong>Votre adresse est un Gmail ?</strong> Utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p><p>Sinon, écrivez-nous : nous vous envoyons un lien pour choisir un nouveau mot de passe.</p><a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp</a></div></details>}
    <button className="button primary" disabled={busy} aria-busy={busy}>{busy?'Patientez…':register?'Créer mon compte':'Se connecter'}</button>
   </form>
   {error&&<p className="form-error" role="alert">{error}</p>}
+  {!register&&misses>=2&&<div className="auth-help" role="status"><strong>On vous aide à entrer</strong><p>Vérifiez l’orthographe de votre e-mail : <b>{email.trim().toLowerCase()||'—'}</b></p>{google&&/@gmail\.com$/i.test(email.trim())&&!inAppBrowser(navigator.userAgent)&&<p>C’est un Gmail : utilisez « Continuer avec Google » en haut, sans mot de passe.</p>}<p>Mot de passe oublié ? Écrivez-nous, nous vous envoyons tout de suite un lien pour en choisir un nouveau.</p><a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>Écrire sur WhatsApp</a></div>}
   <p>{register?'Déjà un compte ?':'Pas encore de compte ?'} <button type="button" className="text-button" onClick={()=>{setMode(register?'login':'register');setError('');}}>{register?'Se connecter':'Créer un compte'}</button></p>
  </section></main>;
 }

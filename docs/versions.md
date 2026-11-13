@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.59.0 — 14 novembre 2026
+
+- Navigateur Facebook/Instagram : bandeau « Vous êtes dans Facebook — Ouvrir dans Chrome/Safari » dès l’inscription, pour que la personne retrouve Yombal le lendemain sans retaper son mot de passe (Chrome s’ouvre déjà connecté).
+- Connexion : petit œil pour voir le mot de passe ; après 2 erreurs, encadré d’aide (vérifier l’orthographe de l’e-mail, Google pour les Gmail, WhatsApp pour un nouveau mot de passe).
+- Alertes du propriétaire sur son téléphone : client bloqué à la connexion, nouveau paiement Pro, paiement à vérifier. Bouton « Recevoir les alertes ici » dans l’administration (avec alerte d’essai).
+
 ## 0.58.0 — 13 novembre 2026
 
 - iPhone : le guide d’installation devient « étape par étape » (1 sur 3, 2 sur 3, 3 sur 3) avec « C’est fait — Suivant » : flèche vers Partager, menu de Safari avec la bonne ligne entourée, bouton « Ajouter » entouré, puis écran de félicitations.

@@ -1,4 +1,5 @@
 'use client';
+import {enablePush,pushSupported} from './notify-invitation';
 import {useCallback,useEffect,useMemo,useState,type CSSProperties,type FormEvent} from 'react';
 import Link from 'next/link';
 import {Smartphone,BellRing,Copy,MessageCircle,Phone,Mail,Link2,UserPlus,Activity,AlertTriangle,ArrowLeft,Bot,Crown,CreditCard,Eye,KeyRound,LayoutDashboard,LoaderCircle,LogOut,Lock,MessageSquareWarning,Power,RefreshCw,Search,ShieldAlert,ShieldCheck,UserCheck,UserX,Users,Wrench,X} from 'lucide-react';
@@ -30,6 +31,14 @@ const steps:{key:keyof Journey;label:string;short:string}[]=[{key:'profile',labe
 const waLink=(phone:string)=>{let d=phone.replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.length===9&&/^[37]/.test(d))d='221'+d;return d.length>=8?'https://wa.me/'+d:'';};
 const reached=(j:Journey)=>{let n=0;for(const st of steps){if(j[st.key])n++;else break;}return n;};
 function JourneyDots({j}:{j:Journey}){const n=reached(j);return <span className="adm-journey" title={n?('Arrivé à : '+steps[n-1].label):'Inscrit, rien fait'}>{steps.map((st,i)=><i key={st.key} className={i<n?'on':j[st.key]?'part':''}/>)}<small>{n?steps[n-1].short:'Inscrit'}</small></span>;}
+// Alertes du propriétaire sur ce téléphone (client bloqué, paiement…), via les notifications de Yombal.
+function AlertsButton({act}:{act:(body:Record<string,unknown>)=>Promise<unknown>}){
+ const [state,setState]=useState<'idle'|'on'|'busy'|'off'>('idle');
+ useEffect(()=>{if(!pushSupported()){setState('off');return;}if(Notification.permission==='granted')void navigator.serviceWorker.getRegistration().then(r=>r?.pushManager.getSubscription()).then(s=>{if(s)setState('on');}).catch(()=>{});},[]);
+ if(state==='off')return null;
+ async function enable(){setState('busy');try{if(!await navigator.serviceWorker.getRegistration())await navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'});if(await enablePush()){setState('on');await act({action:'test_alert'});}else setState('idle');}catch{setState('idle');}}
+ return <button type="button" className={'adm-btn '+(state==='on'?'ghost':'gold')} onClick={()=>void enable()} disabled={state==='busy'} title="Être prévenu sur ce téléphone quand un client est bloqué ou qu’un paiement arrive">{state==='busy'?<LoaderCircle size={16} className="spin"/>:<BellRing size={16}/>}{state==='on'?'Alertes actives · tester':'Recevoir les alertes ici'}</button>;
+}
 function AppTag({u}:{u:AdminUser}){return u.app.installed?<span className="adm-tag g" title={u.app.opens+' ouverture(s) en application'}><Smartphone size={12}/>Installée</span>:u.app.prompts?<span className="adm-tag" title={u.app.prompts+' invitation(s) vue(s), '+u.app.dismissed+' refusée(s)'}>Pas encore · vue {u.app.prompts}×</span>:<span className="adm-tag">—</span>;}
 
 export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:()=>void;busy:boolean}){
@@ -45,7 +54,7 @@ export default function AdminConsole({email,onLeave,busy}:{email:string;onLeave:
    <div className="adm-side-foot"><Link href="/" prefetch={false} className="adm-link"><ArrowLeft size={16}/>Retour à Yombal</Link><button type="button" className="adm-link" disabled={busy} onClick={onLeave}><LogOut size={16}/>Fermer la session admin</button><small>{email}</small></div>
   </aside>
   <main className="adm-main">
-   <header className="adm-top"><div><span className="adm-eyebrow">ADMINISTRATION PRIVÉE</span><h1>{tabs.find(t=>t.id===tab)?.label}</h1></div><div className="adm-top-tools">{data&&<span className={'adm-status '+(data.flags.maintenance?'r':'g')}><i/>{data.flags.maintenance?'Maintenance active':'Site en ligne'}</span>}<button type="button" className="adm-btn ghost" onClick={()=>void load()} disabled={loading}>{loading?<LoaderCircle size={16} className="spin"/>:<RefreshCw size={16}/>}Actualiser</button></div></header>
+   <header className="adm-top"><div><span className="adm-eyebrow">ADMINISTRATION PRIVÉE</span><h1>{tabs.find(t=>t.id===tab)?.label}</h1></div><div className="adm-top-tools">{data&&<span className={'adm-status '+(data.flags.maintenance?'r':'g')}><i/>{data.flags.maintenance?'Maintenance active':'Site en ligne'}</span>}<AlertsButton act={act}/><button type="button" className="adm-btn ghost" onClick={()=>void load()} disabled={loading}>{loading?<LoaderCircle size={16} className="spin"/>:<RefreshCw size={16}/>}Actualiser</button></div></header>
    {notice&&<p className="adm-notice g" role="status">{notice}<button type="button" onClick={()=>setNotice('')} aria-label="Fermer"><X size={15}/></button></p>}
    {error&&<p className="adm-notice r" role="alert">{error}</p>}
    {!data?<div className="adm-card adm-loading"><LoaderCircle className="spin" size={22}/>Chargement des données…</div>:

@@ -1,4 +1,6 @@
 import {pushToUser} from './web-push';
+import {alertOwner} from './admin-alerts';
+import {users} from '../db/schema';
 import {and,desc,eq,lt,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {billingCheckouts,billingPayments,subscriptionRequests,subscriptions} from '../db/schema';
@@ -43,9 +45,10 @@ async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now())
   activated=true;
  });
  const ledger=(await db.select().from(billingPayments).where(eq(billingPayments.providerPaymentId,paymentId)).limit(1))[0];
- if(!ledger||ledger.checkoutId!==row.id||ledger.userId!==row.userId||ledger.applied!==1)throw Error('Règlement déjà associé ou incomplet.');
+ if(!ledger||ledger.checkoutId!==row.id||ledger.userId!==row.userId||ledger.applied!==1){await alertOwner('payment-problem:'+paymentId,'⚠️ Paiement à vérifier','Un paiement SasPay est arrivé mais l’abonnement n’a pas pu être activé automatiquement. Vérifiez l’onglet Paiements.');throw Error('Règlement déjà associé ou incomplet.');}
  // Notification « Bienvenue dans Yombal Pro » : ramène dans l’application ceux restés sur la page de paiement.
  if(activated)await pushToUser(row.userId).catch(()=>false);
+ if(activated){const who=(await db.select({name:users.name,email:users.email}).from(users).where(eq(users.id,row.userId)).limit(1))[0];await alertOwner('paid:'+paymentId,'💰 Nouveau paiement Pro',`${who?.name||who?.email||'Un client'} vient de payer ${row.amount.toLocaleString('fr-FR')} F (${plan.months} mois). Son compte Pro est actif.`,'/administration');}
 }
 
 export async function createSasPayCheckout(user:Customer,planId:string,origin:string,credentials:Credentials){
