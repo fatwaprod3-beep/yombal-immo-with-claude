@@ -1,3 +1,4 @@
+import {pushToUser} from './web-push';
 import {and,desc,eq,lt,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {billingCheckouts,billingPayments,subscriptionRequests,subscriptions} from '../db/schema';
@@ -26,6 +27,7 @@ async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now())
  const db=getDb(),now=new Date(at).toISOString();
  const guard=and(eq(billingPayments.providerPaymentId,paymentId),eq(billingPayments.checkoutId,row.id),eq(billingPayments.userId,row.userId),eq(billingPayments.applied,0))!;
  // Transaction PostgreSQL : verrou par compte pour que deux renouvellements simultanés se cumulent.
+ let activated=false;
  await db.transaction(async tx=>{
   await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${'yombal-billing:'+row.userId}))`);
   await tx.insert(billingPayments).values({providerPaymentId:paymentId,checkoutId:row.id,userId:row.userId,planId:plan.id,amount:row.amount,currency:'XOF',createdAt:now,applied:0}).onConflictDoNothing();
@@ -38,9 +40,12 @@ async function applyVerifiedPayment(row:Checkout,paymentId:string,at=Date.now())
   await tx.update(billingCheckouts).set({status:'paid',activeSlot:null,providerPaymentId:paymentId,updatedAt:now}).where(eq(billingCheckouts.id,row.id));
   await tx.update(subscriptionRequests).set({status:'paid'}).where(eq(subscriptionRequests.id,row.id));
   await tx.update(billingPayments).set({applied:1}).where(guard);
+  activated=true;
  });
  const ledger=(await db.select().from(billingPayments).where(eq(billingPayments.providerPaymentId,paymentId)).limit(1))[0];
  if(!ledger||ledger.checkoutId!==row.id||ledger.userId!==row.userId||ledger.applied!==1)throw Error('Règlement déjà associé ou incomplet.');
+ // Notification « Bienvenue dans Yombal Pro » : ramène dans l’application ceux restés sur la page de paiement.
+ if(activated)await pushToUser(row.userId).catch(()=>false);
 }
 
 export async function createSasPayCheckout(user:Customer,planId:string,origin:string,credentials:Credentials){

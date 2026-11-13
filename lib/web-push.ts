@@ -1,4 +1,4 @@
-import {eq,sql} from 'drizzle-orm';
+import {and,eq,lt,sql} from 'drizzle-orm';
 import {getDb} from '../db';
 import {appSettings,pushSubscriptions} from '../db/schema';
 import {encryptPaymentSecret,decryptPaymentSecret} from './payment-config';
@@ -76,4 +76,12 @@ export function pushMessageFor(state:State,{createdAt,lastSeenAt,isPro,documents
  // 7. Plus revenu depuis une semaine.
  if(away>=7)return {title:'👋 Vos loyers vous attendent',body:rentals?'Faites le point en 30 secondes : paiements reçus, retards, reçus à envoyer.':'Reprenez où vous en étiez : votre espace Yombal est prêt.',url:'/',tag:'comeback'};
  return null;
+}
+
+/** Message de bienvenue Pro : après le paiement, la personne est souvent restée sur la page de paiement. */
+export const proWelcomeMessage:PushMessage={title:'👑 Bienvenue dans Yombal Pro !',body:'Votre paiement est confirmé, tout est débloqué. Touchez ici pour revenir dans Yombal.',url:'/?pro=1',tag:'pro-welcome'};
+/** Réveille tous les téléphones abonnés d'une personne (sans contenu : le texte est demandé ensuite). */
+export async function pushToUser(userId:string){
+ try{const subs=await getDb().select({id:pushSubscriptions.id,endpoint:pushSubscriptions.endpoint}).from(pushSubscriptions).where(and(eq(pushSubscriptions.userId,userId),lt(pushSubscriptions.failures,5)));let ok=false;for(const s of subs)ok=(await sendPush(s))||ok;return ok;}
+ catch{return false;}
 }

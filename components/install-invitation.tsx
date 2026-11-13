@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useState,useRef} from 'react';
-import {Download,Check,X,Zap,BellRing,MessageCircle,TriangleAlert,Search,Clock,Smartphone,Share,SquarePlus,MousePointerClick} from 'lucide-react';
+import {Gift,Download,Check,X,Zap,BellRing,MessageCircle,TriangleAlert,Search,Clock,Smartphone,Share,SquarePlus,MousePointerClick} from 'lucide-react';
 import {isStandalone as standalone,inAppBrowser,installationDevice} from '../lib/app-install';
 import {trackEvent} from '../lib/track-event';
 
@@ -81,6 +81,7 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
    <span className="install-invite-eyebrow">{content.eyebrow}</span>
    <h2 id="install-invite-title">{content.title}</h2>
    <p>{content.text}</p>
+   <span className="install-invite-bonus"><Gift size={15}/>Bonus : +1 reçu gratuit quand Yombal est sur votre écran</span>
    {variant==='steps'?<ol className="install-invite-steps">{steps.map((s,i)=><li key={i}><span>{i+1}</span><s.icon size={16}/><b>{s.text}</b></li>)}</ol>
    :<ul>{content.items.map(it=><li key={it.title}><span><it.icon size={16}/></span><div><strong>{it.title}</strong><small>{it.text}</small></div></li>)}</ul>}
    {inApp&&<p className="install-invite-note"><TriangleAlert size={15}/>Vous êtes dans l’application Facebook : elle ne peut pas installer Yombal. On va l’ouvrir dans Chrome, c’est l’affaire de 10 secondes.</p>}

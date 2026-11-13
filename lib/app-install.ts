@@ -39,3 +39,17 @@ export async function openInChrome() {
   try { const r = await fetch('/api/auth/handoff', { method: 'POST', credentials: 'same-origin' }); if (r.ok) path = ((await r.json()) as { path: string }).path; } catch {}
   window.location.href = chromeInstallUrl(window.location.origin, path);
 }
+
+/** Navigateur iPhone/iPad : 'safari', 'chrome' (CriOS, bouton Partager en haut), 'inapp' (Facebook, Instagram…) ou 'other'. */
+export function iosBrowser(userAgent: string): 'safari' | 'chrome' | 'inapp' | 'other' {
+  if (inAppBrowser(userAgent)) return 'inapp';
+  if (/CriOS/i.test(userAgent)) return 'chrome';
+  if (/FxiOS|EdgiOS|OPiOS/i.test(userAgent)) return 'other';
+  return /Safari/i.test(userAgent) ? 'safari' : 'other';
+}
+export function isIpad(userAgent: string, touchPoints = 0) { return /iPad/i.test(userAgent) || (/Macintosh/i.test(userAgent) && touchPoints > 1); }
+/** Lien personnel (3 min, usage unique) pour retrouver sa session dans un autre navigateur. */
+export async function handoffLink() {
+  try { const r = await fetch('/api/auth/handoff', { method: 'POST', credentials: 'same-origin' }); if (r.ok) return window.location.origin + ((await r.json()) as { path: string }).path; } catch {}
+  return window.location.origin + '/';
+}

@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.56.0 — 13 novembre 2026
+
+- Bonus installation : 1 document gratuit de plus (4 au lieu de 3) pour qui a mis Yombal sur son écran d’accueil ; affiché dans l’invitation et dans le compteur des factures.
+- iPhone : guide dédié avec flèche animée vers le bouton Partager (en bas dans Safari, en haut dans Chrome ou sur iPad), les 3 gestes illustrés ; depuis Facebook/Instagram, explication pour passer dans Safari et bouton « copier mon lien de connexion » (3 min, usage unique).
+- WhatsApp : la discussion s’ouvre sans message pré-écrit.
+- Yombal Pro : notification « 👑 Bienvenue dans Yombal Pro ! » dès que le paiement est confirmé (ramène dans l’application ceux restés sur la page de paiement) ; les clients Pro existants la reçoivent au prochain envoi quotidien.
+
 ## 0.55.0 — 12 novembre 2026
 
 - Navigateur Facebook/Instagram : « Ouvrir dans Chrome » transmet la connexion (lien personnel de 3 minutes, à usage unique) ; sur Android, le bouton d’installation ouvre Chrome directement, déjà connecté.
