@@ -291,3 +291,22 @@
 @keyframes ios-coach-bounce{0%,100%{translate:0 0}50%{translate:0 -10px}}
 .ios-coach.top .ios-coach-arrow{animation-name:ios-coach-bounce-up}@keyframes ios-coach-bounce-up{0%,100%{translate:0 0}50%{translate:0 10px}}
 .install-invite-bonus{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 12px;border-radius:99px;background:#e9f6ee;color:#2f7a60;font-size:12.5px;font-weight:800}
+
+/* Guide iPhone étape par étape */
+.ios-coach-progress{display:flex;justify-content:center;gap:6px;margin:12px 0 4px}.ios-coach-progress i{width:38px;height:5px;border-radius:3px;background:#ece6f0;transition:background .3s}.ios-coach-progress i.on{background:#f58b76}
+.ios-coach-eyebrow{display:block;margin-top:8px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#e9705a}
+.ios-coach-card>.ios-coach-do{margin:6px 0 0;font-size:16px;line-height:1.45;font-weight:700;color:#21152e}.ios-coach-do strong{color:#0a62c9}
+.ios-coach-card small{display:block;margin-top:8px;font-size:12px;line-height:1.45;color:#8a7f93}
+.ios-coach-sheet{margin:12px 0 0;padding:10px;border-radius:16px;background:#f2f2f6;display:grid;gap:6px;text-align:left}
+.ios-coach-sheet span{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;background:#fff;font-size:13px;color:#999}
+.ios-coach-sheet span.hl{color:#111;font-weight:800;outline:3px solid #f58b76;box-shadow:0 0 0 6px #f58b7640;animation:ios-coach-pulse 1.4s ease-in-out infinite}.ios-coach-sheet svg{color:#111}
+.ios-coach-addbar{margin:12px 0 0;padding:12px;border-radius:16px;background:#f2f2f6;text-align:left}
+.ios-coach-addbar>div:first-child{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#0a7cff}.ios-coach-addbar b{color:#111}
+.ios-coach-addbar .hl{font-weight:800;padding:2px 8px;border-radius:8px;outline:3px solid #f58b76;box-shadow:0 0 0 6px #f58b7640;animation:ios-coach-pulse 1.4s ease-in-out infinite}
+.ios-coach-addbar .app{display:flex;gap:10px;align-items:center;margin-top:12px;padding:8px;border-radius:12px;background:#fff}.ios-coach-addbar .app img{width:38px;height:38px;border-radius:9px}.ios-coach-addbar .app span{display:grid;font-size:13px}.ios-coach-addbar .app small{margin:0;font-size:11px}
+.ios-coach-party{display:grid;place-items:center;width:58px;height:58px;margin:12px auto 0;border-radius:50%;background:#fff1ec;color:#e9705a}
+.ios-coach-links{display:flex;justify-content:center;gap:16px;margin-top:10px}.ios-coach-links a,.ios-coach-links button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;padding:6px 2px;font:inherit;font-size:12.5px;color:#8a7f93;text-decoration:none;white-space:nowrap}
+@keyframes ios-coach-pulse{0%,100%{box-shadow:0 0 0 4px #f58b7640}50%{box-shadow:0 0 0 9px #f58b7620}}
+.ios-coach-card h2.ios-coach-mini{font-size:14px;color:#6a6071;padding:0 30px}
+.ios-coach-card{max-height:calc(100dvh - 120px);overflow:auto}
+@media (max-height:700px){.ios-coach-card{top:42%;padding-top:16px}.ios-coach-card>img{width:40px;height:40px;margin-bottom:6px}.ios-coach-card h2{font-size:18px}.ios-coach-sheet span{padding:8px 11px}.ios-coach-card small{font-size:11.5px}}

@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.58.0 — 13 novembre 2026
+
+- iPhone : le guide d’installation devient « étape par étape » (1 sur 3, 2 sur 3, 3 sur 3) avec « C’est fait — Suivant » : flèche vers Partager, menu de Safari avec la bonne ligne entourée, bouton « Ajouter » entouré, puis écran de félicitations.
+- Bouton « Je suis bloqué · WhatsApp » à chaque étape ; chaque étape franchie est notée pour voir où les gens s’arrêtent.
+
 ## 0.57.0 — 13 novembre 2026
 
 - Administration : type de téléphone de chaque inscrit (ex. « Samsung SM-A135F · Chrome », « iPhone · Facebook »), dans la liste et la fiche du compte ; total Android · iPhone dans le parcours des inscrits.
