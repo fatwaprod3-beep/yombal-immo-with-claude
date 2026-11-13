@@ -3,8 +3,15 @@ import {getDb} from '../../../../db';
 import {securityEvents} from '../../../../db/schema';
 import {requireAdmin,adminJson} from '../../../../lib/admin-guard';
 import {flags,getSetting} from '../../../../lib/app-settings';
+import {describeDevice} from '../../../../lib/device';
 export const dynamic='force-dynamic';
-type UserRow={id:string;email:string;name:string;status:string;created_at:string;last_seen_at:string|null;last_login_at:string|null;plan_id:string|null;sub_status:string|null;expires_at:string|null;properties:number|null;tenants:number|null;spaces:number|null;paid:number|null;ai_messages:number|null;flagged:number|null;tester:number|null;configured:boolean|null;mode:string|null;leases:number|null;rent_payments:number|null;receipts:number|null;contracts:number|null;app_opens:number|null;app_installed:number|null;app_last:string|null;prompts:number|null;prompt_dismissed:number|null;push:number|null;ref_code:string|null;phone:string|null;company:string|null};
+type UserRow={id:string;email:string;name:string;status:string;created_at:string;last_seen_at:string|null;last_login_at:string|null;plan_id:string|null;sub_status:string|null;expires_at:string|null;properties:number|null;tenants:number|null;spaces:number|null;paid:number|null;ai_messages:number|null;flagged:number|null;tester:number|null;configured:boolean|null;mode:string|null;leases:number|null;rent_payments:number|null;receipts:number|null;contracts:number|null;app_opens:number|null;app_installed:number|null;app_last:string|null;prompts:number|null;prompt_dismissed:number|null;device_seen:string|null;user_agent:string|null;push:number|null;ref_code:string|null;phone:string|null;company:string|null};
+// Téléphone : celui noté par l'application (modèle exact), sinon celui de la dernière connexion.
+function deviceOf(u:{device_seen:string|null;user_agent:string|null}){
+ const fromUa=u.user_agent?describeDevice(u.user_agent):null;
+ if(u.device_seen){const os=/^iPhone/.test(u.device_seen)?'iPhone':/^iPad/.test(u.device_seen)?'iPad':/^Ordinateur/.test(u.device_seen)?'Ordinateur':/^Autre/.test(u.device_seen)?'Autre':'Android';return {os,label:u.device_seen};}
+ return fromUa&&fromUa.os!=='Autre'?{os:fromUa.os,label:fromUa.label}:null;
+}
 export async function GET(request:Request){
  const {denied}=await requireAdmin(request);if(denied)return denied;
  try{
@@ -15,6 +22,8 @@ export async function GET(request:Request){
     (select count(*)::int from yombal_invoice_links i where i.user_id=u.id) as receipts,
     e.app_opens,e.app_installed,e.app_last,e.prompts,e.prompt_dismissed,
     (select count(*)::int from yombal_push_subscriptions ps where ps.user_id=u.id and ps.failures<5) as push,
+    (select detail from yombal_user_events d where d.user_id=u.id and d.kind='device_seen' order by d.created_at desc limit 1) as device_seen,
+    (select user_agent from yombal_security_events se where se.user_id=u.id and se.user_agent is not null order by se.created_at desc limit 1) as user_agent,
     l.code as ref_code
    from yombal_users u
    left join yombal_track_links l on l.id=u.ref_link_id
@@ -47,9 +56,10 @@ export async function GET(request:Request){
    // Parcours : 0 inscrit → 1 profil choisi → 2 logement → 3 locataire → 4 loyer encaissé → 5 document → 6 Pro.
    journey:{profile:!!u.configured,property:(u.properties||0)>0,tenant:(u.tenants||0)>0,payment:(u.rent_payments||0)>0,document:(u.receipts||0)+(u.contracts||0)>0,pro},
    documents:(u.receipts||0)+(u.contracts||0),
-   app:{installed:(u.app_installed||0)+(u.app_opens||0)>0,opens:u.app_opens||0,last:u.app_last,prompts:u.prompts||0,dismissed:u.prompt_dismissed||0},push:(u.push||0)>0};});
+   app:{installed:(u.app_installed||0)+(u.app_opens||0)>0,opens:u.app_opens||0,last:u.app_last,prompts:u.prompts||0,dismissed:u.prompt_dismissed||0},push:(u.push||0)>0,device:deviceOf(u)};});
   const real=list.filter(u=>!u.tester);
-  const funnel={signups:real.length,profile:real.filter(u=>u.journey.profile).length,property:real.filter(u=>u.journey.property).length,tenant:real.filter(u=>u.journey.tenant).length,payment:real.filter(u=>u.journey.payment).length,document:real.filter(u=>u.journey.document).length,pro:real.filter(u=>u.journey.pro).length,app:real.filter(u=>u.app.installed).length,prompted:real.filter(u=>u.app.prompts>0).length,push:real.filter(u=>u.push).length};
+  const osCount=(os:string)=>real.filter(u=>u.device?.os===os).length;
+  const funnel={signups:real.length,profile:real.filter(u=>u.journey.profile).length,property:real.filter(u=>u.journey.property).length,tenant:real.filter(u=>u.journey.tenant).length,payment:real.filter(u=>u.journey.payment).length,document:real.filter(u=>u.journey.document).length,pro:real.filter(u=>u.journey.pro).length,app:real.filter(u=>u.app.installed).length,prompted:real.filter(u=>u.app.prompts>0).length,push:real.filter(u=>u.push).length,android:osCount('Android'),iphone:osCount('iPhone')+osCount('iPad'),computer:osCount('Ordinateur')};
   // Les comptes de test (vos propres essais) sont exclus des chiffres.
   const active30=real.filter(u=>u.lastSeenAt&&u.lastSeenAt>iso(30*864e5)).length;
   const signups=(await db.execute(sql`select substr(created_at,1,10) as d,count(*)::int as n from yombal_users where created_at>${iso(30*864e5)} and tester=0 group by 1 order by 1`)) as unknown as {d:string;n:number}[];

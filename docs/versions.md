@@ -1,5 +1,10 @@
 # Versions de Yombal.immo
 
+## 0.57.0 — 13 novembre 2026
+
+- Administration : type de téléphone de chaque inscrit (ex. « Samsung SM-A135F · Chrome », « iPhone · Facebook »), dans la liste et la fiche du compte ; total Android · iPhone dans le parcours des inscrits.
+- Le modèle exact est noté une fois par jour à l’ouverture de Yombal ; pour les comptes existants, l’appareil de la dernière connexion est utilisé en attendant.
+
 ## 0.56.0 — 13 novembre 2026
 
 - Bonus installation : 1 document gratuit de plus (4 au lieu de 3) pour qui a mis Yombal sur son écran d’accueil ; affiché dans l’invitation et dans le compteur des factures.

@@ -5,10 +5,10 @@ import {getDb} from '../../../db';
 import {userEvents} from '../../../db/schema';
 export const dynamic='force-dynamic';
 // Étapes mesurées pour comprendre le parcours des inscrits (aucune donnée personnelle dans le détail).
-const kinds=['install_prompt_shown','install_prompt_accepted','install_prompt_dismissed','app_installed','app_open_standalone','push_granted','push_denied','push_opened','onboarding_example_saved','onboarding_example_skipped','document_locked'] as const;
+const kinds=['install_prompt_shown','install_prompt_accepted','install_prompt_dismissed','app_installed','app_open_standalone','push_granted','push_denied','push_opened','onboarding_example_saved','onboarding_example_skipped','document_locked','device_seen'] as const;
 // Événements comptés au plus une fois par jour et par personne, pour ne pas gonfler les chiffres.
-const daily=new Set<string>(['app_open_standalone','install_prompt_shown','document_locked']);
-const input=z.object({kind:z.enum(kinds),detail:z.string().trim().max(80).regex(/^[\w\s:.,/-]*$/).optional()}).strict();
+const daily=new Set<string>(['app_open_standalone','install_prompt_shown','document_locked','device_seen']);
+const input=z.object({kind:z.enum(kinds),detail:z.string().trim().max(80).regex(/^[\w\s:.,/·+-]*$/).optional()}).strict();
 export async function POST(request:Request){
  const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin)return new Response(null,{status:403});
  const user=await getCurrentUser();if(!user)return new Response(null,{status:204});

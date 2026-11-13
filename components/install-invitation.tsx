@@ -2,7 +2,7 @@
 import {useEffect,useState,useRef} from 'react';
 import {Gift,Download,Check,X,Zap,BellRing,MessageCircle,TriangleAlert,Search,Clock,Smartphone,Share,SquarePlus,MousePointerClick} from 'lucide-react';
 import {isStandalone as standalone,inAppBrowser,installationDevice} from '../lib/app-install';
-import {trackEvent} from '../lib/track-event';
+import {trackEvent,trackDevice} from '../lib/track-event';
 
 // Invitation à installer l'application : une fois par ouverture de Yombal sur téléphone, tant que l'application
 // n'est pas installée. Trois versions différentes se relaient pour ne pas lasser. Jamais pendant une saisie,
@@ -20,6 +20,7 @@ export default function InstallInvitation({onInstall,available,suspended=false}:
   const done=()=>{setInstalled(true);setOpen(false);};
   const installedNow=()=>{trackEvent('app_installed');done();};
   if(standalone())trackEvent('app_open_standalone');
+  void trackDevice();
   const display=window.matchMedia('(display-mode: standalone)');
   const changed=()=>{if(standalone())done();};
   setInstalled(standalone()||!!window.yombalInstall?.installed);
