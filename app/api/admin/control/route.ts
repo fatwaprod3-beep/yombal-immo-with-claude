@@ -10,6 +10,7 @@ import {sasPayPrices} from '../../../../lib/saspay-prices';
 import {createSessionToken,sessionCookieHeader,hashPassword,createPurposeToken} from '../../../auth';
 import {aiProviders,type AiProvider} from '../../../../lib/assistant';
 import {alertOwner} from '../../../../lib/admin-alerts';
+import {emailEnabled,emailHtml,sendEmail} from '../../../../lib/email';
 export const dynamic='force-dynamic';
 const input=z.discriminatedUnion('action',[
  z.object({action:z.literal('flag'),flag:z.enum(['registrations','maintenance','assistant']),value:z.boolean()}),
@@ -36,7 +37,10 @@ export async function POST(request:Request){
   }
   if(a.action==='test_alert'){
    await alertOwner('test:'+now.getTime(),'✅ Alertes Yombal activées','C’est ici que vous serez prévenu : client bloqué à la connexion, nouveau paiement, paiement à vérifier.');
-   return adminJson({ok:true,message:'Alerte d’essai envoyée : elle doit arriver sur ce téléphone dans quelques secondes.'});
+   // E-mail d'essai (Resend) envoyé à l'adresse du propriétaire.
+   const to=(process.env.YOMBAL_ADMIN_EMAIL||'').trim();
+   const mailed=emailEnabled()&&to?await sendEmail({to,subject:'✅ Yombal : les e-mails fonctionnent',html:emailHtml({title:'Les e-mails Yombal fonctionnent',lines:['Cet e-mail d’essai confirme que Yombal peut envoyer des e-mails.','Vos clients peuvent maintenant recevoir eux-mêmes un lien « Mot de passe oublié », et vous recevez une copie de vos alertes ici.']}),text:'Les e-mails Yombal fonctionnent.'}):false;
+   return adminJson({ok:true,message:'Alerte d’essai envoyée sur ce téléphone.'+(emailEnabled()?(mailed?' E-mail d’essai envoyé : regardez votre boîte (et les spams).':' L’e-mail d’essai n’est pas parti : vérifiez la clé Resend.'):' E-mails pas encore activés.')});
   }
   if(a.action==='logout_all'){
    await setSetting('sessions_after',String(Date.now()));await audit('Déconnexion de tous les comptes');

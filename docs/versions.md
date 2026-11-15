@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.60.1 — 15 novembre 2026
+
+- E-mails activés (clé Resend ajoutée dans Vercel). Le bouton d’alertes de l’administration envoie aussi un e-mail d’essai au propriétaire.
+
 ## 0.60.0 — 15 novembre 2026
 
 - Rappels (notifications) en priorité, avant l’installation : proposés quelques secondes après l’ouverture et juste après le premier logement, à chaque visite tant que ce n’est ni accepté ni bloqué. Message personnalisé avec le vrai locataire, le vrai loyer et le jour d’échéance.
