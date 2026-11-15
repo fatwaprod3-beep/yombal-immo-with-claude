@@ -1,5 +1,11 @@
 # Versions de Yombal.immo
 
+## 0.61.0 — 15 novembre 2026
+
+- E-mail du lendemain : chaque matin, les inscrits de la veille qui ne sont pas revenus reçoivent un e-mail adapté à l’étape qui leur manque (premier logement, locataire, suivi du loyer). Un seul envoi par personne.
+- Le bouton de cet e-mail connecte directement, sans mot de passe (lien valable 3 jours, une seule utilisation).
+- Connexion : l’aide « Recevoir un lien par e-mail » apparaît dès la première erreur de mot de passe.
+
 ## 0.60.1 — 15 novembre 2026
 
 - E-mails activés (clé Resend ajoutée dans Vercel). Le bouton d’alertes de l’administration envoie aussi un e-mail d’essai au propriétaire.

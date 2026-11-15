@@ -4,6 +4,7 @@ import {userEvents} from '../../../../db/schema';
 import {pushMessageFor,sendPush} from '../../../../lib/web-push';
 import {subscriptionFor} from '../../../../lib/subscription-server';
 import type {State} from '../../../../lib/model';
+import {sendDayAfterEmails} from '../../../../lib/followup-emails';
 export const dynamic='force-dynamic';
 export const maxDuration=60;
 type Row={pro_welcomed:boolean;user_id:string;created_at:string;last_seen_at:string|null;data:string|null;documents:number;last_sent:string|null;subs:{id:string;endpoint:string}[];recent_tags:string[]|null};
@@ -38,5 +39,7 @@ export async function GET(request:Request){
   let ok=false;for(const s of r.subs)ok=(await sendPush(s))||ok;
   if(ok){sent++;await db.insert(userEvents).values({id:crypto.randomUUID(),userId:r.user_id,kind:'push_sent',detail:message.tag,createdAt:now.toISOString()});}
  }
- return Response.json({users:rows.length,sent,skipped});
+ // E-mail du lendemain pour les inscrits d'hier qui ne sont pas revenus.
+ let emails={sent:0,candidates:0};try{emails=await sendDayAfterEmails(now);}catch(error){console.error('day_after_failed',error instanceof Error?error.message:'unknown');}
+ return Response.json({users:rows.length,sent,skipped,emails});
 }
