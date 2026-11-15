@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.62.1 — 15 novembre 2026
+
+- Démonstration : bandeau bien visible « Vous visitez une démonstration — exemples inventés, rien n’est enregistré » avec le bouton « Créer mon espace gratuit » (ou « Revenir à mon espace » si on est connecté).
+
 ## 0.62.0 — 15 novembre 2026
 
 - Relances par e-mail des inscrits qui ne reviennent pas : 1er e-mail dès 20 h après l’inscription (anciens inscrits depuis le 1er novembre inclus), 2e e-mail 3 jours plus tard s’ils ne sont toujours pas revenus. Messages personnalisés (agence ou propriétaire, nom de l’agence, logement, locataire, loyer, jour d’échéance) avec la fiche de leur logement. 80 e-mails par jour au plus.
