@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 import {X,Copy,Check,MoreHorizontal,Compass,Gift,ArrowRight,ArrowLeft,MessageCircle,PartyPopper} from 'lucide-react';
-import {handoffLink,iosBrowser,isIpad} from '../lib/app-install';
+import {handoffLink,iosBrowser,isIpad,openInSafari} from '../lib/app-install';
 import {trackEvent} from '../lib/track-event';
 import {supportLink} from '../lib/support';
 
@@ -15,6 +15,9 @@ export default function IosInstallCoach({onClose}:{onClose:()=>void}){
  const [browser,setBrowser]=useState<'safari'|'chrome'|'inapp'|'other'>('safari'),[tablet,setTablet]=useState(false),[copied,setCopied]=useState(false),[step,setStep]=useState(0);
  useEffect(()=>{setBrowser(iosBrowser(navigator.userAgent));setTablet(isIpad(navigator.userAgent,navigator.maxTouchPoints));const d=ref.current;if(d&&!d.open)d.showModal();trackEvent('install_prompt_accepted','ios-coach');},[]);
  const close=()=>{ref.current?.close();onClose();};
+ const [jump,setJump]=useState<'idle'|'busy'|'failed'>('idle'),[link,setLink]=useState('');
+ useEffect(()=>{if(browser!=='inapp')return;let on=true;const load=()=>void handoffLink().then(l=>{if(on)setLink(l);});load();const t=setInterval(load,150000);return ()=>{on=false;clearInterval(t);};},[browser]);
+ async function safari(){setJump('busy');const ok=await openInSafari(link||undefined);trackEvent('browser_switch',ok?'xsafari-ok':'xsafari-failed');setJump(ok?'idle':'failed');}
  async function copy(){const link=await handoffLink();try{await navigator.clipboard.writeText(link);setCopied(true);}catch{window.prompt('Copiez ce lien puis collez-le dans Safari :',link);}}
  const arrowTop=browser==='chrome'||tablet;
  // Étape par étape : on ne peut pas toucher Safari à la place de la personne, mais on lui montre un geste à la fois.
@@ -27,7 +30,9 @@ export default function IosInstallCoach({onClose}:{onClose:()=>void}){
    <h2 id="ios-coach-title">{browser==='inapp'?'Ouvrez Yombal dans Safari':'Mettez Yombal sur votre écran d’accueil'}</h2>
    <span className="ios-coach-bonus"><Gift size={14}/>Bonus : +1 reçu gratuit</span></>:<h2 id="ios-coach-title" className="ios-coach-mini">Yombal sur votre écran d’accueil</h2>}
    {browser==='inapp'?<>
-    <p>Vous êtes dans l’application Facebook ou Instagram : elle ne permet pas d’ajouter Yombal. Passez dans Safari, c’est rapide.</p>
+    <p>Vous êtes dans l’application Facebook ou Instagram : elle ne permet pas d’ajouter Yombal. Passez dans Safari, déjà connecté.</p>
+    {jump!=='failed'&&<button type="button" className="ios-coach-ok" disabled={jump==='busy'} onClick={()=>void safari()}><Compass size={17}/>{jump==='busy'?'Ouverture de Safari…':'Ouvrir dans Safari'}</button>}
+    {jump==='failed'&&<p className="ios-coach-fallback">Safari ne s’est pas ouvert tout seul : faites ces 3 gestes.</p>}
     <ol className="ios-coach-steps">
      <li><b>1</b><span>Touchez <MoreHorizontal size={17}/> en haut à droite de l’écran</span></li>
      <li><b>2</b><span>Choisissez <strong>« Ouvrir dans le navigateur »</strong> <Compass size={16}/></span></li>

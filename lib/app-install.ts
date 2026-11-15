@@ -53,3 +53,18 @@ export async function handoffLink() {
   try { const r = await fetch('/api/auth/handoff', { method: 'POST', credentials: 'same-origin' }); if (r.ok) return window.location.origin + ((await r.json()) as { path: string }).path; } catch {}
   return window.location.origin + '/';
 }
+
+/** iPhone dans Facebook/Instagram : ouvre Safari directement (adresse « x-safari-https:// », iOS 17 et plus), déjà connecté.
+ *  Renvoie true si la page a bien été quittée ; sinon (iPhone ancien, Facebook qui bloque) on montre les gestes à faire. */
+export async function openInSafari(prefetched?: string): Promise<boolean> {
+  // Le lien est préparé à l'avance quand c'est possible : l'ouverture se fait alors directement au toucher.
+  const link = prefetched || await handoffLink();
+  if (!/^https:\/\//.test(link)) return false;
+  let left = false;
+  const hidden = () => { if (document.hidden) left = true; };
+  document.addEventListener('visibilitychange', hidden);
+  window.location.href = 'x-safari-' + link;
+  await new Promise(r => setTimeout(r, 1600));
+  document.removeEventListener('visibilitychange', hidden);
+  return left || document.hidden;
+}

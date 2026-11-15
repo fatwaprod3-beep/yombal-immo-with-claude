@@ -2,6 +2,7 @@ import {and,asc,eq,gt} from 'drizzle-orm';
 import {getDb} from '../db';
 import {userEvents,users} from '../db/schema';
 import {pushToUser,type PushMessage} from './web-push';
+import {emailHtml,sendEmail} from './email';
 
 // Alertes pour le propriétaire de Yombal : un problème arrive (client bloqué, paiement…), son téléphone sonne tout de suite.
 // Le texte reste sur le serveur ; le téléphone le demande en recevant la notification (comme pour les clients).
@@ -21,6 +22,8 @@ export async function alertOwner(key:string,title:string,body:string,url='/admin
    {id:crypto.randomUUID(),userId:id,kind:'admin_alert_pending',detail:JSON.stringify({title:title.slice(0,80),body:body.slice(0,240),url,tag:'alert-'+key.slice(0,60)}),createdAt:now.toISOString()},
   ]);
   await pushToUser(id);
+  // Copie par e-mail (si Resend est branché) : une trace dans la boîte du propriétaire.
+  const to=(process.env.YOMBAL_ADMIN_EMAIL||'').trim();if(to&&!key.startsWith('test:'))await sendEmail({to,subject:title,html:emailHtml({title,lines:[body],cta:{label:'Ouvrir l’administration',url:'https://yombal-immo.pro'+url}}),text:body+'\n\nhttps://yombal-immo.pro'+url});
  }catch(error){console.error('Owner alert failed',error instanceof Error?error.message:'unknown');}
 }
 /** Prochaine alerte en attente pour ce compte (le plus ancien d'abord), retirée de la file. */

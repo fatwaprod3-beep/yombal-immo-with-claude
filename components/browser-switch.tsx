@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import {X,TriangleAlert} from 'lucide-react';
-import {inAppBrowser,installationDevice,openInChrome} from '../lib/app-install';
+import {inAppBrowser,installationDevice,openInChrome,openInSafari,handoffLink} from '../lib/app-install';
 import {trackEvent} from '../lib/track-event';
 
 // Inscrits depuis une pub : Yombal s'ouvre dans le navigateur de Facebook/Instagram. Le lendemain, la personne
@@ -16,14 +16,16 @@ export default function BrowserSwitch({onIos}:{onIos:()=>void}){
   const d=installationDevice(ua,navigator.maxTouchPoints);if(d==='desktop')return;
   setDevice(d);trackEvent('browser_switch','shown-'+d);
  },[]);
+ const [link,setLink]=useState('');
+ useEffect(()=>{if(device!=='ios')return;let on=true;const load=()=>void handoffLink().then(l=>{if(on)setLink(l);});load();const t=setInterval(load,150000);return ()=>{on=false;clearInterval(t);};},[device]);
  if(!device)return null;
  const hide=()=>{try{sessionStorage.setItem(hideKey,'1');}catch{}setDevice(null);};
- const go=()=>{trackEvent('browser_switch','clicked-'+device);if(device==='ios')onIos();else void openInChrome();};
+ const go=async()=>{trackEvent('browser_switch','clicked-'+device);if(device==='ios'){const ok=await openInSafari(link||undefined);trackEvent('browser_switch',ok?'xsafari-ok':'xsafari-failed');if(!ok)onIos();}else void openInChrome();};
  const app=/Instagram/i.test(navigator.userAgent)?'Instagram':'Facebook';
  return <div className="browser-switch" role="note">
   <TriangleAlert size={18} aria-hidden="true"/>
-  <div><b>Vous êtes dans {app}</b><small>Ouvrez Yombal dans {device==='ios'?'Safari':'Chrome'} pour le retrouver demain sans retaper votre mot de passe.</small></div>
-  <button type="button" className="browser-switch-go" onClick={go}>Ouvrir dans {device==='ios'?'Safari':'Chrome'}</button>
+  <div><b>Vous êtes dans {app}</b><small>Important : ouvrez Yombal dans {device==='ios'?'Safari':'Chrome'} (déjà connecté), sinon demain il faudra retrouver votre mot de passe.</small></div>
+  <button type="button" className="browser-switch-go" onClick={()=>void go()}>Ouvrir dans {device==='ios'?'Safari':'Chrome'}</button>
   <button type="button" className="browser-switch-x" onClick={hide} aria-label="Masquer"><X size={16}/></button>
  </div>;
 }

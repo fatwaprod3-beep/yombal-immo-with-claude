@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.60.0 — 15 novembre 2026
+
+- Rappels (notifications) en priorité, avant l’installation : proposés quelques secondes après l’ouverture et juste après le premier logement, à chaque visite tant que ce n’est ni accepté ni bloqué. Message personnalisé avec le vrai locataire, le vrai loyer et le jour d’échéance.
+- iPhone dans Facebook/Instagram : bouton « Ouvrir dans Safari » qui ouvre Safari directement, déjà connecté (iOS 17 et plus) ; sinon, les gestes à faire s’affichent.
+- Bandeau « Ouvrir dans Chrome/Safari » plus visible.
+- E-mails (Resend) prêts à s’activer dès que la clé RESEND_API_KEY est ajoutée dans Vercel : « Mot de passe oublié » par e-mail en autonomie, et copie par e-mail des alertes du propriétaire.
+
 ## 0.59.0 — 14 novembre 2026
 
 - Navigateur Facebook/Instagram : bandeau « Vous êtes dans Facebook — Ouvrir dans Chrome/Safari » dès l’inscription, pour que la personne retrouve Yombal le lendemain sans retaper son mot de passe (Chrome s’ouvre déjà connecté).
