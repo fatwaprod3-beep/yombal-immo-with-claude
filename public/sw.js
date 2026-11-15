@@ -28,6 +28,6 @@ self.addEventListener('push', event => {
       const response = await fetch('/api/push/next', { credentials: 'include', cache: 'no-store' });
       if (response.ok) { const data = await response.json(); if (data && data.title) message = data; }
     } catch {}
-    await self.registration.showNotification(message.title, { body: message.body, icon: '/icons/yombal-192.png', badge: '/icons/favicon-96.png', tag: message.tag, renotify: false, data: { url: message.url, push: true } });
+    await self.registration.showNotification(message.title, { body: message.body, icon: '/icons/yombal-192.png', badge: '/icons/badge-96.png', tag: message.tag, renotify: false, data: { url: message.url, push: true } });
   })());
 });

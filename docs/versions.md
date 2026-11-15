@@ -1,5 +1,12 @@
 # Versions de Yombal.immo
 
+## 0.62.0 — 15 novembre 2026
+
+- Relances par e-mail des inscrits qui ne reviennent pas : 1er e-mail dès 20 h après l’inscription (anciens inscrits depuis le 1er novembre inclus), 2e e-mail 3 jours plus tard s’ils ne sont toujours pas revenus. Messages personnalisés (agence ou propriétaire, nom de l’agence, logement, locataire, loyer, jour d’échéance) avec la fiche de leur logement. 80 e-mails par jour au plus.
+- « Mot de passe oublié ? » : lien bien visible qui ouvre une vraie page pour recevoir le lien par e-mail.
+- Notifications Android : la petite icône de la barre du haut affiche le logo Yombal au lieu d’un carré blanc.
+- Les réponses aux e-mails Yombal arrivent dans la boîte du propriétaire.
+
 ## 0.61.0 — 15 novembre 2026
 
 - E-mail du lendemain : chaque matin, les inscrits de la veille qui ne sont pas revenus reçoivent un e-mail adapté à l’étape qui leur manque (premier logement, locataire, suivi du loyer). Un seul envoi par personne.

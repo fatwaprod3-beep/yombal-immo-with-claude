@@ -4,10 +4,10 @@ import {inAppBrowser} from '../lib/app-install';
 import {markSignup} from '../lib/meta-pixel';
 import {useState,type FormEvent} from 'react';
 import Link from 'next/link';
-import {ArrowLeft,LogIn,UserPlus,Eye,EyeOff,MessageCircle} from 'lucide-react';
+import {ArrowLeft,LogIn,UserPlus,Eye,EyeOff,MessageCircle,KeyRound} from 'lucide-react';
 
 export default function AuthForm({returnTo,initialMode,google=false,emailReset=false,initialError=''}:{returnTo:string;initialMode:'login'|'register';google?:boolean;emailReset?:boolean;initialError?:string}){
- const [mode,setMode]=useState(initialMode),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState('');
+ const [mode,setMode]=useState<'login'|'register'|'forgot'>(initialMode),[name,setName]=useState(''),[email,setEmail]=useState(''),[password,setPassword]=useState('');
  const [busy,setBusy]=useState(false),[error,setError]=useState(initialError),[show,setShow]=useState(false),[misses,setMisses]=useState(0),[forgot,setForgot]=useState(''),[forgotBusy,setForgotBusy]=useState(false);
  async function sendReset(){setForgotBusy(true);setForgot('');try{const r=await fetch('/api/auth/forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const d=await r.json() as {message?:string;error?:string};setForgot(d.message||d.error||'Réessayez.');}catch{setForgot('Connexion impossible, réessayez.');}finally{setForgotBusy(false);}}
  const resetBox=emailReset?<div className="auth-reset"><button type="button" className="auth-reset-btn" disabled={forgotBusy||!/^\S+@\S+\.\S+$/.test(email.trim())} onClick={()=>void sendReset()}>{forgotBusy?'Envoi…':'Recevoir un lien par e-mail'}</button>{!/^\S+@\S+\.\S+$/.test(email.trim())&&<small>Écrivez d’abord votre e-mail plus haut.</small>}{forgot&&<p className="auth-reset-msg" role="status">{forgot}</p>}</div>:null;
@@ -22,6 +22,19 @@ export default function AuthForm({returnTo,initialMode,google=false,emailReset=f
    window.location.assign(returnTo);
   }catch(e){setError(e instanceof Error?e.message:'Réessayez.');setBusy(false);}
  }
+ if(mode==='forgot')return <main className="admin-shell"><section className="admin-card">
+  <button type="button" className="text-button" onClick={()=>setMode('login')}><ArrowLeft size={17}/>Retour à la connexion</button>
+  <span className="admin-symbol"><KeyRound size={28}/></span>
+  <h1>Mot de passe oublié</h1>
+  <p>{emailReset?'Écrivez l’e-mail de votre compte : nous vous envoyons un lien pour choisir un nouveau mot de passe. Vous serez connecté tout de suite.':'Écrivez-nous sur WhatsApp : nous vous envoyons un lien pour choisir un nouveau mot de passe.'}</p>
+  {emailReset&&<form onSubmit={e=>{e.preventDefault();void sendReset();}}>
+   <label className="field"><span>E-mail de votre compte</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" maxLength={200} required autoFocus/></label>
+   <button className="button primary" disabled={forgotBusy} aria-busy={forgotBusy}>{forgotBusy?'Envoi…':'Recevoir le lien par e-mail'}</button>
+  </form>}
+  {forgot&&<p className="auth-reset-msg" role="status">{forgot}</p>}
+  {google&&!inAppBrowser(typeof navigator==='undefined'?'':navigator.userAgent)&&<p className="auth-forgot-tip"><strong>Votre adresse est un Gmail ?</strong> Revenez en arrière et utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p>}
+  <a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>{emailReset?'Pas reçu ? Écrivez-nous sur WhatsApp':'Écrire sur WhatsApp'}</a>
+ </section></main>;
  return <main className="admin-shell"><section className="admin-card">
   <Link className="text-button" href="/" prefetch={false}><ArrowLeft size={17}/>Retour à Yombal</Link>
   <span className="admin-symbol">{register?<UserPlus size={28}/>:<LogIn size={28}/>}</span>
@@ -32,7 +45,7 @@ export default function AuthForm({returnTo,initialMode,google=false,emailReset=f
   <form onSubmit={submit}>
    {register&&<label className="field"><span>Nom complet ou nom de l’agence</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" minLength={2} maxLength={120} required/></label>}
    <label className="field"><span>E-mail</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" maxLength={200} required/></label>
-   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><span className="password-field"><input type={show?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/><button type="button" onClick={()=>setShow(v=>!v)} aria-label={show?'Cacher le mot de passe':'Voir le mot de passe'}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button></span></label>{!register&&<details className="auth-forgot"><summary>Mot de passe oublié ?</summary><div><p><strong>Votre adresse est un Gmail ?</strong> Utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p>{resetBox}<p>{emailReset?'Pas d’e-mail reçu ? Écrivez-nous :':'Sinon, écrivez-nous : nous vous envoyons un lien pour choisir un nouveau mot de passe.'}</p><a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer">Écrire sur WhatsApp</a></div></details>}
+   <label className="field"><span>Mot de passe{register?' (8 caractères minimum)':''}</span><span className="password-field"><input type={show?'text':'password'} value={password} onChange={e=>setPassword(e.target.value)} autoComplete={register?'new-password':'current-password'} minLength={register?8:1} maxLength={200} required/><button type="button" onClick={()=>setShow(v=>!v)} aria-label={show?'Cacher le mot de passe':'Voir le mot de passe'}>{show?<EyeOff size={18}/>:<Eye size={18}/>}</button></span></label>{!register&&<button type="button" className="auth-forgot-link" onClick={()=>{setMode('forgot');setError('');setForgot('');}}>Mot de passe oublié ?</button>}
    <button className="button primary" disabled={busy} aria-busy={busy}>{busy?'Patientez…':register?'Créer mon compte':'Se connecter'}</button>
   </form>
   {error&&<p className="form-error" role="alert">{error}</p>}
