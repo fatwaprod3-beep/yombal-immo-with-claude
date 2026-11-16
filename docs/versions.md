@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.63.0 — 16 novembre 2026
+
+- Pixel Meta : événement « Achat » (montant en F CFA, durée choisie) envoyé quand un paiement Pro est confirmé, même si la personne revient sur Yombal plus tard. Une seule fois par paiement. L’objectif des publicités ne change pas.
+
 ## 0.62.1 — 15 novembre 2026
 
 - Démonstration : bandeau bien visible « Vous visitez une démonstration — exemples inventés, rien n’est enregistré » avec le bouton « Créer mon espace gratuit » (ou « Revenir à mon espace » si on est connecté).

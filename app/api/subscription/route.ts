@@ -2,7 +2,8 @@ import {getCurrentUser} from '../../auth';
 import {findPlan} from '../../../lib/billing';
 import {isDevelopmentAdmin} from '../../../lib/development-admin';
 import {getDb} from '../../../db';
-import {subscriptionRequests} from '../../../db/schema';
+import {billingCheckouts,subscriptionRequests} from '../../../db/schema';
+import {and,desc,eq,gt} from 'drizzle-orm';
 import {subscriptionFor} from '../../../lib/subscription-server';
 import {paymentCredentials} from '../../../lib/payment-config';
 import {createSasPayCheckout,reconcilePayments} from '../../../lib/subscription-payments';
@@ -13,7 +14,10 @@ export async function GET(request?:Request){
  try{
   const checkoutId=request?new URL(request.url).searchParams.get('commande')||undefined:undefined;
   const payment=await reconcilePayments(user.userId,checkoutId);
-  return json({subscription:await subscriptionFor(user.userId),payment});
+  // Dernier paiement réel des 14 derniers jours : la page envoie l'événement « Achat » au pixel Meta (une fois).
+  const since=new Date(Date.now()-14*864e5).toISOString();
+  const last=(await getDb().select({id:billingCheckouts.id,amount:billingCheckouts.amount,planId:billingCheckouts.planId}).from(billingCheckouts).where(and(eq(billingCheckouts.userId,user.userId),eq(billingCheckouts.status,'paid'),gt(billingCheckouts.updatedAt,since))).orderBy(desc(billingCheckouts.updatedAt)).limit(1))[0]||null;
+  return json({subscription:await subscriptionFor(user.userId),payment,lastPurchase:last});
  }catch{return json({error:'La vérification du paiement n’a pas abouti. Réessayez dans un instant.'},503);}
 }
 export async function POST(request:Request){
