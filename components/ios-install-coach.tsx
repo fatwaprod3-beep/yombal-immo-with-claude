@@ -66,7 +66,7 @@ export default function IosInstallCoach({onClose}:{onClose:()=>void}){
     </>}
     {step<3?<button type="button" className="ios-coach-ok" onClick={()=>go(step+1)}><Check size={17}/>{step===2?'C’est fait':'C’est fait — Suivant'}<ArrowRight size={17}/></button>
      :<button type="button" className="ios-coach-ok" onClick={close}>Compris</button>}
-    <div className="ios-coach-links">{step>0&&step<3&&<button type="button" onClick={()=>setStep(step-1)}><ArrowLeft size={14}/>Retour</button>}<a href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={14}/>Je suis bloqué · WhatsApp</a></div>
+    <div className="ios-coach-links">{step>0&&step<3&&<button type="button" onClick={()=>setStep(step-1)}><ArrowLeft size={14}/>Retour</button>}<a href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={14}/>Je suis bloqué · nous écrire</a></div>
    </>}
   </div>
   {browser!=='inapp'&&step===0&&<div className="ios-coach-arrow" aria-hidden="true"><ShareIcon/></div>}

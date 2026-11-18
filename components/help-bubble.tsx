@@ -3,7 +3,7 @@ import {useEffect,useRef,useState,type CSSProperties,type PointerEvent} from 're
 import {Bot,ChevronLeft,ChevronRight,X} from 'lucide-react';
 import {supportLink} from '../lib/support';
 
-// Un seul bouton flottant qui alterne toutes les 10 secondes entre un conseiller (WhatsApp) et l'assistant IA.
+// Un seul bouton flottant qui alterne toutes les 10 secondes entre un conseiller (icône WhatsApp, qui ouvre un e-mail) et l'assistant IA.
 // Il se déplace du doigt (il se colle au bord le plus proche et garde sa place) et se range en petite languette.
 type Spot={side:'left'|'right';y:number};
 const spotKey='yombal-bubble-spot',foldKey='yombal-bubble-folded';
@@ -22,12 +22,12 @@ export default function HelpBubble({onAssistant}:{onAssistant:()=>void}){
  function up(){const d=drag.current;drag.current=null;if(!d)return;if(d.moved&&pos.current){const h=window.innerHeight;const y=Math.min(Math.max(pos.current.y/h,0.12),0.86);save({side:pos.current.x<window.innerWidth/2?'left':'right',y});setLive(null);pos.current=null;setDragging(false);return;}
   // Simple appui : on ouvre ce qui est affiché.
   activate();}
- function activate(){if(face==='wa')window.open(supportLink(),'_blank','noopener,noreferrer');else onAssistant();}
+ function activate(){if(face==='wa')window.location.href=supportLink();else onAssistant();}
  const style:CSSProperties=live?{left:live.x-28,top:live.y-28,right:'auto',bottom:'auto'}:spot?{top:`calc(${(spot.y*100).toFixed(1)}vh - 28px)`,bottom:'auto',...(spot.side==='left'?{left:12,right:'auto'}:{right:12,left:'auto'})}:{};
  const side=spot?.side||'right';
  if(folded)return <button type="button" className={'hb-tab '+side} style={spot?{top:`calc(${(spot.y*100).toFixed(1)}vh - 22px)`,bottom:'auto'}:undefined} onClick={()=>fold(false)} aria-label="Afficher l’aide">{side==='right'?<ChevronLeft size={16}/>:<ChevronRight size={16}/>}</button>;
  return <div className={'hb '+side+(dragging?' dragging':'')} style={style}>
-  <button type="button" className={'hb-main '+face+(talk?' talk':'')} onPointerDown={down} onPointerMove={move} onPointerUp={up} onClick={e=>{if(e.detail===0)activate();}} onPointerCancel={()=>{drag.current=null;setLive(null);setDragging(false);}} aria-label={face==='wa'?'Parler à un conseiller sur WhatsApp':'Ouvrir l’assistant Yombal'}>
+  <button type="button" className={'hb-main '+face+(talk?' talk':'')} onPointerDown={down} onPointerMove={move} onPointerUp={up} onClick={e=>{if(e.detail===0)activate();}} onPointerCancel={()=>{drag.current=null;setLive(null);setDragging(false);}} aria-label={face==='wa'?'Écrire à un conseiller':'Ouvrir l’assistant Yombal'}>
    <span className="hb-icon" key={face}>{face==='wa'?<WhatsAppIcon/>:<Bot size={22}/>}</span>
    <span className="hb-label" key={'l'+face}>{face==='wa'?'Un conseiller':'Assistant IA'}</span>
   </button>

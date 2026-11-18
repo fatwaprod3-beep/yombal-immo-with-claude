@@ -1,5 +1,9 @@
 # Versions de Yombal.immo
 
+## 0.63.1 — 18 novembre 2026
+
+- Le numéro WhatsApp britannique n’est plus disponible : il est retiré partout (site, e-mails). Le bouton d’aide garde son icône WhatsApp mais ouvre maintenant un e-mail vers contactyombal@gmail.com.
+
 ## 0.63.0 — 16 novembre 2026
 
 - Pixel Meta : événement « Achat » (montant en F CFA, durée choisie) envoyé quand un paiement Pro est confirmé, même si la personne revient sur Yombal plus tard. Une seule fois par paiement. L’objectif des publicités ne change pas.

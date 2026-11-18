@@ -12,7 +12,7 @@ const schema=z.object({email:z.string().trim().toLowerCase().email().max(200)});
 // Réponse identique que le compte existe ou non, pour ne pas révéler qui est inscrit.
 export async function POST(request:Request){
  if(request.headers.get('origin')!==new URL(request.url).origin)return Response.json({error:'Origine non autorisée.'},{status:403});
- if(!emailEnabled())return Response.json({error:'L’envoi par e-mail n’est pas encore disponible. Écrivez-nous sur WhatsApp.',whatsapp:true},{status:503});
+ if(!emailEnabled())return Response.json({error:'L’envoi par e-mail n’est pas encore disponible. Écrivez-nous par e-mail.',whatsapp:true},{status:503});
  const p=schema.safeParse(await request.json().catch(()=>({})));
  if(!p.success)return Response.json({error:'Vérifiez votre adresse e-mail.'},{status:400});
  if(await tooManyAttempts('forgot:'+(request.headers.get('x-forwarded-for')||'').split(',')[0]))return Response.json({error:'Trop de demandes. Réessayez dans 15 minutes.'},{status:429});

@@ -57,7 +57,7 @@ async function send(r:Row,step:1|2,now:Date){
  const token=await createPurposeToken('magic',r.id,72*36e5);
  const link=`${site}/api/auth/magic?t=${token}&next=${encodeURIComponent(m.next)}`;
  const ok=await sendEmail({to:r.email,subject:m.subject,
-  html:emailHtml({title:m.title,card:m.card,lines:[...m.lines,'Pas besoin de mot de passe : ce bouton vous connecte directement (valable 3 jours).'],cta:{label:m.cta,url:link},ps:m.ps,foot:'Vous recevez cet e-mail car vous avez créé un compte Yombal. Une question ? Répondez à cet e-mail ou écrivez-nous sur WhatsApp : +44 7445 510315.'}),
+  html:emailHtml({title:m.title,card:m.card,lines:[...m.lines,'Pas besoin de mot de passe : ce bouton vous connecte directement (valable 3 jours).'],cta:{label:m.cta,url:link},ps:m.ps,foot:'Vous recevez cet e-mail car vous avez créé un compte Yombal. Une question ? Répondez simplement à cet e-mail.'}),
   text:`${m.lines.join('\n\n')}\n\n${m.cta} (sans mot de passe, valable 3 jours) :\n${link}\n${m.ps?'\nP.S. '+m.ps+'\n':''}\nL'équipe Yombal`});
  await getDb().insert(userEvents).values({id:crypto.randomUUID(),userId:r.id,kind:step===1?'email_day1':'email_day4',detail:ok?'sent':'failed',createdAt:now.toISOString()});
  return ok;

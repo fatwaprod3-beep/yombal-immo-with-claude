@@ -26,14 +26,14 @@ export default function AuthForm({returnTo,initialMode,google=false,emailReset=f
   <button type="button" className="text-button" onClick={()=>setMode('login')}><ArrowLeft size={17}/>Retour à la connexion</button>
   <span className="admin-symbol"><KeyRound size={28}/></span>
   <h1>Mot de passe oublié</h1>
-  <p>{emailReset?'Écrivez l’e-mail de votre compte : nous vous envoyons un lien pour choisir un nouveau mot de passe. Vous serez connecté tout de suite.':'Écrivez-nous sur WhatsApp : nous vous envoyons un lien pour choisir un nouveau mot de passe.'}</p>
+  <p>{emailReset?'Écrivez l’e-mail de votre compte : nous vous envoyons un lien pour choisir un nouveau mot de passe. Vous serez connecté tout de suite.':'Écrivez-nous par e-mail : nous vous envoyons un lien pour choisir un nouveau mot de passe.'}</p>
   {emailReset&&<form onSubmit={e=>{e.preventDefault();void sendReset();}}>
    <label className="field"><span>E-mail de votre compte</span><input type="email" value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email" maxLength={200} required autoFocus/></label>
    <button className="button primary" disabled={forgotBusy} aria-busy={forgotBusy}>{forgotBusy?'Envoi…':'Recevoir le lien par e-mail'}</button>
   </form>}
   {forgot&&<p className="auth-reset-msg" role="status">{forgot}</p>}
   {google&&!inAppBrowser(typeof navigator==='undefined'?'':navigator.userAgent)&&<p className="auth-forgot-tip"><strong>Votre adresse est un Gmail ?</strong> Revenez en arrière et utilisez « Continuer avec Google » : vous entrez sans mot de passe.</p>}
-  <a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>{emailReset?'Pas reçu ? Écrivez-nous sur WhatsApp':'Écrire sur WhatsApp'}</a>
+  <a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>{emailReset?'Pas reçu ? Écrivez-nous':'Nous écrire'}</a>
  </section></main>;
  return <main className="admin-shell"><section className="admin-card">
   <Link className="text-button" href="/" prefetch={false}><ArrowLeft size={17}/>Retour à Yombal</Link>
@@ -49,7 +49,7 @@ export default function AuthForm({returnTo,initialMode,google=false,emailReset=f
    <button className="button primary" disabled={busy} aria-busy={busy}>{busy?'Patientez…':register?'Créer mon compte':'Se connecter'}</button>
   </form>
   {error&&<p className="form-error" role="alert">{error}</p>}
-  {!register&&misses>=(emailReset?1:2)&&<div className="auth-help" role="status"><strong>On vous aide à entrer</strong><p>Vérifiez l’orthographe de votre e-mail : <b>{email.trim().toLowerCase()||'—'}</b></p>{google&&/@gmail\.com$/i.test(email.trim())&&!inAppBrowser(navigator.userAgent)&&<p>C’est un Gmail : utilisez « Continuer avec Google » en haut, sans mot de passe.</p>}{emailReset?<><p>Mot de passe oublié ? Recevez un lien pour en choisir un nouveau :</p>{resetBox}</>:<p>Mot de passe oublié ? Écrivez-nous, nous vous envoyons tout de suite un lien pour en choisir un nouveau.</p>}<a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>Écrire sur WhatsApp</a></div>}
+  {!register&&misses>=(emailReset?1:2)&&<div className="auth-help" role="status"><strong>On vous aide à entrer</strong><p>Vérifiez l’orthographe de votre e-mail : <b>{email.trim().toLowerCase()||'—'}</b></p>{google&&/@gmail\.com$/i.test(email.trim())&&!inAppBrowser(navigator.userAgent)&&<p>C’est un Gmail : utilisez « Continuer avec Google » en haut, sans mot de passe.</p>}{emailReset?<><p>Mot de passe oublié ? Recevez un lien pour en choisir un nouveau :</p>{resetBox}</>:<p>Mot de passe oublié ? Écrivez-nous, nous vous envoyons tout de suite un lien pour en choisir un nouveau.</p>}<a className="auth-forgot-wa" href={supportLink()} target="_blank" rel="noopener noreferrer"><MessageCircle size={16}/>Nous écrire</a></div>}
   <p>{register?'Déjà un compte ?':'Pas encore de compte ?'} <button type="button" className="text-button" onClick={()=>{setMode(register?'login':'register');setError('');}}>{register?'Se connecter':'Créer un compte'}</button></p>
  </section></main>;
 }
